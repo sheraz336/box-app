@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "984496861173",
+    "project_id": "finditorium",
+    "storage_bucket": "finditorium.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984496861173:android:685d09cc09bdaf1d887abc",
+        "android_client_info": {
+          "package_name": "com.app.finditorium"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984496861173-jjrjnrvlfrg26p6lhe3tcl4i030tsm1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNaqo_208XIWDWVLR3f9TMWSJS76TYoJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984496861173-jjrjnrvlfrg26p6lhe3tcl4i030tsm1q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "984496861173-efumegel2t846o08gk3soa27rhs8k2ku.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.boxDeliveryApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984496861173:android:6476abf600ae3f8a887abc",
+        "android_client_info": {
+          "package_name": "com.example.box_delivery_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984496861173-0g7up0aqmq1t9uv2eb33d0cvcnbutqi1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.box_delivery_app",
+            "certificate_hash": "fd47e24f508833b2a4e2046e1d43604000805bbb"
+          }
+        },
+        {
+          "client_id": "984496861173-jjrjnrvlfrg26p6lhe3tcl4i030tsm1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNaqo_208XIWDWVLR3f9TMWSJS76TYoJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984496861173-jjrjnrvlfrg26p6lhe3tcl4i030tsm1q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "984496861173-efumegel2t846o08gk3soa27rhs8k2ku.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.boxDeliveryApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
