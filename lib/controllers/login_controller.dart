@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,12 +12,12 @@ class AuthController extends ChangeNotifier {
   bool get isSigningIn => _isSigningIn;
 
   void setEmail(String email) {
-    authModel.email = email;
+    authModel.email = email.trim();
     notifyListeners();
   }
 
   void setPassword(String password) {
-    authModel.password = password;
+    authModel.password = password.trim();
     notifyListeners();
   }
 
@@ -89,7 +90,16 @@ class AuthController extends ChangeNotifier {
     final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 
     //create user if does not exist in 'users' collection
-
+    final snapshot = await FirebaseFirestore.instance.collection("users").doc(userCredential.user!.uid).get();
+    if(!snapshot.exists){
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userCredential.user!.uid)
+          .set({
+        "name": userCredential.user?.displayName ?? "Your Name",
+        "email": userCredential.user!.email,
+      });
+    }
     return true;
   }
 }

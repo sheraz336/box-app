@@ -74,6 +74,7 @@ class SignUpView extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               CustomTextFormField(
+                maxLength: 30,
                 hintText: 'Enter your name',
                 onChanged: authController.updateName,
                 validator: Validators.fullNameValidator,
@@ -122,6 +123,7 @@ class SignUpView extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               CustomTextFormField(
+                maxLength: 16,
                 hintText: 'Enter password',
                 obscureText: true,
                 onChanged: authController.updatePassword,
@@ -147,7 +149,8 @@ class SignUpView extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               CustomTextFormField(
-                hintText: '',
+                maxLength: 16,
+                hintText: 'Confirm Password',
                 obscureText: true,
                 onChanged: authController.updateConfirmPassword,
                 validator: (txt){

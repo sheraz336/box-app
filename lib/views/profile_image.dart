@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +62,11 @@ class ProfileScreen extends StatelessWidget {
                       child: SizedBox(
                         height: 56,
                         child: OutlinedButton(
-                          onPressed: controller.logOut,
+                          onPressed:  ()async{
+                            await FirebaseAuth.instance.signOut();
+                            controller.logOut();
+                            Navigator.of(context).pushNamedAndRemoveUntil("/splash", (route)=>false);
+                          },
                           style: OutlinedButton.styleFrom(
                             backgroundColor: Colors.white,
                             side: BorderSide(color: Color(0xFFE25E00), width: 1), // Orange border

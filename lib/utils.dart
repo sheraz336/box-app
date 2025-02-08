@@ -64,6 +64,14 @@ class Validators {
     if (txt.length < 6) {
       return "Password length should be at least 6.";
     }
+
+    if (txt.length > 16) {
+      return "Max length is 16.";
+    }
+
+    if(txt.contains(" "))
+      return "Password cannot have whitespaces";
+
     if (!RegExp("^(?=.*?[0-9])").hasMatch(txt))
       return "Password should contain 1 digit";
 
@@ -79,6 +87,9 @@ class Validators {
     if (text == null) return "Name cannot be empty";
     if (text.trim().split(" ").length != 2)
       return "Enter both first & last names";
+    if (RegExp("^(?=.*?[0-9])").hasMatch(text))
+      return "Names cannot contain digits";
+
     return null;
   }
 }

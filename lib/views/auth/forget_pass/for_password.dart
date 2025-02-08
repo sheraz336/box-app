@@ -1,6 +1,7 @@
 import 'package:box_delivery_app/utils.dart';
 import 'package:box_delivery_app/widgets/custom_textform.dart';
 import 'package:box_delivery_app/widgets/forget_otp.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,14 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       setState(() {
         isLoading=true;
       });
+
+      //check if email with this user exists,
+      final snapshot = await FirebaseFirestore.instance.collection("users").where("email",isEqualTo: email).get();
+      if(snapshot.docs.isEmpty){
+        throw Exception("User of this email does not exist");
+      }
+
+      //send reset link
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       showAlertDialog(context, "Success",
           "A reset password link was sent to your email", true, () {});
