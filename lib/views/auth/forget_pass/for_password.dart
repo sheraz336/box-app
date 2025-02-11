@@ -82,7 +82,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   const SizedBox(height: 8),
                   Center(
                     child: const Text(
-                      'Enter your email address, we will \n                 send an OTP',
+                      'Enter your registered email address, and we’ll send you a link to reset your password.',
                       style: TextStyle(
                           color: Color(0xff76889A),
                           fontSize: 14,

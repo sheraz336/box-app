@@ -25,6 +25,7 @@ import 'package:box_delivery_app/views/qr_scan_view.dart';
 import 'package:box_delivery_app/views/simple_profile.dart';
 
 import 'package:box_delivery_app/views/thankYou_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -46,11 +47,12 @@ void main()async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
- //  await FirebaseAppCheck.instance.activate(
- //    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
- //    androidProvider: AndroidProvider.debug,
- // appleProvider: AppleProvider.appAttest,
- //  );
+  await FirebaseAppCheck.instance.activate(
+    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    androidProvider: AndroidProvider.playIntegrity,
+ appleProvider: AppleProvider.appAttest,
+  );
+  FirebaseFirestore.instance.settings = Settings(persistenceEnabled: true);
 
   runApp(
     MultiProvider(

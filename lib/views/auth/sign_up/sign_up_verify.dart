@@ -39,7 +39,7 @@ class VerificationView extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: "We have send you an ",
+                    text: "To continue, please enter your mobile number. We will send a ",
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
@@ -50,7 +50,7 @@ class VerificationView extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: "One Time Password(OTP)\n",
+                    text: "one-time password (OTP) ",
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 14,
@@ -61,7 +61,7 @@ class VerificationView extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: "on this mobile number ",
+                    text: "  to verify your account",
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,

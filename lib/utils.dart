@@ -85,10 +85,12 @@ class Validators {
 
   static String? fullNameValidator(String? text) {
     if (text == null) return "Name cannot be empty";
-    if (text.trim().split(" ").length != 2)
+    if (text.trim().split(" ").length < 2)
       return "Enter both first & last names";
     if (RegExp("^(?=.*?[0-9])").hasMatch(text))
       return "Names cannot contain digits";
+    if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(text))
+      return "Names cannot contain character";
 
     return null;
   }
