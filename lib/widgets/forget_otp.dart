@@ -12,7 +12,7 @@ class OTPInput extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(
         4,
-            (index) => SizedBox(
+        (index) => SizedBox(
           width: 50,
           height: 50,
           child: TextField(

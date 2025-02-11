@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,6 +11,7 @@ class AddLocationView extends StatefulWidget {
   @override
   State<AddLocationView> createState() => _AddLocationViewState();
 }
+
 void showQrPopup(BuildContext context) {
   showModalBottomSheet(
     context: context,
@@ -20,11 +20,9 @@ void showQrPopup(BuildContext context) {
     builder: (context) {
       return QrPopupContainer(
         onPrint: () {
-          // Handle Print button logic
           Navigator.pop(context);
         },
         onDone: () {
-          // Handle Done button logic
           Navigator.pop(context);
         },
       );
@@ -33,7 +31,7 @@ void showQrPopup(BuildContext context) {
 }
 
 class _AddLocationViewState extends State<AddLocationView> {
-  String selectedTab = "Location"; // 👈 Default selected tab
+  String selectedTab = "Location";
 
   void navigateTo(String tab) {
     if (tab != selectedTab) {
@@ -45,7 +43,6 @@ class _AddLocationViewState extends State<AddLocationView> {
       } else if (tab == "Items") {
         Navigator.pushNamed(context, "/items");
       }
-
     }
   }
 
@@ -55,7 +52,10 @@ class _AddLocationViewState extends State<AddLocationView> {
       create: (context) => AddLocationController(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Add Location", style: TextStyle(color: Colors.white),),
+          title: const Text(
+            "Add Location",
+            style: TextStyle(color: Colors.white),
+          ),
           backgroundColor: Color(0xffe25e00),
         ),
         body: Consumer<AddLocationController>(
@@ -65,15 +65,14 @@ class _AddLocationViewState extends State<AddLocationView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Category Tabs
-                  CategoryTabs(selectedTab: selectedTab, onTabSelected: navigateTo),
+                  CategoryTabs(
+                      selectedTab: selectedTab, onTabSelected: navigateTo),
 
                   const SizedBox(height: 12),
 
-                  // Upload Photo
-                  const Text("Upload Photo (Optional)", style: TextStyle(color: Colors.grey)),
+                  const Text("Upload Photo (Optional)",
+                      style: TextStyle(color: Colors.grey)),
                   GestureDetector(
-                    //onTap: () => controller.pickImage(), // Implement image picker
                     child: Container(
                       height: 150,
                       width: double.infinity,
@@ -84,14 +83,14 @@ class _AddLocationViewState extends State<AddLocationView> {
                       child: Center(
                         child: controller.imageUrl == null
                             ? SvgPicture.asset("assets/camera.svg", height: 40)
-                            : Image.file(controller.imageUrl! as File, fit: BoxFit.cover),
+                            : Image.file(controller.imageUrl! as File,
+                                fit: BoxFit.cover),
                       ),
                     ),
                   ),
 
                   const SizedBox(height: 16),
 
-                  // Location Name
                   CustomTextField(
                     controller: controller.nameController,
                     labelText: "Location Name",
@@ -101,7 +100,6 @@ class _AddLocationViewState extends State<AddLocationView> {
 
                   const SizedBox(height: 16),
 
-                  // Address
                   CustomTextField(
                     controller: controller.addressController,
                     labelText: "Address",
@@ -110,12 +108,12 @@ class _AddLocationViewState extends State<AddLocationView> {
 
                   const SizedBox(height: 16),
 
-                  // Type Dropdown
                   DropdownButtonFormField<String>(
                     value: controller.selectedType,
                     decoration: InputDecoration(
                       labelText: "Type",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                     items: ["Home", "Office", "Warehouse"].map((String value) {
                       return DropdownMenuItem<String>(
@@ -132,7 +130,6 @@ class _AddLocationViewState extends State<AddLocationView> {
 
                   const SizedBox(height: 16),
 
-                  // Description
                   CustomTextField(
                     controller: controller.descriptionController,
                     labelText: "Description (Optional)",
@@ -147,15 +144,18 @@ class _AddLocationViewState extends State<AddLocationView> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
-                        controller.saveLocation();
-                        showQrPopup(context);
+                      onPressed: () async {
+                        if (await controller.saveLocation())
+                          Navigator.pop(context);
+                        // showQrPopup(context);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xffe25e00),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
                       ),
-                      child: const Text("Add Location", style: TextStyle(color: Colors.white, fontSize: 14)),
+                      child: const Text("Add Location",
+                          style: TextStyle(color: Colors.white, fontSize: 14)),
                     ),
                   ),
                 ],

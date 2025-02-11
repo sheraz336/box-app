@@ -15,14 +15,12 @@ class ThankYouScreen extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                // Celebration effect background
                 SvgPicture.asset(
-                  'assets/checkMark.svg', // Add your confetti effect SVG or PNG
+                  'assets/checkMark.svg',
                   width: size.width * 0.55,
                   height: size.width * 0.55,
                   fit: BoxFit.contain,
                 ),
-                // Orange circular background
                 Container(
                   width: 90,
                   height: 90,

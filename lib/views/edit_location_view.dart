@@ -44,48 +44,42 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                   locationName = value;
                 });
               }),
-
               _buildLabel('Address'),
               _buildTextField('Enter Address', (value) {
                 setState(() {
                   address = value;
                 });
               }),
-
               _buildLabel('Type'),
-              _buildDropdown(['Select Type', 'Home', 'Office', 'Other'], (value) {
+              _buildDropdown(['Select Type', 'Home', 'Office', 'Other'],
+                  (value) {
                 setState(() {
                   selectedType = value!;
                 });
               }),
-
               _buildLabel('Enter Latitude'),
               _buildDropdown(['Select', '12.34', '56.78'], (value) {
                 setState(() {
                   selectedLatitude = value!;
                 });
               }),
-
               _buildLabel('Enter Longitude'),
               _buildDropdown(['Select', '98.76', '54.32'], (value) {
                 setState(() {
                   selectedLongitude = value!;
                 });
               }),
-
               _buildLabel('Description'),
               _buildTextField(
                 'Enter Description',
-                    (value) {
+                (value) {
                   setState(() {
                     description = value;
                   });
                 },
                 maxLines: 3, // Fix height of description field
               ),
-
               SizedBox(height: 20),
-
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -104,7 +98,10 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                   },
                   child: Text(
                     'Update Location',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
               ),
@@ -125,7 +122,8 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
     );
   }
 
-  Widget _buildTextField(String hintText, Function(String) onChanged, {int maxLines = 1}) {
+  Widget _buildTextField(String hintText, Function(String) onChanged,
+      {int maxLines = 1}) {
     return TextFormField(
       decoration: InputDecoration(
         hintText: hintText,
@@ -151,7 +149,8 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4), // Fix spacing
+        contentPadding:
+            EdgeInsets.symmetric(horizontal: 12, vertical: 4), // Fix spacing
       ),
       value: options.first,
       items: options.map((String option) {
@@ -161,7 +160,9 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
             option,
             style: TextStyle(
               fontSize: 16,
-              fontWeight: option == options.first ? FontWeight.normal : FontWeight.w500, // Fix bold issue
+              fontWeight: option == options.first
+                  ? FontWeight.normal
+                  : FontWeight.w500, // Fix bold issue
             ),
           ),
         );

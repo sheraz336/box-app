@@ -8,27 +8,29 @@ import '../../../widgets/custom_textform.dart';
 import '../sign_in/sign_in.dart';
 import 'sign_up_verify.dart';
 
-
 class SignUpView extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
 
-  void onRegister(BuildContext context, UserController controller)async{
-    try{
-      if(!formKey.currentState!.validate())return;
-      Navigator.push(context, MaterialPageRoute(builder: (c)=>VerificationView()));
-    }catch(e){
+  void onRegister(BuildContext context, UserController controller) async {
+    try {
+      if (!formKey.currentState!.validate()) return;
+      Navigator.push(
+          context, MaterialPageRoute(builder: (c) => VerificationView()));
+    } catch (e) {
       showSnackbar(context, e.toString());
     }
   }
 
-  void googleSignin(BuildContext context)async{
-    try{
+  void googleSignin(BuildContext context) async {
+    try {
       final success = await AuthController().signInWithGoogle();
-      if(!success)return;
+      if (!success) return;
       Navigator.pushNamedAndRemoveUntil(
-          context, "/"
-          "home", (route) => false);
-    }catch(e){
+          context,
+          "/"
+          "home",
+          (route) => false);
+    } catch (e) {
       print(e);
       showSnackbar(context, e.toString());
     }
@@ -39,15 +41,17 @@ class SignUpView extends StatelessWidget {
     final authController = Provider.of<UserController>(context);
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: formKey,
-          child: SingleChildScrollView(
-
+        body: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: formKey,
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [SizedBox(height: 30,),
+            children: [
+              SizedBox(
+                height: 30,
+              ),
               Center(
                 child: const Text(
                   "Register Your New Account",
@@ -80,10 +84,9 @@ class SignUpView extends StatelessWidget {
                 validator: Validators.fullNameValidator,
                 textStyle: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w400,color: Color(0xffBABFC5)
-                ),
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xffBABFC5)),
               ),
-
               const SizedBox(height: 20),
               Align(
                 alignment: Alignment.centerLeft,
@@ -105,10 +108,8 @@ class SignUpView extends StatelessWidget {
                 textStyle: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
-                    color: Color(0xffBABFC5)
-                ),
+                    color: Color(0xffBABFC5)),
               ),
-
               const SizedBox(height: 20),
               Align(
                 alignment: Alignment.centerLeft,
@@ -131,10 +132,8 @@ class SignUpView extends StatelessWidget {
                 textStyle: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
-                    color: Color(0xffBABFC5)
-                ),
+                    color: Color(0xffBABFC5)),
               ),
-
               const SizedBox(height: 20),
               Align(
                 alignment: Alignment.centerLeft,
@@ -153,26 +152,24 @@ class SignUpView extends StatelessWidget {
                 hintText: 'Confirm Password',
                 obscureText: true,
                 onChanged: authController.updateConfirmPassword,
-                validator: (txt){
-                  if(txt ==  null|| txt.isEmpty)return "Cannot be empty";
+                validator: (txt) {
+                  if (txt == null || txt.isEmpty) return "Cannot be empty";
 
-                  if(authController.user.password!=authController.user.confirmPassword)return "Passwords do not match";
+                  if (authController.user.password !=
+                      authController.user.confirmPassword)
+                    return "Passwords do not match";
                   return null;
                 },
                 textStyle: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
-                    color: Color(0xffBABFC5)
-                ),
+                    color: Color(0xffBABFC5)),
               ),
-
-
               const SizedBox(height: 24),
               CustomButton(
                 text: "Sign Up",
-                onPressed: ()=>onRegister(context,authController),
+                onPressed: () => onRegister(context, authController),
               ),
-
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -188,7 +185,10 @@ class SignUpView extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> SignInScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignInScreen()));
                     },
                     child: const Text(
                       'Sign In',
@@ -202,38 +202,38 @@ class SignUpView extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 children: [
-                  // Left Divider
                   Expanded(
                     child: Divider(
-                      color: Color(0xffF1F2F6), // Adjust opacity
+                      color: Color(0xffF1F2F6),
                       thickness: 1.68,
-                      endIndent: 8, // Gap between divider and text
+                      endIndent: 8,
                     ),
                   ),
-                  // Center Text
                   Text(
                     'or sign in with',
                     style: TextStyle(
-                        color: Color(0xff7A848C), // Adjust opacity
+                        color: Color(0xff7A848C),
                         fontSize: 14,
-                        fontWeight: FontWeight.w400
-                    ),
+                        fontWeight: FontWeight.w400),
                   ),
-                  // Right Divider
                   Expanded(
                     child: Divider(
-                      color: Color(0xffF1F2F6), // Adjust opacity
+                      color: Color(0xffF1F2F6),
                       thickness: 1.68,
-                      endIndent: 8, // Gap between divider and text
+                      endIndent: 8,
                     ),
                   ),
-                ],),
+                ],
+              ),
               const SizedBox(height: 20),
               Center(
-                child: SizedBox(width: 160,
+                child: SizedBox(
+                  width: 160,
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(color: Color(0xFFCFD5DB)),
@@ -242,12 +242,12 @@ class SignUpView extends StatelessWidget {
                       ),
                       minimumSize: Size(160, 56),
                     ),
-                    onPressed: () {  },
+                    onPressed: () {},
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          'assets/google.png', // Add a Google logo asset
+                          'assets/google.png',
                           width: 20,
                           height: 20,
                         ),
@@ -269,7 +269,7 @@ class SignUpView extends StatelessWidget {
             ],
           ),
         ),
-        ),)
-    );
+      ),
+    ));
   }
 }

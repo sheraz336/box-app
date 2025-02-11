@@ -1,11 +1,10 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/item_controller.dart';
-import '../widgets/custom_delete_dailogue.dart';
 import '../widgets/management_category_tabs.dart';
 import '../models/item_model.dart';
 import '../widgets/nav_bar_widget.dart';
-import 'home_screen.dart'; // Import ItemModel
+
 
 class ItemManagementScreen extends StatefulWidget {
   @override
@@ -45,7 +44,6 @@ class _ItemManagementScreenState extends State<ItemManagementScreen> {
             ),
             body: Column(
               children: [
-                // Category Tabs
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -55,7 +53,6 @@ class _ItemManagementScreenState extends State<ItemManagementScreen> {
                   ),
                 ),
 
-                // Location Dropdown
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Container(
@@ -86,7 +83,6 @@ class _ItemManagementScreenState extends State<ItemManagementScreen> {
                 ),
                 SizedBox(height: 1),
 
-                // List of Items
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16),

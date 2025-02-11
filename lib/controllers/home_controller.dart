@@ -1,4 +1,7 @@
 
+import 'package:box_delivery_app/repos/box_repository.dart';
+import 'package:box_delivery_app/repos/item_repository.dart';
+import 'package:box_delivery_app/repos/location_repository.dart';
 import 'package:flutter/material.dart';
 import '../models/item_model.dart';
 
@@ -10,7 +13,7 @@ class HomeController extends ChangeNotifier {
       imagePath: 'assets/onboarding2.png',
       items: 210,
       value: 2000,
-      isShared: true,
+      isShared: true, tags: '', description: '',
     ),
     BoxModel(
       id: '2',
@@ -18,7 +21,7 @@ class HomeController extends ChangeNotifier {
       imagePath: 'assets/onboarding2.png',
       items: 210,
       value: 2000,
-      isShared: true,
+      isShared: true, tags: '', description: '',
     ),
     BoxModel(
       id: '3',
@@ -26,7 +29,7 @@ class HomeController extends ChangeNotifier {
       imagePath: 'assets/onboarding2.png',
       items: 34,
       value: 0,
-      isShared: false,
+      isShared: false, tags: '', description: '',
     ),
     BoxModel(
       id: '4',
@@ -34,11 +37,14 @@ class HomeController extends ChangeNotifier {
       imagePath: 'assets/onboarding3.png',
       items: 34,
       value: 0,
-      isShared: false,
+      isShared: false, tags: '', description: '',
     ),
   ];
 
-  List<BoxModel> get boxes => _boxes;
+  // List<LocationModel> get locations => LocationRepository.instance.list;
+  // List<BoxModel> get boxes => BoxRepository.instance.list;
+  // List<ItemModel> get items => ItemRepository.instance.list;
+  // List<ItemModel> get itemsWithNoLocationOrBox => ItemRepository.instance.getItemsWithNoLocationOrBox();
 
   void editBox(String id) {
   }

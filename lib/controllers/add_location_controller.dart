@@ -1,6 +1,9 @@
 // controllers/add_location_controller.dart
+import 'dart:math';
+
+import 'package:box_delivery_app/models/item_model.dart';
+import 'package:box_delivery_app/repos/location_repository.dart';
 import 'package:flutter/material.dart';
-import '../models/LocationModel.dart';
 
 class AddLocationController with ChangeNotifier {
   TextEditingController nameController = TextEditingController();
@@ -19,20 +22,29 @@ class AddLocationController with ChangeNotifier {
     notifyListeners();
   }
 
-  void saveLocation() {
-    if (nameController.text.isEmpty || addressController.text.isEmpty || selectedType == null) {
-      return;
+  Future<bool> saveLocation() async{
+    try{
+      if (nameController.text.isEmpty || addressController.text.isEmpty || selectedType == null) {
+        return false;
+      }
+
+      LocationModel location = LocationModel(
+        id: "location-"+Random.secure().nextInt(10000).toString(),
+        name: nameController.text,
+        address: addressController.text,
+        type: selectedType!,
+        description: descriptionController.text.isEmpty ? "" : descriptionController.text,
+        imagePath: "assets/onboarding2.png",
+      );
+
+      await LocationRepository.instance.putLocation(location);
+
+      // Save logic (send to API or database)
+      print("Location Saved: ${location.name}");
+      return true;
+    }catch(e){
+      print(e);
+      return false;
     }
-
-    LocationModel location = LocationModel(
-      name: nameController.text,
-      address: addressController.text,
-      type: selectedType!,
-      description: descriptionController.text.isEmpty ? null : descriptionController.text,
-      imageUrl: imageUrl,
-    );
-
-    // Save logic (send to API or database)
-    print("Location Saved: ${location.name}");
   }
 }

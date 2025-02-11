@@ -1,4 +1,3 @@
-// views/boxes_view.dart
 import 'package:box_delivery_app/views/items_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

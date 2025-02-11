@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../controllers/user_controller_for.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_textform.dart';
@@ -16,10 +15,12 @@ class SetNewPasswordScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [SizedBox(height: 30,),
+            children: [
+              SizedBox(
+                height: 30,
+              ),
               Center(
                 child: const Text(
                   "Set New Password",
@@ -48,12 +49,12 @@ class SetNewPasswordScreen extends StatelessWidget {
               CustomTextFormField(
                 hintText: 'Enter new password',
                 onChanged: userController.updateEmail,
-                errorText: userController.passwordError, textStyle: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,color: Color(0xffBABFC5)
+                errorText: userController.passwordError,
+                textStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xffBABFC5)),
               ),
-              ),
-
               const SizedBox(height: 20),
               Align(
                 alignment: Alignment.centerLeft,
@@ -71,25 +72,27 @@ class SetNewPasswordScreen extends StatelessWidget {
                 hintText: 'Confirm password',
                 obscureText: true,
                 onChanged: userController.updateEmail,
-                errorText: userController.passwordError, textStyle: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16,
-                  color: Color(0xffBABFC5)
+                errorText: userController.passwordError,
+                textStyle: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                    color: Color(0xffBABFC5)),
               ),
-              ),
-
               const SizedBox(height: 24),
               CustomButton(
                 text: "Reset Password",
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => PasswordResetSuccessScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PasswordResetSuccessScreen()));
                 },
               ),
-
               const SizedBox(height: 20),
               GestureDetector(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SignInScreen()));
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -8,7 +8,7 @@ class CustomButton extends StatelessWidget {
 
   const CustomButton({
     Key? key,
-    this.isLoading=false,
+    this.isLoading = false,
     required this.text,
     required this.onPressed,
   }) : super(key: key);
@@ -29,23 +29,25 @@ class CustomButton extends StatelessWidget {
             ),
             elevation: 0,
           ),
-          child:isLoading ? Center(
-            child: Container(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 2,
-              ),
-            ),
-          ): Text(
-            text,
-            style:TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xffFFFFFF),
-            ),
-          ),
+          child: isLoading
+              ? Center(
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  ),
+                )
+              : Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xffFFFFFF),
+                  ),
+                ),
         ),
       ),
     );

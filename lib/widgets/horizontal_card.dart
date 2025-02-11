@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class ItemHorizontalCard extends StatelessWidget {
@@ -123,7 +122,6 @@ class ItemHorizontalCard extends StatelessWidget {
                       color: Colors.black,
                     ),
                     Image.asset('assets/pen_edit.png',width:18.07,height: 13.69,),
-
                   ],
                 ),
               ),

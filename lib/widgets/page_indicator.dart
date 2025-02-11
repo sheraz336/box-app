@@ -14,7 +14,7 @@ class PageIndicator extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         3,
-            (index) => Container(
+        (index) => Container(
           width: currentPage == index ? 24 : 12,
           height: 4,
           margin: const EdgeInsets.symmetric(horizontal: 4),

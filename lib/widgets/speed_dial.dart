@@ -29,7 +29,7 @@ class _SpeedDialFABState extends State<SpeedDialFAB> {
                     () {
                   setState(() => isOpen = false);
                   // Add location logic
-                      Navigator.pushNamed(context, "/add_location");
+                  Navigator.pushNamed(context, "/add_location");
                 },
               ),
             ),
@@ -41,6 +41,7 @@ class _SpeedDialFABState extends State<SpeedDialFAB> {
                 Color(0xffe25e00),
                     () {
                   setState(() => isOpen = false);
+                  Navigator.pushNamed(context, "/add_box");
                   // Add box logic
                 },
               ),
@@ -53,6 +54,7 @@ class _SpeedDialFABState extends State<SpeedDialFAB> {
                 Color(0xffe25e00),
                     () {
                   setState(() => isOpen = false);
+                  Navigator.pushNamed(context, "/items");
                   // Add item logic
                 },
               ),

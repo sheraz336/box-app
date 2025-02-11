@@ -15,33 +15,43 @@ class QRScanScreen extends StatelessWidget {
             backgroundColor: Color(0xffE25E00),
             title: Text(
               'QR Scan',
-              style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600,color: Color(0xffFFFFFF)),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xffFFFFFF)),
             ),
           ),
           body: Padding(
             padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 50,
-                ),
-                Container(
-                  width: 263,
-                  height: 264,
-                  child: Center(
-                    child: Image.asset(
-                      'assets/qr_scan.png',
-                      width: 224,
-                      height: 224,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Container(
+                    width: 263,
+                    height: 264,
+                    child: Center(
+                      child: Image.asset(
+                        'assets/qr_scan.png',
+                        width: 224,
+                        height: 224,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 70),
-                CustomButton(text: 'Scan Item', onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => InvalidQRScreen()));
-                })
-              ],
+                  SizedBox(height: 70),
+                  CustomButton(
+                      text: 'Scan Item',
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => InvalidQRScreen()));
+                      })
+                ],
+              ),
             ),
           ),
         );

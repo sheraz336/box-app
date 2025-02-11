@@ -2,11 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
 import '../controllers/profile_image_controller.dart';
 import '../widgets/profile_image.dart';
 import '../widgets/profile_text_field.dart';
-
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -27,8 +25,13 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               children: [
                 ProfileImageWidget(
-                  image: CircleAvatar(backgroundImage: AssetImage('assets/profile_image.png')),
-                  onMoreTap: () => _showImageOptions(context, controller), icon: Icon(Icons.more_horiz,color:Color(0xffFFFFFF) ,),
+                  image: CircleAvatar(
+                      backgroundImage: AssetImage('assets/profile_image.png')),
+                  onMoreTap: () => _showImageOptions(context, controller),
+                  icon: Icon(
+                    Icons.more_horiz,
+                    color: Color(0xffFFFFFF),
+                  ),
                 ),
                 SizedBox(height: 20),
                 Text(
@@ -62,17 +65,19 @@ class ProfileScreen extends StatelessWidget {
                       child: SizedBox(
                         height: 56,
                         child: OutlinedButton(
-                          onPressed:  ()async{
+                          onPressed: () async {
                             await FirebaseAuth.instance.signOut();
                             controller.logOut();
-                            Navigator.of(context).pushNamedAndRemoveUntil("/splash", (route)=>false);
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                "/splash", (route) => false);
                           },
                           style: OutlinedButton.styleFrom(
                             backgroundColor: Colors.white,
-                            side: BorderSide(color: Color(0xFFE25E00), width: 1), // Orange border
+                            side: BorderSide(
+                                color: Color(0xFFE25E00),
+                                width: 1), // Orange border
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)
-                            ),
+                                borderRadius: BorderRadius.circular(8)),
                           ),
                           child: Text(
                             'Log Out',
@@ -94,8 +99,7 @@ class ProfileScreen extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFFE25E00),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)
-                            ),
+                                borderRadius: BorderRadius.circular(8)),
                           ),
                           child: Text(
                             'Delete Account',
@@ -110,7 +114,6 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-
               ],
             ),
           ),
@@ -149,7 +152,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  void _showImageSourceDialog(BuildContext context, ProfileController controller) {
+  void _showImageSourceDialog(
+      BuildContext context, ProfileController controller) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

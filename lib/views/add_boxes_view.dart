@@ -1,7 +1,8 @@
+import 'package:box_delivery_app/models/item_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../controllers/addbox_controller.dart';
+import '../repos/location_repository.dart';
 import '../widgets/category_tabs.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/qr_popup_container.dart';
@@ -19,11 +20,9 @@ void showQrPopup(BuildContext context) {
     builder: (context) {
       return QrPopupContainer(
         onPrint: () {
-          // Handle Print button logic
           Navigator.pop(context);
         },
         onDone: () {
-          // Handle Done button logic
           Navigator.pop(context);
         },
       );
@@ -50,6 +49,7 @@ class _AddBoxViewState extends State<AddBoxView> {
 
   @override
   Widget build(BuildContext context) {
+    final locations = context.read<LocationRepository>().list;
     return ChangeNotifierProvider(
       create: (_) => AddBoxController(),
       child: Consumer<AddBoxController>(
@@ -64,11 +64,11 @@ class _AddBoxViewState extends State<AddBoxView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CategoryTabs(selectedTab: selectedTab, onTabSelected: navigateTo),
-
+                  CategoryTabs(
+                      selectedTab: selectedTab, onTabSelected: navigateTo),
                   SizedBox(height: 16),
-
-                  const Text("Upload Photo (Optional)", style: TextStyle(color: Colors.grey)),
+                  const Text("Upload Photo (Optional)",
+                      style: TextStyle(color: Colors.grey)),
                   Container(
                     height: 150,
                     decoration: BoxDecoration(
@@ -79,20 +79,33 @@ class _AddBoxViewState extends State<AddBoxView> {
                       child: Icon(Icons.add, size: 50, color: Colors.black26),
                     ),
                   ),
-
                   SizedBox(height: 16),
-
                   CustomTextField(
                     controller: controller.boxNameController,
                     labelText: "Box Name",
                     hintText: "Enter box name",
                   ),
                   SizedBox(height: 10),
-                  CustomTextField(
-                    controller: controller.locationController,
-                    labelText: "Location",
-                    hintText: "Enter location",
+                  DropdownButtonFormField<LocationModel>(
+                      items: [
+                        ...locations.map((item) {
+                          return DropdownMenuItem(
+                            child: Text(item.name),
+                            value: item,
+                          );
+                        })
+                      ],
+                      onChanged: (item) {
+                        controller.locationId = item?.id;
+                      },
+                    hint: Text("Location"),
+                    decoration: TextFieldInputDecoration,
                   ),
+                  // CustomTextField(
+                  //   controller: controller.locationController,
+                  //   labelText: "Location",
+                  //   hintText: "Enter location",
+                  // ),
                   SizedBox(height: 10),
                   CustomTextField(
                     controller: controller.descriptionController,
@@ -106,9 +119,7 @@ class _AddBoxViewState extends State<AddBoxView> {
                     labelText: "Tags (Optional)",
                     hintText: "Enter tags",
                   ),
-
                   SizedBox(height: 16),
-
                   Row(
                     children: [
                       Checkbox(
@@ -119,27 +130,25 @@ class _AddBoxViewState extends State<AddBoxView> {
                     ],
                   ),
                   Container(
-                    height: 55, // Matches text field height
+                    height: 55,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.transparent), // Grey border
+                      border: Border.all(color: Colors.transparent),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
                       child: Image.asset(
-                        "assets/QR.png", // Replace with your actual SVG path
-                        height: 30, // Adjust size as needed
+                        "assets/QR.png",
+                        height: 30,
                       ),
                     ),
                   ),
-
                   SizedBox(height: 16),
-
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        controller.addBox;
-                        showQrPopup(context);
+                      onPressed: () async {
+                        if (await controller.addBox()) Navigator.pop(context);
+                        // showQrPopup(context);
                       },
                       child: Text("Add Box"),
                       style: ElevatedButton.styleFrom(

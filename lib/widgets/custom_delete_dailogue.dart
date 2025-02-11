@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class CustomDeleteDialog extends StatelessWidget {
   final VoidCallback onConfirm;
 
-  const CustomDeleteDialog({Key? key, required this.onConfirm}) : super(key: key);
+  const CustomDeleteDialog({Key? key, required this.onConfirm})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +33,18 @@ class CustomDeleteDialog extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   side: BorderSide(color: Color(0xffe25e00)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
                 onPressed: () => Navigator.pop(context),
-                child: Text("Cancel", style: TextStyle(color: Color(0xffe25e00))),
+                child:
+                    Text("Cancel", style: TextStyle(color: Color(0xffe25e00))),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xffe25e00),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
                 onPressed: onConfirm,
                 child: Text("Delete", style: TextStyle(color: Colors.white)),

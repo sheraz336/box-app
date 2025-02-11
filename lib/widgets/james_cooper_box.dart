@@ -3,7 +3,7 @@ import '../models/box_model.dart';
 import '../models/item_model.dart';
 
 class StyledBoxCard extends StatelessWidget {
-  final BoxModel box;
+  final LocationModel box;
   final Function(String) onEdit;
   final Function(String) onDelete;
 
@@ -20,7 +20,8 @@ class StyledBoxCard extends StatelessWidget {
       // width: 159,
       height: 263,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),color: Color(0xffFFFFFF),
+        borderRadius: BorderRadius.circular(12),
+        color: Color(0xffFFFFFF),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.25),
@@ -97,7 +98,7 @@ class StyledBoxCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Boxes: ${box.id}',
+                          'Boxes: ${box.boxes.length}',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 12,
@@ -112,16 +113,15 @@ class StyledBoxCard extends StatelessWidget {
                             color: Color(0xff4D4D4D),
                           ),
                         ),
-                        if (box.value != null)
-                          Text(
-                            'Value: £${box.value}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                              color: Color(0xff4D4D4D),
-                            ),
+                        Text(
+                          'Value: £${box.value}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            color: Color(0xff4D4D4D),
                           ),
-                        if (box.isShared)
+                        ),
+                        if (false)
                           Text(
                             'Shared: Yes',
                             style: TextStyle(
@@ -143,13 +143,21 @@ class StyledBoxCard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Image.asset('assets/pen_edit.png',width: 18.86,height: 19.5,),
+                    Image.asset(
+                      'assets/pen_edit.png',
+                      width: 18.86,
+                      height: 19.5,
+                    ),
                     Container(
                       width: 1,
                       height: 28,
                       color: Colors.black,
                     ),
-                    Image.asset('assets/delete_box.png',width: 18.86,height: 19.5,),
+                    Image.asset(
+                      'assets/delete_box.png',
+                      width: 18.86,
+                      height: 19.5,
+                    ),
                   ],
                 ),
               ),

@@ -1,9 +1,5 @@
-import 'dart:math';
-
-import 'package:box_delivery_app/controllers/forget_pass_controller.dart';
 import 'package:box_delivery_app/controllers/signup_controller.dart';
 import 'package:box_delivery_app/utils.dart';
-import 'package:box_delivery_app/views/auth/sign_in/sign_in.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -85,7 +81,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 // handle other error codes
                 default:
                   showSnackbar(context, 'Something went wrong!');
-                // handle error further if needed
               }
             },
             onError: (error, stackTrace) {},
@@ -141,7 +136,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           Center(
                             child: Text(
                               "",
-                              // "${otpController.secondsRemaining}",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -150,7 +144,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             ),
                           ),
                           SizedBox(height: 20),
-
                           PinInputField(onSubmit: (code) {
                             otpController.setOtp(code);
                           }),
@@ -237,10 +230,8 @@ class _PinInputFieldState extends State<PinInputField> {
   late final int _length;
 
   Size _findContainerSize(BuildContext context) {
-    // full screen width
     double width = MediaQuery.of(context).size.width * 0.85;
 
-    // using left-over space to get width of each container
     width /= _length;
 
     return Size.square(width);
@@ -282,7 +273,7 @@ class _PinInputFieldState extends State<PinInputField> {
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Color(0xFFE25E00),width: 2),
+        border: Border.all(color: Color(0xFFE25E00), width: 2),
         borderRadius: BorderRadius.circular(7.5),
       ),
     );
@@ -304,7 +295,7 @@ class _PinInputFieldState extends State<PinInputField> {
           height: size.height * _focusScaleFactor,
           width: size.width * _focusScaleFactor,
           decoration: defaultPinTheme.decoration!.copyWith(
-            border: Border.all(color: Color(0xFFE25E00),width: 2),
+            border: Border.all(color: Color(0xFFE25E00), width: 2),
             color: Colors.white,
           ),
         ),

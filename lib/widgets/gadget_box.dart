@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../models/box_model.dart';
 import '../models/item_model.dart';
 
 class BoxCard extends StatelessWidget {
@@ -32,19 +31,16 @@ class BoxCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Background Image
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.asset(
-              'assets/final_gadget.png', // Path to your background image
+              'assets/final_gadget.png',
               width: 165,
               height: 192,
-              fit: BoxFit.cover, // Ensure the image covers the entire container
+              fit: BoxFit.cover,
             ),
           ),
-          // Gradient Overlay
 
-          // Content
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

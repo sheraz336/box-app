@@ -5,7 +5,6 @@ import '../widgets/management_category_tabs.dart';
 import '../models/box_model.dart';
 import '../widgets/scan_qr.dart';
 
-
 class BoxManagementScreen extends StatefulWidget {
   @override
   _BoxManagementScreenState createState() => _BoxManagementScreenState();
@@ -31,7 +30,7 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
 
   final List<Box_Model> boxes = List.generate(
     6,
-        (index) => Box_Model(
+    (index) => Box_Model(
       title: "Gadget Box",
       imageUrl: "assets/box.png",
       itemCount: 34,
@@ -49,7 +48,6 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
       ),
       body: Column(
         children: [
-          // Scrollable Category Tabs
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -59,7 +57,6 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
             ),
           ),
 
-          // Location Dropdown
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Container(
@@ -75,9 +72,9 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
                   value: selectedLocation,
                   items: ["Select Location", "Warehouse 1", "Warehouse 2"]
                       .map((location) => DropdownMenuItem(
-                    value: location,
-                    child: Text(location),
-                  ))
+                            value: location,
+                            child: Text(location),
+                          ))
                       .toList(),
                   onChanged: (value) {
                     setState(() {
@@ -90,7 +87,6 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
           ),
           SizedBox(height: 10),
 
-          // Grid of Box Cards
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -116,17 +112,19 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
                             context: context,
                             builder: (context) => CustomDeleteDialog(
                               onConfirm: () {
-                                // Perform delete action
                                 setState(() {
-                                  boxes.removeAt(index); // Remove item from list
+                                  boxes
+                                      .removeAt(index);
                                 });
                                 Navigator.pop(context);
                               },
                             ),
                           );
-                        },onViewDetails: () {
-                        BoxDetailsDialog.showDetailsDialog(context, boxes[index]);
-                      },
+                        },
+                        onViewDetails: () {
+                          BoxDetailsDialog.showDetailsDialog(
+                              context, boxes[index]);
+                        },
                       );
                     },
                   );
@@ -138,5 +136,4 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
       ),
     );
   }
-
 }

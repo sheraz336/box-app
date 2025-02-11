@@ -1,13 +1,10 @@
-
 import 'package:box_delivery_app/views/auth/sign_in/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../controllers/for_otp.dart';
-import '../../../controllers/otp_controller.dart';
-
 import '../../../widgets/custom_button.dart';
 import 'for_new_pass.dart';
-import 'for_success.dart';
+
 class ForgetPassOtp extends StatelessWidget {
   const ForgetPassOtp({super.key});
 
@@ -16,7 +13,6 @@ class ForgetPassOtp extends StatelessWidget {
     final otpController = context.watch<OTPController>();
 
     return Scaffold(
-
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
@@ -44,7 +40,7 @@ class ForgetPassOtp extends StatelessWidget {
                       ),
                     ),
                     TextSpan(
-                      text:  "Your Phone Number Here",
+                      text: "Your Phone Number Here",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -57,12 +53,15 @@ class ForgetPassOtp extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10,),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(4, (index) {
                   return SizedBox(
-                    width: 64,height: 56,
+                    width: 64,
+                    height: 56,
                     child: TextField(
                       onChanged: (value) {
                         if (value.isNotEmpty) {
@@ -77,10 +76,9 @@ class ForgetPassOtp extends StatelessWidget {
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
                       style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xffe25e00)
-                      ),
+                          fontSize: 28,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xffe25e00)),
                       decoration: InputDecoration(
                         counterText: "",
                         enabledBorder: OutlineInputBorder(
@@ -88,7 +86,8 @@ class ForgetPassOtp extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Color(0xffe25e00)),
+                          borderSide:
+                              const BorderSide(color: Color(0xffe25e00)),
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
@@ -124,13 +123,19 @@ class ForgetPassOtp extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            CustomButton(text: 'Verify', onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SetNewPasswordScreen()));
-            }),
+            CustomButton(
+                text: 'Verify',
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SetNewPasswordScreen()));
+                }),
             const SizedBox(height: 20),
             GestureDetector(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>SignInScreen()));
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SignInScreen()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

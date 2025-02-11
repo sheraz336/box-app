@@ -1,7 +1,11 @@
 import 'package:box_delivery_app/views/boxes_screen.dart';
 import 'package:box_delivery_app/views/items_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../repos/box_repository.dart';
+import '../repos/item_repository.dart';
+import '../repos/location_repository.dart';
 import '../views/location_management_view.dart';
 
 class StatsBar extends StatelessWidget {
@@ -9,6 +13,10 @@ class StatsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locations = context.watch<LocationRepository>().list;
+    final boxes = context.watch<BoxRepository>().list;
+    final items = context.watch<ItemRepository>().list;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       color: Colors.white,
@@ -17,7 +25,7 @@ class StatsBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildStatItem("04", "Locations", const Color(0xFFFEF8E1),
+            _buildStatItem(locations.length.toString(), "Locations", const Color(0xFFFEF8E1),
                 const Color(0xFFE25E00), "assets/onboarding3.png",onTap: (){
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => LocationManagementScreen()));
@@ -25,7 +33,7 @@ class StatsBar extends StatelessWidget {
             SizedBox(
               width: 3,
             ),
-            _buildStatItem("12", "Boxes", const Color(0xFFF5E0FF),
+            _buildStatItem(boxes.length.toString(), "Boxes", const Color(0xFFF5E0FF),
                 const Color(0xFFBB2BFF), "assets/onboarding3.png", onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => BoxesView()));
@@ -33,7 +41,7 @@ class StatsBar extends StatelessWidget {
             SizedBox(
               width: 3,
             ),
-            _buildStatItem("362", "Items", const Color(0xFFE4FBE4),
+            _buildStatItem(items.length.toString(), "Items", const Color(0xFFE4FBE4),
                 const Color(0xFF00B100), "assets/onboarding3.png"),
           ],
         ),

@@ -1,5 +1,6 @@
 import 'package:box_delivery_app/views/profile_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -12,15 +13,15 @@ class CustomBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 375, // Set width
-      height: 39, // Set height
+      width: 375,
+      height: 39,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: const Color(0x1A000000), // Hex: #0000001A (10% opacity)
-            offset: const Offset(-1, -5), // Matches the specified shadow direction
-            blurRadius: 4, // Blur effect
+            color: const Color(0x1A000000),
+            offset: const Offset(-1, -5),
+            blurRadius: 4,
           ),
         ],
       ),
@@ -31,26 +32,27 @@ class CustomBottomNav extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(
-                icon: Icons.home,
+                imagePath: 'assets/navbar_1.svg',
                 isSelected: currentIndex == 0,
                 onTap: () {},
               ),
               _buildNavItem(
-                icon: Icons.dashboard,
+                imagePath: 'assets/navbar_2.svg',
                 isSelected: currentIndex == 1,
                 onTap: () {},
               ),
               _buildNavItem(
-                icon: Icons.folder,
+                imagePath: 'assets/navbar_3.svg',
                 isSelected: currentIndex == 2,
                 onTap: () {},
               ),
               _buildNavItem(
-                icon: Icons.person,
+                imagePath: 'assets/navbar_4.svg',
                 isSelected: currentIndex == 3,
                 onTap: () {
                   print("bye");
-                  Navigator.push(context, MaterialPageRoute(builder: (c)=>ProfileScreen()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (c) => ProfileScreen()));
                 },
               ),
             ],
@@ -61,7 +63,7 @@ class CustomBottomNav extends StatelessWidget {
   }
 
   Widget _buildNavItem({
-    required IconData icon,
+    required String imagePath,
     required bool isSelected,
     required VoidCallback onTap,
   }) {
@@ -70,10 +72,11 @@ class CustomBottomNav extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            color: isSelected ? Color(0xffe25e00) : Colors.grey,
-            size: 28,
+          SvgPicture.asset(
+            imagePath,
+            // color: isSelected ? const Color(0xffe25e00) : Colors.grey,
+            width: 28,
+            height: 28,
           ),
           const SizedBox(height: 4),
         ],

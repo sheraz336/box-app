@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/location_mang_controller.dart';
-import '../models/location_mang_model.dart';
 import '../widgets/location_manangement.dart';
 import '../widgets/management_category_tabs.dart';
 import '../widgets/share_location_dialoge.dart';
@@ -14,7 +13,8 @@ class LocationManagementScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: Text("Location Management", style: TextStyle(color: Colors.white)),
+            title: Text("Location Management",
+                style: TextStyle(color: Colors.white)),
             backgroundColor: Color(0xffe25e00),
             centerTitle: true,
           ),
@@ -33,7 +33,7 @@ class LocationManagementScreen extends StatelessWidget {
                         Navigator.pushNamed(context, "/manage_items");
                       } else if (tab == "Boxes Management") {
                         Navigator.pushNamed(context, "/manage_boxes");
-                      }else{
+                      } else {
                         Navigator.pushNamed(context, "/manage_location");
                       }
                     },
@@ -47,11 +47,6 @@ class LocationManagementScreen extends StatelessWidget {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            // Show ShareLocationDialog when the box is clicked
-                            // showDialog(
-                            //   context: context,
-                            //   builder: (context) => ShareLocationDialog(),
-                            // );
                             Navigator.of(context).pushNamed("/edit_location");
                           },
                           child: StyledBoxCard(
@@ -65,7 +60,6 @@ class LocationManagementScreen extends StatelessWidget {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            // Show ShareLocationDialog when the box is clicked
                             showDialog(
                               context: context,
                               builder: (context) => ShareLocationDialog(),
@@ -88,7 +82,6 @@ class LocationManagementScreen extends StatelessWidget {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            // Show ShareLocationDialog when the box is clicked
                             showDialog(
                               context: context,
                               builder: (context) => ShareLocationDialog(),
@@ -105,7 +98,6 @@ class LocationManagementScreen extends StatelessWidget {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            // Show ShareLocationDialog when the box is clicked
                             showDialog(
                               context: context,
                               builder: (context) => ShareLocationDialog(),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../models/location_mang_model.dart';
-
 class StyledBoxCard extends StatelessWidget {
   final LocationManagement box;
   final Function(String) onEdit;
@@ -31,19 +29,15 @@ class StyledBoxCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Background Image
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.asset(
-              'assets/final.png', // Path to your background image
+              'assets/final.png',
               width: 165,
               height: 263,
-              fit: BoxFit.cover, // Ensure the image covers the entire container
+              fit: BoxFit.cover,
             ),
           ),
-          // Gradient Overlay
-
-          // Content
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
