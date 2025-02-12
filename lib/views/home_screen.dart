@@ -111,8 +111,19 @@ class HomeScreen extends StatelessWidget {
                                       MaterialPageRoute(
                                           builder: (c) =>
                                               EditLocationScreen(location: item,))),
-                                  onDelete: () =>
-                                      homeController.deleteLocation(item),
+                                  onDelete: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          CustomDeleteDialog(
+                                            onConfirm: () {
+                                              homeController.deleteLocation(item);
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                    );
+                                  }
+
                                 ),
                                 const SizedBox(width: 12),
                               ],
@@ -199,8 +210,19 @@ class HomeScreen extends StatelessWidget {
                                       MaterialPageRoute(
                                           builder: (c) =>
                                               EditBoxesScreen(box: item))),
-                                  onDelete: () =>
-                                      homeController.deleteBox(item),
+                                  onDelete: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          CustomDeleteDialog(
+                                            onConfirm: () {
+                                              homeController.deleteBox(item);
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                    );
+                                  }
+
                                 ),
                                 const SizedBox(width: 12),
                               ],

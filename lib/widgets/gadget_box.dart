@@ -119,21 +119,27 @@ class BoxCard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Image.asset(
-                      'assets/pen_edit.png',
-                      width: 24.46,
-                      height: 24,
-                    ),
+                 GestureDetector(
+                   onTap: onEdit,
+                   child:    Image.asset(
+                     'assets/pen_edit.png',
+                     width: 24.46,
+                     height: 24,
+                   ),
+                 ),
                     Container(
                       width: 1,
                       height: 28,
                       color: Colors.black,
                     ),
-                    Image.asset(
-                      'assets/delete_box.png',
-                      width: 18.86,
-                      height: 19.5,
-                    ),
+                   GestureDetector(
+                     onTap: onDelete,
+                     child:  Image.asset(
+                       'assets/delete_box.png',
+                       width: 18.86,
+                       height: 19.5,
+                     ),
+                   )
                   ],
                 ),
               ),
