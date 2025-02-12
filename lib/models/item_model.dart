@@ -1,23 +1,25 @@
 // this model is for home_screen.dart
 import 'package:hive_flutter/adapters.dart';
+
 part 'item_model.g.dart';
+
 @HiveType(typeId: 0)
 class LocationModel extends HiveObject {
   @HiveField(0)
-   String id;
+  String id;
   @HiveField(1)
-   String name;
+  String name;
   @HiveField(2)
-   String address;
+  String address;
   @HiveField(3)
-   String type;
+  String type;
   @HiveField(4)
-   String description;
+  String description;
   @HiveField(5)
-   String imagePath;
+  String? imagePath;
 
   int items = 0;
-  List<BoxModel> boxes=[];
+  List<BoxModel> boxes = [];
   double value = 0;
 
   LocationModel(
@@ -28,7 +30,7 @@ class LocationModel extends HiveObject {
       required this.description,
       required this.imagePath});
 
-  void update(LocationModel model){
+  void update(LocationModel model) {
     this.name = model.name;
     this.address = model.address;
     this.type = model.address;
@@ -36,22 +38,35 @@ class LocationModel extends HiveObject {
     this.description = model.description;
     this.imagePath = model.imagePath;
   }
+
+  LocationModel copy() {
+    return LocationModel(
+        id: id,
+        name: name,
+        address: address,
+        type: type,
+        description: description,
+        imagePath: imagePath)
+      ..boxes = boxes
+      ..items = items
+      ..value = value;
+  }
 }
 
 @HiveType(typeId: 1)
 class BoxModel extends HiveObject {
   @HiveField(0)
-   String id;
+  String id;
   @HiveField(1)
-   String name;
+  String name;
   @HiveField(2)
-   String tags;
+  String tags;
   @HiveField(3)
-   String description;
+  String description;
   @HiveField(4)
-   String imagePath;
+  String? imagePath;
   @HiveField(5)
-   String? locationId;
+  String? locationId;
 
   LocationModel? location;
   int items;
@@ -71,7 +86,7 @@ class BoxModel extends HiveObject {
     this.isShared = false,
   });
 
-  void update(BoxModel model){
+  void update(BoxModel model) {
     this.name = model.name;
     this.tags = model.tags;
     this.description = model.description;
@@ -97,7 +112,7 @@ class ItemModel {
   @HiveField(5)
   String purchaseDate;
   @HiveField(6)
-  String imagePath;
+  String? imagePath;
   @HiveField(7)
   double value;
   @HiveField(8)
@@ -106,14 +121,14 @@ class ItemModel {
   String tags;
 
   ItemModel(
-      { this.name="",
-       this.id="",
-       this.boxId="",
-       this.locationId="",
-       this.description="",
-       this.purchaseDate="",
-       this.imagePath="",
-       this.value=0,
-       this.quantity=1,
-       this.tags=""});
+      {this.name = "",
+      this.id = "",
+      this.boxId = "",
+      this.locationId = "",
+      this.description = "",
+      this.purchaseDate = "",
+      this.imagePath = "",
+      this.value = 0,
+      this.quantity = 1,
+      this.tags = ""});
 }

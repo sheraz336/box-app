@@ -22,7 +22,7 @@ class LocationModelAdapter extends TypeAdapter<LocationModel> {
       address: fields[2] as String,
       type: fields[3] as String,
       description: fields[4] as String,
-      imagePath: fields[5] as String,
+      imagePath: fields[5] as String?,
     );
   }
 
@@ -71,7 +71,7 @@ class BoxModelAdapter extends TypeAdapter<BoxModel> {
       description: fields[3] as String,
       id: fields[0] as String,
       name: fields[1] as String,
-      imagePath: fields[4] as String,
+      imagePath: fields[4] as String?,
     );
   }
 
@@ -121,7 +121,7 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
       locationId: fields[3] as String?,
       description: fields[4] as String,
       purchaseDate: fields[5] as String,
-      imagePath: fields[6] as String,
+      imagePath: fields[6] as String?,
       value: fields[7] as double,
       quantity: fields[8] as int,
       tags: fields[9] as String,

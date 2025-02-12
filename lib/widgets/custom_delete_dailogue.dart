@@ -17,7 +17,7 @@ class CustomDeleteDialog extends StatelessWidget {
           CircleAvatar(
             radius: 30,
             backgroundColor: Color(0xffe25e00),
-            child: Icon(Icons.delete, color: Color(0xffe25e00), size: 35),
+            child: Icon(Icons.delete, color: Colors.white, size: 35),
           ),
           SizedBox(height: 15),
           Text(

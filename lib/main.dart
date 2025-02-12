@@ -1,5 +1,4 @@
 import 'package:box_delivery_app/controllers/home_controller.dart';
-import 'package:box_delivery_app/controllers/location_mang_controller.dart';
 import 'package:box_delivery_app/controllers/login_controller.dart';
 import 'package:box_delivery_app/controllers/onboarding_provider.dart';
 import 'package:box_delivery_app/controllers/otp_controller.dart';
@@ -10,23 +9,9 @@ import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/repos/box_repository.dart';
 import 'package:box_delivery_app/repos/item_repository.dart';
 import 'package:box_delivery_app/repos/location_repository.dart';
-import 'package:box_delivery_app/views/add_boxes_view.dart';
-import 'package:box_delivery_app/views/add_item_view.dart';
-import 'package:box_delivery_app/views/add_location_view.dart';
-import 'package:box_delivery_app/views/auth/forget_pass/for_success.dart';
-import 'package:box_delivery_app/views/box_management_view.dart';
-import 'package:box_delivery_app/views/boxes_screen.dart';
-import 'package:box_delivery_app/views/edit_boxes_view.dart';
-import 'package:box_delivery_app/views/edit_items_view.dart';
-import 'package:box_delivery_app/views/edit_location_view.dart';
+import 'package:box_delivery_app/views/add/add_view.dart';
 import 'package:box_delivery_app/views/home_screen.dart';
-import 'package:box_delivery_app/views/invalid_qr_view.dart';
-import 'package:box_delivery_app/views/item_management_view.dart';
-import 'package:box_delivery_app/views/items_screen.dart';
-import 'package:box_delivery_app/views/location_management_view.dart';
-import 'package:box_delivery_app/views/profile_image.dart';
-import 'package:box_delivery_app/views/qr_scan_view.dart';
-import 'package:box_delivery_app/views/simple_profile.dart';
+import 'package:box_delivery_app/views/management/management_view.dart';
 
 import 'package:box_delivery_app/views/thankYou_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -41,7 +26,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'controllers/for_otp.dart';
-import 'controllers/item_controller.dart';
 import 'controllers/profile_image_controller.dart';
 import 'controllers/signup_controller.dart';
 import 'controllers/user_controller_for.dart';
@@ -70,13 +54,18 @@ void main()async {
   Hive.registerAdapter(ItemModelAdapter());
 
   //init repositories
-  await LocationRepository.instance.init();
-  await BoxRepository.instance.init();
   await ItemRepository.instance.init();
+  await BoxRepository.instance.init();
+  await LocationRepository.instance.init();
 
   //set up repositories listener
   await LocationRepository.instance.initListeners();
   await BoxRepository.instance.initListeners();
+
+  //fire events once
+  LocationRepository.instance.fireNotify();
+  BoxRepository.instance.fireNotify();
+  ItemRepository.instance.fireNotify();
 
   // await Hive.deleteBoxFromDisk(LocationRepository.boxName);
   // await Hive.deleteBoxFromDisk(BoxRepository.boxName);
@@ -96,9 +85,7 @@ void main()async {
         ChangeNotifierProvider(create: (_) => OtpController()),
         ChangeNotifierProvider(create: (_) => SignUpController()),
         ChangeNotifierProvider(create: (_) => HomeController()),
-        ChangeNotifierProvider(create: (_) => LocationProvider()),
         ChangeNotifierProvider(create: (_) => QRScanController()),
-        ChangeNotifierProvider(create: (_) => ItemsController()),
         ChangeNotifierProvider(create: (_) => ProfileController()),
       ],
       child: const MyApp(),
@@ -138,18 +125,18 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: FirebaseAuth.instance.currentUser!=null ? "/home":'/splash',
         routes: {
-          '/add_location': (context) => AddLocationView(),
-          '/add_box': (context) => AddBoxView(),
-          '/items': (context) => AddItemsView(),
+          '/add_location': (context) => AddView(pageIndex: 0),
+          '/add_box': (context) => AddView(pageIndex: 1),
+          '/items': (context) => AddView(pageIndex: 2),
           '/home': (context) => HomeScreen(),
           '/splash': (context) => SplashScreen(),
           '/thank_you': (context) => ThankYouScreen(),
-          '/manage_boxes': (context) => BoxManagementScreen(),
-          '/manage_location': (context) => LocationManagementScreen(),
-          '/manage_items': (context) => ItemManagementScreen(),
-          '/edit_boxes': (context) => EditBoxesScreen(),
-          '/edit_location': (context) => EditLocationScreen(),
-          '/edit_items': (context) => EditItemScreen(),
+          '/manage_boxes': (context) => ManagementView(pageIndex: 1),
+          '/manage_location': (context) => ManagementView(pageIndex: 0),
+          '/manage_items': (context) => ManagementView(pageIndex: 2),
+          // '/edit_boxes': (context) => EditBoxesScreen(),
+          // '/edit_location': (context) => EditLocationScreen(),
+          // '/edit_items': (context) => EditItemScreen(),
         },
         // home: BoxesView(),
       ),

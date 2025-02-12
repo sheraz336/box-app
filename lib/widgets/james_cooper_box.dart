@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import '../models/box_model.dart';
 import '../models/item_model.dart';
 
 class StyledBoxCard extends StatelessWidget {
   final LocationModel box;
-  final Function(String) onEdit;
-  final Function(String) onDelete;
+  final Function() onEdit;
+  final Function() onDelete;
 
   const StyledBoxCard({
     Key? key,
@@ -68,8 +69,10 @@ class StyledBoxCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 1.5),
                   ),
-                  child: Image.asset(
-                    box.imagePath,
+                  child: box.imagePath != null
+                      ? Image.file(File(box.imagePath!))
+                      : Image.asset(
+                    "assets/box.png",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -143,21 +146,23 @@ class StyledBoxCard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Image.asset(
-                      'assets/pen_edit.png',
-                      width: 18.86,
-                      height: 19.5,
-                    ),
+                   GestureDetector(onTap: onEdit,child:  Image.asset(
+                     'assets/pen_edit.png',
+                     width: 18.86,
+                     height: 19.5,
+                   ),),
                     Container(
                       width: 1,
                       height: 28,
                       color: Colors.black,
                     ),
-                    Image.asset(
-                      'assets/delete_box.png',
-                      width: 18.86,
-                      height: 19.5,
-                    ),
+                   GestureDetector(
+                     onTap: onDelete,
+                     child:  Image.asset(
+                     'assets/delete_box.png',
+                     width: 18.86,
+                     height: 19.5,
+                   ),)
                   ],
                 ),
               ),

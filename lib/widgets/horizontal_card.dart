@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ItemHorizontalCard extends StatelessWidget {
   final String title;
-  final String imagePath;
+  final String? imagePath;
   final DateTime? purchaseDate;
   final bool hasTimer;
+  final VoidCallback? onEdit, onDelete;
 
   const ItemHorizontalCard({
     Key? key,
+    this.onEdit,
+    this.onDelete,
     required this.title,
     required this.imagePath,
     this.purchaseDate,
@@ -25,8 +31,7 @@ class ItemHorizontalCard extends StatelessWidget {
             topLeft: Radius.circular(8),
             bottomLeft: Radius.circular(8),
             topRight: Radius.circular(8),
-            bottomRight: Radius.circular(8)
-        ),
+            bottomRight: Radius.circular(8)),
         border: Border.all(color: const Color(0xFFCFD5DB), width: 1),
       ),
       child: Row(
@@ -39,10 +44,12 @@ class ItemHorizontalCard extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.black, width: 1),
             ),
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.cover,
-            ),
+            child: imagePath != null
+                ? Image.file(File(imagePath!))
+                : Image.asset(
+                    "assets/splashicon.png",
+                    fit: BoxFit.cover,
+                  ),
           ),
           // Text Section
           Expanded(
@@ -86,7 +93,7 @@ class ItemHorizontalCard extends StatelessWidget {
                   // Purchase Date
                   if (purchaseDate != null)
                     Text(
-                      'Purchase Date: ${purchaseDate!.toString().split(' ')[0]}',
+                      'Purchase Date: ${DateFormat(DateFormat.YEAR_MONTH_DAY).format(purchaseDate!)}',
                       style: const TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w400,
@@ -115,13 +122,27 @@ class ItemHorizontalCard extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Image.asset('assets/pen_edit.png',width: 18.07,height: 13.69,),
+                    GestureDetector(
+                      onTap: onEdit,
+                      child: Image.asset(
+                        'assets/pen_edit.png',
+                        width: 18.07,
+                        height: 13.69,
+                      ),
+                    ),
                     Container(
                       width: 25.47,
                       height: 1.2,
                       color: Colors.black,
                     ),
-                    Image.asset('assets/pen_edit.png',width:18.07,height: 13.69,),
+                    GestureDetector(
+                      onTap: onDelete,
+                      child: Image.asset(
+                        'assets/delete_box.png',
+                        width: 18.07,
+                        height: 13.69,
+                      ),
+                    )
                   ],
                 ),
               ),

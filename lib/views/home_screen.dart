@@ -4,6 +4,7 @@ import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/repos/box_repository.dart';
 import 'package:box_delivery_app/repos/item_repository.dart';
 import 'package:box_delivery_app/repos/location_repository.dart';
+import 'package:box_delivery_app/views/edit/edit_location_view.dart';
 import 'package:box_delivery_app/widgets/speed_dial.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +12,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import '../controllers/home_controller.dart';
+import '../widgets/custom_delete_dailogue.dart';
 import '../widgets/stats_bar_widget.dart';
 import '../widgets/gadget_box.dart';
 import '../widgets/horizontal_card.dart';
 import '../widgets/james_cooper_box.dart';
 import '../widgets/nav_bar_widget.dart';
+import 'edit/edit_boxes_view.dart';
+import 'edit/edit_items_view.dart';
 
 part 'home_screen.g.dart';
 
@@ -39,7 +43,7 @@ class HomeScreen extends StatelessWidget {
     final boxes = context.watch<BoxRepository>().getBoxesWithNoLocation();
     final items = context.watch<ItemRepository>().getItemsWithNoLocationOrBox();
 
-    return  Consumer<HomeController>(builder: (c,homeController,w){
+    return Consumer<HomeController>(builder: (c, homeController, w) {
       return Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
@@ -83,10 +87,15 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 children: [
                   //locations
-                  if(locations.isEmpty)
+                  if (locations.isEmpty)
                     Row(
                       children: [
-                       Expanded(child: Text("You have 0 locations",textAlign: TextAlign.center,),)
+                        Expanded(
+                          child: Text(
+                            "You have 0 locations",
+                            textAlign: TextAlign.center,
+                          ),
+                        )
                       ],
                     ),
                   SingleChildScrollView(
@@ -94,16 +103,20 @@ class HomeScreen extends StatelessWidget {
                     child: Row(
                       children: [
                         ...locations.map((item) => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            StyledBoxCard(
-                              box: item,
-                              onEdit: homeController.editBox,
-                              onDelete: homeController.deleteBox,
-                            ),
-                            const SizedBox(width: 12),
-                          ],
-                        ))
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                StyledBoxCard(
+                                  box: item,
+                                  onEdit: () => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (c) =>
+                                              EditLocationScreen(location: item,))),
+                                  onDelete: () =>
+                                      homeController.deleteLocation(item),
+                                ),
+                                const SizedBox(width: 12),
+                              ],
+                            ))
                         // StyledBoxCard(
                         //   box: homeController.boxes[1],
                         //   onEdit: homeController.editBox,
@@ -162,10 +175,15 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                   //boxes
-                  if(boxes.isEmpty)
+                  if (boxes.isEmpty)
                     Row(
                       children: [
-                        Expanded(child: Text("You have 0 boxes with no location",textAlign: TextAlign.center,),)
+                        Expanded(
+                          child: Text(
+                            "You have 0 boxes with no location",
+                            textAlign: TextAlign.center,
+                          ),
+                        )
                       ],
                     ),
                   SingleChildScrollView(
@@ -173,16 +191,20 @@ class HomeScreen extends StatelessWidget {
                     child: Row(
                       children: [
                         ...boxes.map((item) => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            BoxCard(
-                              box: item,
-                              onEdit: homeController.editBox,
-                              onDelete: homeController.deleteBox,
-                            ),
-                            const SizedBox(width: 12),
-                          ],
-                        ))
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                BoxCard(
+                                  box: item,
+                                  onEdit: () => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (c) =>
+                                              EditBoxesScreen(box: item))),
+                                  onDelete: () =>
+                                      homeController.deleteBox(item),
+                                ),
+                                const SizedBox(width: 12),
+                              ],
+                            ))
                         // StyledBoxCard(
                         //   box: homeController.boxes[1],
                         //   onEdit: homeController.editBox,
@@ -241,30 +263,48 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                   //items
-                  if(items.isEmpty)
+                  if (items.isEmpty)
                     Row(
                       children: [
-                        Expanded(child: Text("You have 0 items with no box or location",textAlign: TextAlign.center,),)
+                        Expanded(
+                          child: Text(
+                            "You have 0 items with no box or location",
+                            textAlign: TextAlign.center,
+                          ),
+                        )
                       ],
                     ),
                   SingleChildScrollView(
                     // scrollDirection: Axis.horizontal,
                     child: Column(
                       children: [
-                        ...items
-                            .map((item) => Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.center,
-                          children: [
-                            ItemHorizontalCard(
-                              title: item.name,
-                              imagePath: "assets/onboarding2.png",
-                              purchaseDate: DateTime(2019, 4, 1),
-                              hasTimer: true,
-                            ),
-                            const SizedBox(width: 12),
-                          ],
-                        ))
+                        ...items.map((item) => Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ItemHorizontalCard(
+                                    title: item.name,
+                                    imagePath: item.imagePath,
+                                    purchaseDate: DateTime(2019, 4, 1),
+                                    hasTimer: true,
+                                    onEdit: () => Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (c) =>
+                                                EditItemScreen(item: item))),
+                                    onDelete: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            CustomDeleteDialog(
+                                          onConfirm: () {
+                                            homeController.deleteItem(item);
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      );
+                                    }),
+                                const SizedBox(width: 12),
+                              ],
+                            ))
                         // StyledBoxCard(
                         //   box: homeController.boxes[1],
                         //   onEdit: homeController.editBox,

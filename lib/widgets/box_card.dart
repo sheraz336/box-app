@@ -1,9 +1,11 @@
+import 'dart:io';
+
+import 'package:box_delivery_app/models/item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../models/box_model.dart';
 
 class BoxCard extends StatelessWidget {
-  final Box_Model box;
+  final BoxModel box;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onViewDetails;
@@ -33,10 +35,10 @@ class BoxCard extends StatelessWidget {
                   color: Colors.green,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
                 width: double.infinity,
                 child: Text(
-                  box.title,
+                  box.name,
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
@@ -44,15 +46,20 @@ class BoxCard extends StatelessWidget {
               ),
 
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(box.imageUrl, height: 80, fit: BoxFit.cover),
+                padding: const EdgeInsets.all(6.0),
+                child: box.imagePath != null
+                    ? Image.file(File(box.imagePath!), height: 80, fit: BoxFit.cover)
+                    : Image.asset(
+                  "assets/box.png",
+                    height: 80, fit: BoxFit.cover
+                ),
               ),
 
               // Items Count
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  "Items: ${box.itemCount}",
+                  "Items: ${box.items}",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -63,7 +70,7 @@ class BoxCard extends StatelessWidget {
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.circular(10)),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 6),
+                padding: EdgeInsets.symmetric(vertical: 1),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

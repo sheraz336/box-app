@@ -5,7 +5,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool obscureText;
   final Function(String) onChanged;
   final String? errorText;
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
   final String? Function(String?)? validator;
   final int? maxLength;
 
@@ -16,7 +16,7 @@ class CustomTextFormField extends StatelessWidget {
       this.obscureText = false,
       required this.onChanged,
       this.errorText,
-      required this.textStyle});
+       this.textStyle});
 
   @override
   Widget build(BuildContext context) {

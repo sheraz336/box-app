@@ -7,6 +7,10 @@ class CustomTextField extends StatelessWidget {
   final String hintText;
   final String? iconPath;
   final int maxLines;
+  final int? maxLength;
+  final String? Function(String?)? validator;
+  final bool enabled;
+  final TextInputType? keyboardType;
 
   const CustomTextField({
     Key? key,
@@ -15,13 +19,21 @@ class CustomTextField extends StatelessWidget {
     required this.hintText,
     this.iconPath,
     this.maxLines = 1,
+    this.maxLength,
+    this.validator,
+    this.enabled = true,
+    this.keyboardType,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      keyboardType: keyboardType,
+      validator: validator,
       controller: controller,
       maxLines: maxLines,
+      maxLength: maxLength,
+      enabled: enabled,
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,
@@ -46,25 +58,28 @@ class CustomTextField extends StatelessWidget {
               color: Colors.grey,
               width: 2), // Slightly thicker grey border on focus
         ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide:
+              BorderSide(color: Colors.grey), // Grey border when not focused
+        ),
       ),
     );
   }
 }
 
-final TextFieldInputDecoration=InputDecoration(
+final TextFieldInputDecoration = InputDecoration(
   border: OutlineInputBorder(
     borderRadius: BorderRadius.circular(10),
     borderSide: BorderSide(color: Colors.grey), // Grey border
   ),
   enabledBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(10),
-    borderSide:
-    BorderSide(color: Colors.grey), // Grey border when not focused
+    borderSide: BorderSide(color: Colors.grey), // Grey border when not focused
   ),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(10),
     borderSide: BorderSide(
-        color: Colors.grey,
-        width: 2), // Slightly thicker grey border on focus
+        color: Colors.grey, width: 2), // Slightly thicker grey border on focus
   ),
 );

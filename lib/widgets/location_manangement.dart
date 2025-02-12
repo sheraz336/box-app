@@ -1,7 +1,9 @@
+import 'dart:io';
+
+import 'package:box_delivery_app/models/item_model.dart';
 import 'package:flutter/material.dart';
-import '../models/location_mang_model.dart';
 class StyledBoxCard extends StatelessWidget {
-  final LocationManagement box;
+  final LocationModel box;
   final Function(String) onEdit;
   final Function(String) onDelete;
 
@@ -61,8 +63,10 @@ class StyledBoxCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 1.5),
                   ),
-                  child: Image.asset(
-                    box.imagePath,
+                  child: box.imagePath != null
+                      ? Image.file(File(box.imagePath!))
+                      : Image.asset(
+                    "assets/onboarding2.png",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -115,15 +119,15 @@ class StyledBoxCard extends StatelessWidget {
                               color: Color(0xff4D4D4D),
                             ),
                           ),
-                        if (box.isShared)
-                          Text(
-                            'Shared: Yes',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                              color: Color(0xff4D4D4D),
-                            ),
-                          ),
+                        // if (box.isShared)
+                        //   Text(
+                        //     'Shared: Yes',
+                        //     style: TextStyle(
+                        //       fontWeight: FontWeight.w600,
+                        //       fontSize: 12,
+                        //       color: Color(0xff4D4D4D),
+                        //     ),
+                        //   ),
                       ],
                     ),
                   ),

@@ -1,9 +1,8 @@
+import 'package:box_delivery_app/models/item_model.dart';
 import 'package:flutter/material.dart';
-import '../models/box_model.dart'; // Ensure this import is correct
-
 class BoxDetailsDialog {
   // Method to show the details dialog
-  static void showDetailsDialog(BuildContext context, Box_Model box) {
+  static void showDetailsDialog(BuildContext context, BoxModel box) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -12,13 +11,13 @@ class BoxDetailsDialog {
       ),
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.all(20),
+          // padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -40,7 +39,7 @@ class BoxDetailsDialog {
                   ),
                 ),
                 SizedBox(height: 0.5),
-                _build(context),
+                _build(context,box),
                 SizedBox(height: 16),
                 Image.asset(
                   'assets/bar_code.png',
@@ -101,6 +100,7 @@ class BoxDetailsDialog {
               fontSize: 12,
               color: Color(0xff21252C),
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           Text(
             value,
@@ -116,7 +116,7 @@ class BoxDetailsDialog {
   }
 
   // Helper method to build the details container
-  static Widget _build(BuildContext context) {
+  static Widget _build(BuildContext context,BoxModel box) {
     return Container(
       width: 332, // Overall width
       height: 130, // Overall height
@@ -127,10 +127,10 @@ class BoxDetailsDialog {
       ),
       child: Column(
         children: [
-          _buildDetailRow("Box ID", "#2UJJKSL"),
-          _buildDetailRow("Location", "Allentown"),
-          _buildDetailRow("Description", "Enter Box ID"),
-          _buildDetailRow("Tags", "Electronics"),
+          _buildDetailRow("Box ID", box.id),
+          _buildDetailRow("Location", box.location?.name ?? "none"),
+          _buildDetailRow("Description", box.description),
+          _buildDetailRow("Tags",box.tags),
         ],
       ),
     );
@@ -145,7 +145,7 @@ class BoxDetailsDialog {
     required VoidCallback onPressed,
   }) {
     return Container(
-      width: 155, // Fixed width for the button
+      width: 145, // Fixed width for the button
       height: 56, // Fixed height
       decoration: BoxDecoration(
         color: backgroundColor, // Background color

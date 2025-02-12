@@ -1,12 +1,18 @@
+import 'dart:io';
+
+import 'package:box_delivery_app/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../controllers/add_item_controller.dart';
-import '../models/item_model.dart';
-import '../repos/box_repository.dart';
-import '../repos/location_repository.dart';
-import '../widgets/category_tabs.dart';
-import '../widgets/custom_text_field.dart';
-import '../widgets/qr_popup_container.dart';
+
+import '../../controllers/add_item_controller.dart';
+import '../../models/item_model.dart';
+import '../../repos/box_repository.dart';
+import '../../repos/location_repository.dart';
+import '../../widgets/custom_text_field.dart';
+import '../../widgets/qr_popup_container.dart';
 
 class AddItemsView extends StatefulWidget {
   @override
@@ -33,6 +39,7 @@ void showQrPopup(BuildContext context) {
 
 class _AddItemsViewState extends State<AddItemsView> {
   String selectedTab = "Items";
+  final _formKey = GlobalKey<FormState>();
 
   void navigateTo(String tab) {
     if (tab != selectedTab) {
@@ -48,6 +55,17 @@ class _AddItemsViewState extends State<AddItemsView> {
     }
   }
 
+  void onSave(AddItemsController controller)async{
+    try{
+      if(!_formKey.currentState!.validate())return;
+      await controller.addItem();
+      if(mounted)Navigator.pop(context);
+    }catch(e){
+      print(e);
+      showSnackbar(context, e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final locations = context.watch<LocationRepository>().list;
@@ -57,39 +75,47 @@ class _AddItemsViewState extends State<AddItemsView> {
       create: (_) => AddItemsController(),
       child: Consumer<AddItemsController>(
         builder: (context, controller, child) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text("Add Item"),
-              backgroundColor: Color(0xffe25e00),
-            ),
-            body: SingleChildScrollView(
+          return Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CategoryTabs(selectedTab: "Items", onTabSelected: navigateTo),
-                  const SizedBox(height: 16),
                   const Text("Upload Photo (Optional)",
                       style: TextStyle(color: Colors.grey)),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: ()async{
+                      try{
+                        final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                        if(image==null)return;
+                        setState(() {
+                          controller.imageUrl=image.path;
+                        });
+                      }catch(e){
+                        print(e);
+                        showSnackbar(context, e.toString());
+                      }
+                    },
                     child: Container(
                       height: 150,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black26),
-                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: controller.imageUrl == null
-                          ? const Center(
-                              child: Icon(Icons.add_a_photo,
-                                  size: 50, color: Colors.black26))
-                          : Image.asset(controller.imageUrl!,
-                              fit: BoxFit.cover),
+                      child: Center(
+                        child: controller.imageUrl == null
+                            ? SvgPicture.asset("assets/camera.svg", height: 40)
+                            : Image.file(File(controller.imageUrl!),
+                            fit: BoxFit.cover),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
+                    validator: Validators.itemNameValidator,
                     controller: controller.itemNameController,
                     labelText: "Item Name",
                     hintText: "Enter item name",
@@ -132,30 +158,49 @@ class _AddItemsViewState extends State<AddItemsView> {
                     labelText: "Description",
                     hintText: "Enter description",
                     maxLines: 3,
+                    maxLength: 100,
+                  ),
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: ()async{
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime.now(),
+                      );
+                      if (pickedDate != null) {
+                        controller.purchaseDateController.text = DateFormat(DateFormat.YEAR_MONTH_DAY).format(pickedDate);
+                      }
+                    },
+                    child: CustomTextField(
+                      enabled: false,
+                      controller: controller.purchaseDateController,
+                      labelText: "Purchase Date (Optional)",
+                      hintText: "Enter purchase date",
+                    ),
                   ),
                   const SizedBox(height: 10),
                   CustomTextField(
-                    controller: controller.purchaseDateController,
-                    labelText: "Purchase Date (Optional)",
-                    hintText: "Enter purchase date",
-                  ),
-                  const SizedBox(height: 10),
-                  CustomTextField(
+                    validator: Validators.valueValidator,
                     controller: controller.valueController,
                     labelText: "Value (Optional)",
                     hintText: "Enter value",
                   ),
                   const SizedBox(height: 10),
                   CustomTextField(
+                    validator: Validators.quantityValidator,
+                    keyboardType: TextInputType.number,
                     controller: controller.quantityController,
                     labelText: "Qty (Optional)",
                     hintText: "Enter quantity",
                   ),
                   const SizedBox(height: 10),
                   CustomTextField(
+                    validator: Validators.tagsValidator,
                     controller: controller.tagsController,
                     labelText: "Tags (Optional)",
-                    hintText: "Enter tags",
+                    hintText: "Enter tags separated by comma",
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -202,10 +247,7 @@ class _AddItemsViewState extends State<AddItemsView> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () async {
-                        if (await controller.addItem()) Navigator.pop(context);
-                        // showQrPopup(context);
-                      },
+                      onPressed: ()=>onSave(controller),
                       child: const Text("Add Item"),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xffe25e00),
@@ -218,8 +260,7 @@ class _AddItemsViewState extends State<AddItemsView> {
                   ),
                 ],
               ),
-            ),
-          );
+            ),);
         },
       ),
     );

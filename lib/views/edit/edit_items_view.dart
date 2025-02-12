@@ -1,6 +1,15 @@
+import 'package:box_delivery_app/models/item_model.dart';
+import 'package:box_delivery_app/repos/item_repository.dart';
+import 'package:box_delivery_app/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../repos/box_repository.dart';
 
 class EditItemScreen extends StatefulWidget {
+  final ItemModel item;
+
+  const EditItemScreen({super.key, required this.item});
   @override
   _EditItemScreenState createState() => _EditItemScreenState();
 }
@@ -8,10 +17,34 @@ class EditItemScreen extends StatefulWidget {
 class _EditItemScreenState extends State<EditItemScreen> {
   final TextEditingController _itemIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  String? selectedBox;
+  BoxModel? selectedBox;
+
+  @override
+  void initState() {
+    super.initState();
+    final itemToEdit = widget.item;
+    _itemIdController.text=itemToEdit.id;
+    _descriptionController.text = itemToEdit.description;
+  }
+
+  void onUpdate()async{
+    try{
+      final description = _descriptionController.text.toString();
+      await ItemRepository.instance.updateItem(widget.item..description=description);
+      if(mounted)showSnackbar(context, "Successfully Updated");
+    }catch(e){
+      print(e);
+      showSnackbar(context, e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final boxes = context.watch<BoxRepository>().list;
+
+    final itemToEdit = widget.item;
+    if(selectedBox == null)selectedBox=BoxRepository.instance.getBox(itemToEdit.boxId);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Item", style: TextStyle(color: Colors.white)),
@@ -33,8 +66,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
               SizedBox(height: 8),
               TextField(
                 controller: _itemIdController,
+                enabled: false,
                 decoration: InputDecoration(
-                  hintText: "Enter Item ID",
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 ),
               ),
@@ -50,14 +83,14 @@ class _EditItemScreenState extends State<EditItemScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
+                  child: DropdownButton<BoxModel>(
                     isExpanded: true,
                     value: selectedBox,
                     hint: Text("Select your Box"),
-                    items: ["Gadget Box", "Electronics Kit", "Tool Box"]
+                    items: boxes
                         .map((box) => DropdownMenuItem(
                       value: box,
-                      child: Text(box),
+                      child: Text(box.name),
                     ))
                         .toList(),
                     onChanged: (value) {
@@ -76,6 +109,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
               TextField(
                 controller: _descriptionController,
                 maxLines: 4,
+                maxLength: 100,
                 decoration: InputDecoration(
                   hintText: "Enter Description",
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -92,12 +126,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                     padding: EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  onPressed: () {
-                    // Handle update logic here
-                    print("Item ID: ${_itemIdController.text}");
-                    print("Box: $selectedBox");
-                    print("Description: ${_descriptionController.text}");
-                  },
+                  onPressed: onUpdate,
                   child: Text("Update Item", style: TextStyle(fontSize: 16, color: Colors.white)),
                 ),
               ),

@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../models/item_model.dart';
 
 class BoxCard extends StatelessWidget {
   final BoxModel box;
-  final Function(String) onEdit;
-  final Function(String) onDelete;
+  final Function() onEdit;
+  final Function() onDelete;
 
   const BoxCard({
     Key? key,
@@ -64,8 +66,10 @@ class BoxCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 1.1),
                   ),
-                  child: Image.asset(
-                    box.imagePath,
+                  child: box.imagePath != null
+                      ? Image.file(File(box.imagePath!))
+                      : Image.asset(
+                    "assets/box.png",
                     fit: BoxFit.cover,
                   ),
                 ),

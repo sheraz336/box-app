@@ -1,23 +1,43 @@
+import 'package:box_delivery_app/models/item_model.dart';
+import 'package:box_delivery_app/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../repos/location_repository.dart';
+import '../../widgets/custom_textform.dart';
 
 class EditLocationScreen extends StatefulWidget {
+  final LocationModel location;
+
+  const EditLocationScreen({super.key, required this.location});
+
   @override
   _EditLocationScreenState createState() => _EditLocationScreenState();
 }
 
 class _EditLocationScreenState extends State<EditLocationScreen> {
   final _formKey = GlobalKey<FormState>();
+  late final LocationModel locationToEdit;
+  @override
+  void initState() {
+    super.initState();
+    locationToEdit = widget.location.copy();
+  }
 
-  // Form fields
-  String locationName = '';
-  String address = '';
-  String selectedType = 'Select Type';
-  String selectedLatitude = 'Select';
-  String selectedLongitude = 'Select';
-  String description = '';
+  onLocationUpdate() async {
+    try {
+      if(!_formKey.currentState!.validate())return;
+      await LocationRepository.instance.updateLocation(locationToEdit);
+      if (mounted) showSnackbar(context, "Location Updated Successfully");
+    } catch (e) {
+      print(e);
+      showSnackbar(context, e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffe25e00),
@@ -39,44 +59,60 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
           child: ListView(
             children: [
               _buildLabel('Location Name'),
-              _buildTextField('Enter Current Location', (value) {
-                setState(() {
-                  locationName = value;
-                });
-              }),
+              _buildTextField(
+                "Location",
+                (t) {
+                  setState(() {
+                    locationToEdit..name = t;
+                  });
+                },
+                initialValue: locationToEdit.name,
+                validator: Validators.locationValidator,
+                maxLength: 20,
+              ),
               _buildLabel('Address'),
               _buildTextField('Enter Address', (value) {
                 setState(() {
-                  address = value;
+                  locationToEdit..address = value;
                 });
-              }),
+              },
+                  initialValue: locationToEdit.address,
+                  validator: Validators.addressValidator,
+                  maxLength: 40),
               _buildLabel('Type'),
-              _buildDropdown(['Select Type', 'Home', 'Office', 'Other'],
-                  (value) {
-                setState(() {
-                  selectedType = value!;
-                });
-              }),
-              _buildLabel('Enter Latitude'),
-              _buildDropdown(['Select', '12.34', '56.78'], (value) {
-                setState(() {
-                  selectedLatitude = value!;
-                });
-              }),
-              _buildLabel('Enter Longitude'),
-              _buildDropdown(['Select', '98.76', '54.32'], (value) {
-                setState(() {
-                  selectedLongitude = value!;
-                });
-              }),
+
+              _buildDropdown(
+                ['Home', 'Office', 'Other'],
+                locationToEdit.type,
+                (String? value) {
+                  setState(() {
+                    locationToEdit..type = value!;
+                  });
+                },
+              ),
+              // _buildLabel('Enter Latitude'),
+              // _buildTextField('Latitude', (value) {
+              //   setState(() {
+              //     locationToEdit..latitude = value;
+              //   });
+              // }),
+              // _buildLabel('Enter Longitude'),
+              // _buildTextField('Longitude', (value) {
+              //   setState(() {
+              //     locationToEdit..longitude = value;
+              //   });
+              // }),
               _buildLabel('Description'),
               _buildTextField(
                 'Enter Description',
                 (value) {
                   setState(() {
-                    description = value;
+                    locationToEdit..description = value;
                   });
                 },
+                initialValue: locationToEdit.description,
+                // validator: Validators.des,
+                maxLength: 100,
                 maxLines: 3, // Fix height of description field
               ),
               SizedBox(height: 20),
@@ -90,12 +126,7 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  onPressed: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      // Process the data
-                      print('Location updated');
-                    }
-                  },
+                  onPressed: onLocationUpdate,
                   child: Text(
                     'Update Location',
                     style: TextStyle(
@@ -123,8 +154,15 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
   }
 
   Widget _buildTextField(String hintText, Function(String) onChanged,
-      {int maxLines = 1}) {
+      {int maxLines = 1,
+      int? maxLength,
+      String? initialValue,
+      bool enabled = true,
+      String? Function(String?)? validator}) {
     return TextFormField(
+      enabled: enabled,
+      initialValue: initialValue,
+      maxLength: maxLength,
       decoration: InputDecoration(
         hintText: hintText,
         border: OutlineInputBorder(
@@ -132,19 +170,16 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       ),
-      maxLines: maxLines, // Adjust height if needed
+      maxLines: maxLines,
+      // Adjust height if needed
       onChanged: onChanged,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter a value';
-        }
-        return null;
-      },
+      validator: validator,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
     );
   }
 
-  Widget _buildDropdown(List<String> options, Function(String?) onChanged) {
-    return DropdownButtonFormField<String>(
+  Widget _buildDropdown<T>(List<T> options, T? value, Function(T?) onChanged) {
+    return DropdownButtonFormField<T>(
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -152,12 +187,12 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
         contentPadding:
             EdgeInsets.symmetric(horizontal: 12, vertical: 4), // Fix spacing
       ),
-      value: options.first,
-      items: options.map((String option) {
-        return DropdownMenuItem<String>(
+      value: value,
+      items: options.map((option) {
+        return DropdownMenuItem<T>(
           value: option,
           child: Text(
-            option,
+            (option is LocationModel) ? option.name : option.toString(),
             style: TextStyle(
               fontSize: 16,
               fontWeight: option == options.first

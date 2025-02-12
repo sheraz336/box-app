@@ -9,6 +9,7 @@ class AddBoxController extends ChangeNotifier {
   TextEditingController boxNameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController tagsController = TextEditingController();
+  String? imageUrl;
 
   bool generateQrCode = false;
 
@@ -17,12 +18,8 @@ class AddBoxController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> addBox() async {
+  Future<void> addBox() async {
     try {
-      if (boxNameController.text.isEmpty) {
-        return false;
-      }
-
       BoxModel box = BoxModel(
         id: "box-" + Random.secure().nextInt(10000).toString(),
         locationId: locationId,
@@ -30,18 +27,17 @@ class AddBoxController extends ChangeNotifier {
         description: descriptionController.text.isEmpty
             ? ""
             : descriptionController.text,
-        imagePath: "assets/onboarding2.png",
+        imagePath: imageUrl,
         tags: tagsController.text,
       );
 
       await BoxRepository.instance.putBox(box);
 
-    // Save logic (send to API or database)
-    print("Box Saved: ${box.name}");
-    return true;
-    }catch(e){
-    print(e);
-    return false;
+      // Save logic (send to API or database)
+      print("Box Saved: ${box.name}");
+    } catch (e) {
+      print(e);
+      throw Exception(e.toString());
     }
   }
 }

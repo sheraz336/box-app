@@ -94,4 +94,65 @@ class Validators {
 
     return null;
   }
+
+  static String? locationValidator(String? text) {
+    if (text == null) return "Name cannot be empty";
+    if(text.trim().length < 3)return "Min Length is 3";
+    if (RegExp("^(?=.*?[0-9])").hasMatch(text.trim()))
+      return "Location cannot contain digits";
+    if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(text.trim()))
+      return "Location cannot contain character";
+
+    return null;
+  }
+
+  static String? addressValidator(String? text) {
+    if (text == null) return "Address cannot be empty";
+    if(text.trim().length < 10)return "Min Length is 10";
+    return null;
+  }
+
+  static String? boxNameValidator(String? text) {
+    if (text == null) return "Name cannot be empty";
+    if(text.trim().length < 3)return "Min Length is 3";
+    if (RegExp("^(?=.*?[0-9])").hasMatch(text.trim()))
+      return "Box cannot contain digits";
+    if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(text.trim()))
+      return "Box cannot contain character";
+
+    return null;
+  }
+
+  static String? itemNameValidator(String? text) {
+    if (text == null) return "Name cannot be empty";
+    if(text.trim().length < 3)return "Min Length is 3";
+    if (RegExp("^(?=.*?[0-9])").hasMatch(text.trim()))
+      return "Item cannot contain digits";
+    if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(text.trim()))
+      return "Item cannot contain character";
+
+    return null;
+  }
+
+  static String? quantityValidator(String? text) {
+    if (text == null || text.trim().isEmpty) return null;
+    if (!RegExp(r"^[0-9]+$").hasMatch(text.trim()))
+      return "Enter digits only";
+    return null;
+  }
+
+  static String? valueValidator(String? text) {
+    if (text == null || text.trim().isEmpty) return null;
+    if (!RegExp(r"^[0-9]+$").hasMatch(text.trim()))
+      return "Enter digits only";
+    return null;
+  }
+
+  static String? tagsValidator(String? text) {
+    if (text == null || text.trim().isEmpty) return null;
+    if (!RegExp(r"^[a-zA-Z,]+$").hasMatch(text.trim()))
+      return "Enter tags separated by comma";
+    return null;
+  }
+
 }

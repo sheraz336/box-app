@@ -11,6 +11,9 @@ class AddLocationController with ChangeNotifier {
   TextEditingController descriptionController = TextEditingController();
   String? selectedType;
   String? imageUrl;
+  String? _selectedTypeError;
+
+  String? get selectedTypeError => _selectedTypeError;
 
   void selectType(String type) {
     selectedType = type;
@@ -22,29 +25,26 @@ class AddLocationController with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> saveLocation() async{
-    try{
-      if (nameController.text.isEmpty || addressController.text.isEmpty || selectedType == null) {
-        return false;
-      }
-
+  Future<void> saveLocation() async {
+    try {
       LocationModel location = LocationModel(
-        id: "location-"+Random.secure().nextInt(10000).toString(),
+        id: "location-" + Random.secure().nextInt(10000).toString(),
         name: nameController.text,
         address: addressController.text,
         type: selectedType!,
-        description: descriptionController.text.isEmpty ? "" : descriptionController.text,
-        imagePath: "assets/onboarding2.png",
+        description: descriptionController.text.isEmpty
+            ? ""
+            : descriptionController.text,
+        imagePath: imageUrl
       );
 
       await LocationRepository.instance.putLocation(location);
 
       // Save logic (send to API or database)
       print("Location Saved: ${location.name}");
-      return true;
-    }catch(e){
+    } catch (e) {
       print(e);
-      return false;
+      throw Exception(e.toString());
     }
   }
 }

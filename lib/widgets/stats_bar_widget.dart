@@ -1,12 +1,10 @@
-import 'package:box_delivery_app/views/boxes_screen.dart';
-import 'package:box_delivery_app/views/items_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../repos/box_repository.dart';
 import '../repos/item_repository.dart';
 import '../repos/location_repository.dart';
-import '../views/location_management_view.dart';
 
 class StatsBar extends StatelessWidget {
   const StatsBar({Key? key}) : super(key: key);
@@ -27,22 +25,22 @@ class StatsBar extends StatelessWidget {
           children: [
             _buildStatItem(locations.length.toString(), "Locations", const Color(0xFFFEF8E1),
                 const Color(0xFFE25E00), "assets/onboarding3.png",onTap: (){
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LocationManagementScreen()));
+                  Navigator.pushNamed(context,"/manage_location");
                 }),
             SizedBox(
               width: 3,
             ),
             _buildStatItem(boxes.length.toString(), "Boxes", const Color(0xFFF5E0FF),
                 const Color(0xFFBB2BFF), "assets/onboarding3.png", onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BoxesView()));
+              Navigator.pushNamed(context,"/manage_boxes");
             }),
             SizedBox(
               width: 3,
             ),
             _buildStatItem(items.length.toString(), "Items", const Color(0xFFE4FBE4),
-                const Color(0xFF00B100), "assets/onboarding3.png"),
+                const Color(0xFF00B100), "assets/onboarding3.png",onTap: (){
+                  Navigator.pushNamed(context,"/manage_items");
+                }),
           ],
         ),
       ),
