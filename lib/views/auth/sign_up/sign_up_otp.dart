@@ -47,6 +47,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Widget build(BuildContext context) {
     final authController = Provider.of<UserController>(context);
     final verificationController = Provider.of<VerificationController>(context);
+    authController.updatePhoneNumber(verificationController.fullPhoneNumber);
     print("phone num${verificationController.fullPhoneNumber}");
 
     return SafeArea(

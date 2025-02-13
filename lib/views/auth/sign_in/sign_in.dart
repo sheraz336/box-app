@@ -1,3 +1,5 @@
+import 'package:box_delivery_app/models/profile_iamge_model.dart';
+import 'package:box_delivery_app/repos/profile_repository.dart';
 import 'package:box_delivery_app/utils.dart';
 import 'package:box_delivery_app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import '../sign_up/sign_up_register.dart';
 
 class SignInScreen extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
+
   void signIn(AuthController authController, BuildContext context) async {
     try {
       if (!formKey.currentState!.validate()) return;
@@ -22,6 +25,13 @@ class SignInScreen extends StatelessWidget {
 
   void signInAsGuest(BuildContext context) async {
     try {
+      ProfileRepository.instance.update(UserModel(
+        name: "Guest",
+        email: "user@guest.com",
+        password: "******",
+        phoneNumber: "______",
+        isGuest: true,
+      ));
       Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
     } catch (e) {
       showSnackbar(context, e.toString());
@@ -142,8 +152,10 @@ class SignInScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SignUpView()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignUpView()));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -243,7 +255,7 @@ class SignInScreen extends StatelessWidget {
                           ),
                           minimumSize: Size(160, 56),
                         ),
-                        onPressed: () => signInAsGuest( context),
+                        onPressed: () => signInAsGuest(context),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

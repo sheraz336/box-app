@@ -6,7 +6,7 @@ part 'item_model.g.dart';
 @HiveType(typeId: 0)
 class LocationModel extends HiveObject {
   @HiveField(0)
-  String id;
+  String locationId;
   @HiveField(1)
   String name;
   @HiveField(2)
@@ -17,13 +17,16 @@ class LocationModel extends HiveObject {
   String description;
   @HiveField(5)
   String? imagePath;
+  @HiveField(6)
+  String? ownerId;
 
   int items = 0;
   List<BoxModel> boxes = [];
   double value = 0;
 
   LocationModel(
-      {required this.id,
+      {required this.locationId,
+      this.ownerId,
       required this.name,
       required this.address,
       required this.type,
@@ -41,7 +44,8 @@ class LocationModel extends HiveObject {
 
   LocationModel copy() {
     return LocationModel(
-        id: id,
+        ownerId: ownerId,
+        locationId: locationId,
         name: name,
         address: address,
         type: type,
@@ -50,6 +54,29 @@ class LocationModel extends HiveObject {
       ..boxes = boxes
       ..items = items
       ..value = value;
+  }
+
+  static LocationModel fromMap(Map map) {
+    return LocationModel(
+        ownerId: map["ownerId"],
+        locationId: map["locationId"],
+        name: map["name"],
+        address: map["address"],
+        type: map["type"],
+        description: map["description"],
+        imagePath: map["imagePath"]);
+  }
+
+  Map<String, Object?> toMap() {
+    return {
+      "ownerId": ownerId,
+      "locationId": locationId,
+      "name": name,
+      "address": address,
+      "type": type,
+      "description": description,
+      "imagePath": imagePath
+    };
   }
 }
 
@@ -67,6 +94,8 @@ class BoxModel extends HiveObject {
   String? imagePath;
   @HiveField(5)
   String? locationId;
+  @HiveField(6)
+  String? ownerId;
 
   LocationModel? location;
   int items;
@@ -74,12 +103,14 @@ class BoxModel extends HiveObject {
   bool isShared;
 
   BoxModel({
-    this.locationId = "",
+    this.ownerId,
+    this.locationId,
     required this.tags,
     required this.description,
     required this.id,
     required this.name,
     required this.imagePath,
+    //
     this.location,
     this.items = 0,
     this.value = 0,
@@ -93,6 +124,31 @@ class BoxModel extends HiveObject {
     this.locationId = model.locationId;
     this.description = model.description;
     this.imagePath = model.imagePath;
+  }
+
+  static BoxModel fromMap(Map map) {
+    return BoxModel(
+        value: map["value"],
+        ownerId: map["ownerId"],
+        locationId: map["locationId"],
+        tags: map["tags"],
+        description: map["description"],
+        id: map["id"],
+        name: map["name"],
+        imagePath: map["imagePath"]);
+  }
+
+  Map<String, Object?> toMap() {
+    return {
+      "value": value,
+      "ownerId": ownerId,
+      "locationId": locationId,
+      "tags": tags,
+      "description": description,
+      "id": id,
+      "name": name,
+      "imagePath": imagePath
+    };
   }
 }
 
@@ -119,16 +175,52 @@ class ItemModel {
   int quantity;
   @HiveField(9)
   String tags;
+  @HiveField(10)
+  String? ownerId;
+  @HiveField(11)
+  String? boxLocationId; // location of the box it belongs to
 
   ItemModel(
       {this.name = "",
       this.id = "",
-      this.boxId = "",
-      this.locationId = "",
+      this.ownerId,
+      this.boxId,
+      this.locationId,
       this.description = "",
       this.purchaseDate = "",
-      this.imagePath = "",
+      this.imagePath,
       this.value = 0,
       this.quantity = 1,
       this.tags = ""});
+
+  static ItemModel fromMap(Map map) {
+    return ItemModel(
+        name: map["name"],
+        id: map["id"],
+        ownerId: map["ownerId"],
+        boxId: map["boxId"],
+        locationId: map["locationId"],
+        description: map["description"],
+        purchaseDate: map["purchaseData"],
+        value: map["value"],
+        tags: map["tags"],
+        imagePath: map["imagePath"],
+        quantity: map["quantity"]);
+  }
+
+  Map<String, Object?> toMap() {
+    return {
+      "name": name,
+      "id": id,
+      "ownerId": ownerId,
+      "boxId": boxId,
+      "locationId": locationId,
+      "description": description,
+      "purchaseDate": purchaseDate,
+      "value": value,
+      "tags": tags,
+      "imagePath": imagePath,
+      "quantity": quantity
+    };
+  }
 }

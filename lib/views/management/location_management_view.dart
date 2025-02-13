@@ -24,7 +24,7 @@ class _LocationManagementScreenState extends State<LocationManagementScreen> {
       builder: (context) => CustomDeleteDialog(
         onConfirm: () {
           Navigator.pop(context);
-          LocationRepository.instance.deleteLocation(item.id);
+          LocationRepository.instance.deleteLocation(item.locationId);
         },
       ),
     );

@@ -33,7 +33,6 @@ class UserController with ChangeNotifier {
 
   void updatePhoneNumber(String value) {
     _user.phoneNumber = value.trim();
-    notifyListeners();
   }
 
   Future<void> signUp() async {
@@ -55,6 +54,7 @@ class UserController with ChangeNotifier {
           .set({
         "name": user.name,
         "email": user.email,
+        "phone":user.phoneNumber,
       });
 
       _isSigningUp = false;

@@ -95,7 +95,7 @@ class StyledBoxCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Boxes: ${box.id}',
+                          'Boxes: ${box.locationId}',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 12,

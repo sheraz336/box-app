@@ -1,6 +1,7 @@
 import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/repos/box_repository.dart';
 import 'package:box_delivery_app/repos/item_repository.dart';
+import 'package:box_delivery_app/repos/subscription_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -45,10 +46,10 @@ class LocationRepository extends ChangeNotifier {
 
   void _update() {
     for(var item in _box.values){
-      if (_locations[item.id] != null) {
-        _locations[item.id]!.update(item);
+      if (_locations[item.locationId] != null) {
+        _locations[item.locationId]!.update(item);
       } else {
-        _locations[item.id] = item;
+        _locations[item.locationId] = item;
       }
     }
   }
@@ -57,7 +58,7 @@ class LocationRepository extends ChangeNotifier {
     _locations.values.forEach((item) {
       _locations.values.forEach((item) {
         //update boxes
-        _locations[item.id]!..boxes = BoxRepository.instance.getBoxes(item.id);
+        _locations[item.locationId]!..boxes = BoxRepository.instance.getBoxes(item.locationId);
       });
     });
     notifyListeners();
@@ -71,8 +72,8 @@ class LocationRepository extends ChangeNotifier {
             .getBoxesItems(item.boxes.map((item) => item.id).toList())
             .length;
         final locationItemsCount =
-            ItemRepository.instance.getLocationItems(item.id).length;
-        _locations[item.id]!..items = boxesItemCount + locationItemsCount;
+            ItemRepository.instance.getLocationItems(item.locationId).length;
+        _locations[item.locationId]!..items = boxesItemCount + locationItemsCount;
       });
       notifyListeners();
     });
@@ -83,8 +84,10 @@ class LocationRepository extends ChangeNotifier {
     return _locations[id];
   }
 
-  Future<void> putLocation(LocationModel location) async {
-    await _box.put(location.id, location);
+  Future<bool> putLocation(LocationModel location) async {
+    if (!SubscriptionRepository.instance.canAddLocation()) return false;
+    await _box.put(location.locationId, location);
+    return true;
   }
 
   Future<void> deleteLocation(String id) async {
@@ -93,8 +96,13 @@ class LocationRepository extends ChangeNotifier {
   }
 
   Future<void> updateLocation(LocationModel model) async {
-    if (!_box.containsKey(model.id)) return;
-    await _box.put(model.id, model);
+    if (!_box.containsKey(model.locationId)) return;
+    await _box.put(model.locationId, model);
 
+  }
+
+  Future<void> clear()async {
+    _locations.clear();
+    await _box.clear();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/repos/location_repository.dart';
+import 'package:box_delivery_app/repos/subscription_repository.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -80,8 +81,10 @@ class BoxRepository extends ChangeNotifier {
     return list;
   }
 
-  Future<void> putBox(BoxModel model) async {
+  Future<bool> putBox(BoxModel model) async {
+    if (!SubscriptionRepository.instance.canAddBox()) return false;
     await _box.put(model.id, model);
+    return true;
   }
 
   BoxModel? getBox(String? id) {
@@ -97,5 +100,10 @@ class BoxRepository extends ChangeNotifier {
   Future<void> updateBox(BoxModel model) async {
     if (!_box.containsKey(model.id)) return;
     await _box.put(model.id, model);
+  }
+
+  Future<void> clear()async {
+    _boxes.clear();
+    await _box.clear();
   }
 }

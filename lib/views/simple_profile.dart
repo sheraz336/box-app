@@ -12,6 +12,8 @@ class SimpleProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ProfileController>(
       builder: (context, controller, _) {
+        if(controller.profile == null)return Scaffold();
+
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -32,7 +34,7 @@ class SimpleProfileScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  controller.user.name ?? '',
+                  controller.profile!.name ?? '',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -41,17 +43,17 @@ class SimpleProfileScreen extends StatelessWidget {
                 SizedBox(height: 30),
                 ProfileTextField(
                   label: 'Your Email',
-                  value: controller.user.email,
+                  value: controller.profile!.email,
                 ),
                 SizedBox(height: 20),
                 ProfileTextField(
                   label: 'Phone Number',
-                  value: controller.user.phoneNumber,
+                  value: controller.profile!.phoneNumber,
                 ),
                 SizedBox(height: 20),
                 ProfileTextField(
                   label: 'Password',
-                  value: controller.user.password,
+                  value: controller.profile!.password,
                   isPassword: true,
                 ),
                 SizedBox(height: 50),

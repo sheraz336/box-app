@@ -1,3 +1,4 @@
+import 'package:box_delivery_app/repos/profile_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'auth/onboarding/onboarding_view.dart';
@@ -19,10 +20,14 @@ class _SplashScreenState extends State<SplashScreen> {
   _navigateToOnboarding() async {
     await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
-      );
+      final isLoggedIn = ProfileRepository.instance.isLoggedIn();
+      if (isLoggedIn) {
+        Navigator.pushReplacementNamed(context, "/home");
+      } else
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+        );
     }
   }
 

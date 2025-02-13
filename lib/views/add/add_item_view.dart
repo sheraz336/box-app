@@ -131,7 +131,7 @@ class _AddItemsViewState extends State<AddItemsView> {
                       })
                     ],
                     onChanged: (item) {
-                      controller.locationId = item?.id;
+                      controller.locationId = item?.locationId;
                     },
                     hint: Text("Location"),
                     decoration: TextFieldInputDecoration,

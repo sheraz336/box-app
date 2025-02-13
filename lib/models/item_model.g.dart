@@ -17,21 +17,21 @@ class LocationModelAdapter extends TypeAdapter<LocationModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return LocationModel(
-      id: fields[0] as String,
+      locationId: fields[0] as String,
       name: fields[1] as String,
       address: fields[2] as String,
       type: fields[3] as String,
       description: fields[4] as String,
       imagePath: fields[5] as String?,
-    );
+    )..ownerId = fields[6] as String?;
   }
 
   @override
   void write(BinaryWriter writer, LocationModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
-      ..write(obj.id)
+      ..write(obj.locationId)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
@@ -41,7 +41,9 @@ class LocationModelAdapter extends TypeAdapter<LocationModel> {
       ..writeByte(4)
       ..write(obj.description)
       ..writeByte(5)
-      ..write(obj.imagePath);
+      ..write(obj.imagePath)
+      ..writeByte(6)
+      ..write(obj.ownerId);
   }
 
   @override
@@ -66,6 +68,7 @@ class BoxModelAdapter extends TypeAdapter<BoxModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return BoxModel(
+      ownerId: fields[6] as String?,
       locationId: fields[5] as String?,
       tags: fields[2] as String,
       description: fields[3] as String,
@@ -78,7 +81,7 @@ class BoxModelAdapter extends TypeAdapter<BoxModel> {
   @override
   void write(BinaryWriter writer, BoxModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -90,7 +93,9 @@ class BoxModelAdapter extends TypeAdapter<BoxModel> {
       ..writeByte(4)
       ..write(obj.imagePath)
       ..writeByte(5)
-      ..write(obj.locationId);
+      ..write(obj.locationId)
+      ..writeByte(6)
+      ..write(obj.ownerId);
   }
 
   @override
@@ -117,6 +122,7 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
     return ItemModel(
       name: fields[0] as String,
       id: fields[1] as String,
+      ownerId: fields[10] as String?,
       boxId: fields[2] as String?,
       locationId: fields[3] as String?,
       description: fields[4] as String,
@@ -125,13 +131,13 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
       value: fields[7] as double,
       quantity: fields[8] as int,
       tags: fields[9] as String,
-    );
+    )..boxLocationId = fields[11] as String?;
   }
 
   @override
   void write(BinaryWriter writer, ItemModel obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -151,7 +157,11 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
       ..writeByte(8)
       ..write(obj.quantity)
       ..writeByte(9)
-      ..write(obj.tags);
+      ..write(obj.tags)
+      ..writeByte(10)
+      ..write(obj.ownerId)
+      ..writeByte(11)
+      ..write(obj.boxLocationId);
   }
 
   @override

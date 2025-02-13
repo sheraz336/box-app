@@ -6,9 +6,12 @@ import 'package:box_delivery_app/controllers/qr_scan_controller.dart';
 import 'package:box_delivery_app/controllers/signupcomp_controller.dart';
 import 'package:box_delivery_app/firebase_options.dart';
 import 'package:box_delivery_app/models/item_model.dart';
+import 'package:box_delivery_app/models/profile_iamge_model.dart';
 import 'package:box_delivery_app/repos/box_repository.dart';
 import 'package:box_delivery_app/repos/item_repository.dart';
 import 'package:box_delivery_app/repos/location_repository.dart';
+import 'package:box_delivery_app/repos/profile_repository.dart';
+import 'package:box_delivery_app/repos/subscription_repository.dart';
 import 'package:box_delivery_app/views/add/add_view.dart';
 import 'package:box_delivery_app/views/home_screen.dart';
 import 'package:box_delivery_app/views/management/management_view.dart';
@@ -52,11 +55,14 @@ void main()async {
   Hive.registerAdapter(LocationModelAdapter());
   Hive.registerAdapter(BoxModelAdapter());
   Hive.registerAdapter(ItemModelAdapter());
+  Hive.registerAdapter(UserModelAdapter());
 
   //init repositories
   await ItemRepository.instance.init();
   await BoxRepository.instance.init();
   await LocationRepository.instance.init();
+  await SubscriptionRepository.instance.init();
+  await ProfileRepository.instance.init();
 
   //set up repositories listener
   await LocationRepository.instance.initListeners();
@@ -66,6 +72,7 @@ void main()async {
   LocationRepository.instance.fireNotify();
   BoxRepository.instance.fireNotify();
   ItemRepository.instance.fireNotify();
+  // SubscriptionRepository.instance.fireNotify();
 
   // await Hive.deleteBoxFromDisk(LocationRepository.boxName);
   // await Hive.deleteBoxFromDisk(BoxRepository.boxName);
@@ -76,6 +83,8 @@ void main()async {
         ChangeNotifierProvider(create: (_) => LocationRepository.instance),
         ChangeNotifierProvider(create: (_) => BoxRepository.instance),
         ChangeNotifierProvider(create: (_) => ItemRepository.instance),
+        ChangeNotifierProvider(create: (_) => SubscriptionRepository.instance),
+        ChangeNotifierProvider(create: (_) => ProfileRepository.instance),
 
         ChangeNotifierProvider(create: (_) => AuthController()),
         ChangeNotifierProvider(create: (_) => OTPController()),
@@ -123,7 +132,7 @@ class MyApp extends StatelessWidget {
             background: Colors.white,
           ),
         ),
-        initialRoute: FirebaseAuth.instance.currentUser!=null ? "/home":'/splash',
+        initialRoute: '/splash',
         routes: {
           '/add_location': (context) => AddView(pageIndex: 0),
           '/add_box': (context) => AddView(pageIndex: 1),

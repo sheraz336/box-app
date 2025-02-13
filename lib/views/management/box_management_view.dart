@@ -28,7 +28,7 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
     final locationRepo = context.read<LocationRepository>();
     final boxRepo = context.read<BoxRepository>();
     final locations = locationRepo.list;
-    final boxes = selectedLocation !=null? boxRepo.getBoxes(selectedLocation!.id):boxRepo.list;
+    final boxes = selectedLocation !=null? boxRepo.getBoxes(selectedLocation!.locationId):boxRepo.list;
   print("aaaaa");
     return Column(
       children: [

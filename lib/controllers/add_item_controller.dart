@@ -39,8 +39,8 @@ class AddItemsController extends ChangeNotifier {
       value: double.parse(valueController.text.isEmpty ? "0" :valueController.text),
     );
 
-    await ItemRepository.instance.putItem(item);
-
+    final success = await ItemRepository.instance.putItem(item);
+    if(!success)throw Exception("You have reached your subscription limit");
 
     // Save the newItem to Firestore, database, or local storage
     debugPrint("Item Added: ${item.name}");

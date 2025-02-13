@@ -19,25 +19,20 @@ class AddBoxController extends ChangeNotifier {
   }
 
   Future<void> addBox() async {
-    try {
-      BoxModel box = BoxModel(
-        id: "box-" + Random.secure().nextInt(10000).toString(),
-        locationId: locationId,
-        name: boxNameController.text,
-        description: descriptionController.text.isEmpty
-            ? ""
-            : descriptionController.text,
-        imagePath: imageUrl,
-        tags: tagsController.text,
-      );
+    BoxModel box = BoxModel(
+      id: "box-" + Random.secure().nextInt(10000).toString(),
+      locationId: locationId,
+      name: boxNameController.text,
+      description:
+          descriptionController.text.isEmpty ? "" : descriptionController.text,
+      imagePath: imageUrl,
+      tags: tagsController.text,
+    );
 
-      await BoxRepository.instance.putBox(box);
+    bool success = await BoxRepository.instance.putBox(box);
+    if(!success)throw Exception("You have reached your subscription limit");
 
-      // Save logic (send to API or database)
-      print("Box Saved: ${box.name}");
-    } catch (e) {
-      print(e);
-      throw Exception(e.toString());
-    }
+    // Save logic (send to API or database)
+    print("Box Saved: ${box.name}");
   }
 }

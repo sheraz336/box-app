@@ -1,3 +1,6 @@
+import 'package:box_delivery_app/models/profile_iamge_model.dart';
+import 'package:box_delivery_app/repos/profile_repository.dart';
+import 'package:box_delivery_app/repos/subscription_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,24 +24,50 @@ class AuthController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signIn()async {
+  Future<void> signIn() async {
     if (isSigningIn) {
       return;
     }
-    try{
-      _isSigningIn=true;
+    try {
+      _isSigningIn = true;
       notifyListeners();
 
       //login
       await FirebaseAuth.instance.signOut();
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: authModel.email,
-          password: authModel.password);
+      final userCred = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: authModel.email, password: authModel.password);
 
-      _isSigningIn=false;
+      //save profile
+      final userSnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userCred.user!.uid)
+          .get();
+      final userData = userSnapshot.data()!;
+
+      //save proile
+      ProfileRepository.instance.update(UserModel(
+          name: userData["name"],
+          email: userData["email"],
+          password: authModel.password,
+          phoneNumber: userData["phone"] ?? "______"));
+
+      //get subscription
+      final subSnapshot = await FirebaseFirestore.instance
+          .collection("subscriptions")
+          .doc(userCred.user!.uid)
+          .get();
+      if (subSnapshot.exists) {
+        SubscriptionRepository.instance.changeTo(subSnapshot.data()!["id"],
+            expiry: DateTime.fromMillisecondsSinceEpoch(
+                subSnapshot.data()!["expiryTime"],
+                isUtc: true));
+      }
+
+      _isSigningIn = false;
       notifyListeners();
-    }on FirebaseAuthException catch (e) {
-      _isSigningIn=false;
+    } on FirebaseAuthException catch (e) {
+      await FirebaseAuth.instance.signOut();
+      _isSigningIn = false;
       notifyListeners();
       print("Firebae auth exception ${e.code} $e");
 
@@ -61,7 +90,8 @@ class AuthController extends ChangeNotifier {
           throw Exception('An unknown error occurred: ${e.message}');
       }
     } catch (e) {
-      _isSigningIn=false;
+      await FirebaseAuth.instance.signOut();
+      _isSigningIn = false;
       notifyListeners();
 
       print('An unexpected error occurred: $e');
@@ -87,11 +117,15 @@ class AuthController extends ChangeNotifier {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+    final userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
 
     //create user if does not exist in 'users' collection
-    final snapshot = await FirebaseFirestore.instance.collection("users").doc(userCredential.user!.uid).get();
-    if(!snapshot.exists){
+    final snapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userCredential.user!.uid)
+        .get();
+    if (!snapshot.exists) {
       await FirebaseFirestore.instance
           .collection("users")
           .doc(userCredential.user!.uid)

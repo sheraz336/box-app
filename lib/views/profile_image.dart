@@ -1,16 +1,34 @@
+import 'package:box_delivery_app/repos/subscription_repository.dart';
+import 'package:box_delivery_app/views/subscription_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../controllers/profile_image_controller.dart';
 import '../widgets/profile_image.dart';
 import '../widgets/profile_text_field.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  void onSignout(ProfileController controller) async {
+    await FirebaseAuth.instance.signOut();
+    await controller.logOut();
+    Navigator.of(context).pushNamedAndRemoveUntil("/splash", (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentSub =
+        context.read<SubscriptionRepository>().currentSubscription;
     return Consumer<ProfileController>(
       builder: (context, controller, _) {
+        if (controller.profile == null) return Scaffold();
+        final user = controller.profile!;
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -35,7 +53,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  controller.user.name ?? '',
+                  user.name,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -44,18 +62,43 @@ class ProfileScreen extends StatelessWidget {
                 SizedBox(height: 30),
                 ProfileTextField(
                   label: 'Your Email',
-                  value: controller.user.email,
+                  value: user.email,
                 ),
                 SizedBox(height: 20),
                 ProfileTextField(
                   label: 'Phone Number',
-                  value: controller.user.phoneNumber,
+                  value: user.phoneNumber,
                 ),
                 SizedBox(height: 20),
                 ProfileTextField(
                   label: 'Password',
-                  value: controller.user.password,
+                  value: user.password,
                   isPassword: true,
+                ),
+                SizedBox(height: 20),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                        child: ProfileTextField(
+                      label: 'Subscription',
+                      value: currentSub.name,
+                      isPassword: false,
+                    )),
+                    IconButton(
+                        onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (c) => SubscriptionScreen())),
+                        icon: Container(
+                          width: 35,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: Icon(Icons.navigate_next,color: Colors.white,),
+                        ))
+                  ],
                 ),
                 SizedBox(height: 50),
                 Row(
@@ -65,12 +108,7 @@ class ProfileScreen extends StatelessWidget {
                       child: SizedBox(
                         height: 56,
                         child: OutlinedButton(
-                          onPressed: () async {
-                            await FirebaseAuth.instance.signOut();
-                            controller.logOut();
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                "/splash", (route) => false);
-                          },
+                          onPressed: () => onSignout(controller),
                           style: OutlinedButton.styleFrom(
                             backgroundColor: Colors.white,
                             side: BorderSide(
@@ -91,27 +129,27 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 16),
-                    Expanded(
-                      child: SizedBox(
-                        height: 56,
-                        child: ElevatedButton(
-                          onPressed: controller.deleteAccount,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFFE25E00),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: Text(
-                            'Delete Account',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Expanded(
+                    //   child: SizedBox(
+                    //     height: 56,
+                    //     child: ElevatedButton(
+                    //       onPressed: controller.deleteAccount,
+                    //       style: ElevatedButton.styleFrom(
+                    //         backgroundColor: Color(0xFFE25E00),
+                    //         shape: RoundedRectangleBorder(
+                    //             borderRadius: BorderRadius.circular(8)),
+                    //       ),
+                    //       child: Text(
+                    //         'Delete Account',
+                    //         style: TextStyle(
+                    //           color: Colors.white,
+                    //           fontSize: 16,
+                    //           fontWeight: FontWeight.w600,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ],

@@ -47,7 +47,7 @@ class HomeController extends ChangeNotifier {
   // List<ItemModel> get itemsWithNoLocationOrBox => ItemRepository.instance.getItemsWithNoLocationOrBox();
 
   void deleteLocation(LocationModel item){
-    LocationRepository.instance.deleteLocation(item.id);
+    LocationRepository.instance.deleteLocation(item.locationId);
   }
 
   void deleteBox(BoxModel item){

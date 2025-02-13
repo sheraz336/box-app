@@ -126,7 +126,7 @@ class _AddBoxViewState extends State<AddBoxView> {
                         })
                       ],
                       onChanged: (item) {
-                        controller.locationId = item?.id;
+                        controller.locationId = item?.locationId;
                       },
                       hint: Text("Location"),
                       decoration: TextFieldInputDecoration,

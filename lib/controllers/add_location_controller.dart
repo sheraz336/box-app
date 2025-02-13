@@ -26,9 +26,8 @@ class AddLocationController with ChangeNotifier {
   }
 
   Future<void> saveLocation() async {
-    try {
-      LocationModel location = LocationModel(
-        id: "location-" + Random.secure().nextInt(10000).toString(),
+    LocationModel location = LocationModel(
+        locationId: "location-" + Random.secure().nextInt(10000).toString(),
         name: nameController.text,
         address: addressController.text,
         type: selectedType!,
@@ -36,15 +35,11 @@ class AddLocationController with ChangeNotifier {
             ? ""
             : descriptionController.text,
         imagePath: imageUrl
-      );
+    );
 
-      await LocationRepository.instance.putLocation(location);
-
-      // Save logic (send to API or database)
-      print("Location Saved: ${location.name}");
-    } catch (e) {
-      print(e);
-      throw Exception(e.toString());
-    }
+    final success = await LocationRepository.instance.putLocation(location);
+    if(!success)throw Exception("You have reached your subscription limit");
+    // Save logic (send to API or database)
+    print("Location Saved: ${location.name}");
   }
 }

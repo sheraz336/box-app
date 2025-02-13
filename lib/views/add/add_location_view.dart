@@ -51,6 +51,7 @@ class _AddLocationViewState extends State<AddLocationView> {
   void onSave(AddLocationController controller)async{
     try{
       if(!_formKey.currentState!.validate())return;
+
       await controller.saveLocation();
       if(mounted)Navigator.pop(context);
     }catch(e){

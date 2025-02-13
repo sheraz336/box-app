@@ -12,6 +12,35 @@ void showSnackbar(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
 }
 
+void showConfirmDialog(BuildContext context, String title, String message,
+    bool dismissable, void Function() onOk) {
+  showDialog(
+      context: context,
+      barrierDismissible: dismissable,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            title,
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          ),
+          content: Text(message),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  onOk();
+                },
+                child: const Text("OK")),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Cancel"))
+          ],
+        );
+      });
+}
+
 void showAlertDialog(BuildContext context, String title, String message,
     bool dismissable, void Function() onOk,
     {String buttonText = "OK"}) {
@@ -53,7 +82,8 @@ class Validators {
 
   static String? phoneValidator(String? text) {
     if (text == null) return "Phone cannot be empty";
-    if (!RegExp(r'^(?:[+0][1-9])?[0-9]{10,12}$').hasMatch(text)) return "Invalid Phone";
+    if (!RegExp(r'^(?:[+0][1-9])?[0-9]{10,12}$').hasMatch(text))
+      return "Invalid Phone";
     return null;
   }
 
@@ -69,8 +99,7 @@ class Validators {
       return "Max length is 16.";
     }
 
-    if(txt.contains(" "))
-      return "Password cannot have whitespaces";
+    if (txt.contains(" ")) return "Password cannot have whitespaces";
 
     if (!RegExp("^(?=.*?[0-9])").hasMatch(txt))
       return "Password should contain 1 digit";
@@ -78,8 +107,8 @@ class Validators {
     if (!RegExp("^(?=.*[A-Z])").hasMatch(txt))
       return "Password should contain 1 uppercase letter";
 
-    // if (!RegExp('^(?=.*?[!@#\$&*~])').hasMatch(txt))
-    //   return "Password should contain 1 character";
+// if (!RegExp('^(?=.*?[!@#\$&*~])').hasMatch(txt))
+//   return "Password should contain 1 character";
     return null;
   }
 
@@ -97,7 +126,7 @@ class Validators {
 
   static String? locationValidator(String? text) {
     if (text == null) return "Name cannot be empty";
-    if(text.trim().length < 3)return "Min Length is 3";
+    if (text.trim().length < 3) return "Min Length is 3";
     if (RegExp("^(?=.*?[0-9])").hasMatch(text.trim()))
       return "Location cannot contain digits";
     if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(text.trim()))
@@ -108,13 +137,13 @@ class Validators {
 
   static String? addressValidator(String? text) {
     if (text == null) return "Address cannot be empty";
-    if(text.trim().length < 10)return "Min Length is 10";
+    if (text.trim().length < 10) return "Min Length is 10";
     return null;
   }
 
   static String? boxNameValidator(String? text) {
     if (text == null) return "Name cannot be empty";
-    if(text.trim().length < 3)return "Min Length is 3";
+    if (text.trim().length < 3) return "Min Length is 3";
     if (RegExp("^(?=.*?[0-9])").hasMatch(text.trim()))
       return "Box cannot contain digits";
     if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(text.trim()))
@@ -125,7 +154,7 @@ class Validators {
 
   static String? itemNameValidator(String? text) {
     if (text == null) return "Name cannot be empty";
-    if(text.trim().length < 3)return "Min Length is 3";
+    if (text.trim().length < 3) return "Min Length is 3";
     if (RegExp("^(?=.*?[0-9])").hasMatch(text.trim()))
       return "Item cannot contain digits";
     if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(text.trim()))
@@ -136,15 +165,13 @@ class Validators {
 
   static String? quantityValidator(String? text) {
     if (text == null || text.trim().isEmpty) return null;
-    if (!RegExp(r"^[0-9]+$").hasMatch(text.trim()))
-      return "Enter digits only";
+    if (!RegExp(r"^[0-9]+$").hasMatch(text.trim())) return "Enter digits only";
     return null;
   }
 
   static String? valueValidator(String? text) {
     if (text == null || text.trim().isEmpty) return null;
-    if (!RegExp(r"^[0-9]+$").hasMatch(text.trim()))
-      return "Enter digits only";
+    if (!RegExp(r"^[0-9]+$").hasMatch(text.trim())) return "Enter digits only";
     return null;
   }
 
@@ -154,5 +181,4 @@ class Validators {
       return "Enter tags separated by comma";
     return null;
   }
-
 }

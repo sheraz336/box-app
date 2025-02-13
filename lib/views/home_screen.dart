@@ -31,8 +31,18 @@ class Test extends HiveObject {
   String? a;
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,14 +65,7 @@ class HomeScreen extends StatelessWidget {
           actions: [
             // TextButton(
             //     onPressed: () async {
-            //       await LocationRepository.instance.putLocation(LocationModel(
-            //           id: "location-"+Random.secure().nextInt(10000).toString(),
-            //           name: "name",
-            //           address: "address",
-            //           type: "type",
-            //           description: "description",
-            //           imagePath: "assets/onboarding2.png"));
-            //       print("Location added");
+            //       await ItemRepository.instance.startSync();
             //     },
             //     child: Text(
             //       "oooo",
@@ -106,25 +109,24 @@ class HomeScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 StyledBoxCard(
-                                  box: item,
-                                  onEdit: () => Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (c) =>
-                                              EditLocationScreen(location: item,))),
-                                  onDelete: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          CustomDeleteDialog(
-                                            onConfirm: () {
-                                              homeController.deleteLocation(item);
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                    );
-                                  }
-
-                                ),
+                                    box: item,
+                                    onEdit: () => Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (c) => EditLocationScreen(
+                                                  location: item,
+                                                ))),
+                                    onDelete: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            CustomDeleteDialog(
+                                          onConfirm: () {
+                                            homeController.deleteLocation(item);
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      );
+                                    }),
                                 const SizedBox(width: 12),
                               ],
                             ))
@@ -205,25 +207,23 @@ class HomeScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 BoxCard(
-                                  box: item,
-                                  onEdit: () => Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (c) =>
-                                              EditBoxesScreen(box: item))),
-                                  onDelete: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          CustomDeleteDialog(
-                                            onConfirm: () {
-                                              homeController.deleteBox(item);
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                    );
-                                  }
-
-                                ),
+                                    box: item,
+                                    onEdit: () => Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (c) =>
+                                                EditBoxesScreen(box: item))),
+                                    onDelete: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            CustomDeleteDialog(
+                                          onConfirm: () {
+                                            homeController.deleteBox(item);
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      );
+                                    }),
                                 const SizedBox(width: 12),
                               ],
                             ))
