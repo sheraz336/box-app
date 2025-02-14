@@ -43,6 +43,10 @@ class SubscriptionRepository extends ChangeNotifier {
           .collection("subscriptions")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set({'id': id, 'expiryTime': _expiry.millisecondsSinceEpoch});
+    fireNotify();
+  }
+
+  void fireNotify(){
     notifyListeners();
   }
 

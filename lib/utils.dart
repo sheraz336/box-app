@@ -1,12 +1,21 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:uuid/uuid.dart';
 class ColorUtils {
   static final primaryColor = Color(0xffe25e00);
 }
+final uuid = Uuid();
+String generateRandomId(String prefix){
+  final r = uuid.v4();
+  return "$prefix-$r";
+}
 
+String? getOwnerId(){
+  return FirebaseAuth.instance.currentUser?.uid ?? null;
+}
 // UI Utilities
 void showSnackbar(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));

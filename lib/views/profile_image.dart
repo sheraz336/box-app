@@ -1,5 +1,6 @@
 import 'package:box_delivery_app/repos/subscription_repository.dart';
 import 'package:box_delivery_app/views/subscription_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -16,8 +17,12 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   void onSignout(ProfileController controller) async {
-    await FirebaseAuth.instance.signOut();
     await controller.logOut();
+    await FirebaseAuth.instance.signOut();
+    await FirebaseFirestore.instance.terminate();
+    await FirebaseFirestore.instance.clearPersistence();
+    await FirebaseFirestore.instance;
+    FirebaseFirestore.instance.settings=Settings(persistenceEnabled: true);
     Navigator.of(context).pushNamedAndRemoveUntil("/splash", (route) => false);
   }
 

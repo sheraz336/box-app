@@ -4,6 +4,8 @@ import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/repos/box_repository.dart';
 import 'package:flutter/material.dart';
 
+import '../utils.dart';
+
 class AddBoxController extends ChangeNotifier {
   String? locationId;
   TextEditingController boxNameController = TextEditingController();
@@ -20,7 +22,8 @@ class AddBoxController extends ChangeNotifier {
 
   Future<void> addBox() async {
     BoxModel box = BoxModel(
-      id: "box-" + Random.secure().nextInt(10000).toString(),
+      ownerId: getOwnerId(),
+      id:  generateRandomId("box"),
       locationId: locationId,
       name: boxNameController.text,
       description:

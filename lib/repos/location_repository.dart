@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/repos/box_repository.dart';
 import 'package:box_delivery_app/repos/item_repository.dart';
 import 'package:box_delivery_app/repos/subscription_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -10,6 +14,9 @@ class LocationRepository extends ChangeNotifier {
   static final instance = LocationRepository();
   var _locations = <String, LocationModel>{};
   late final Box<LocationModel> _box;
+
+  //subscription for firestore owned location & location that are shared,
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _subscription,_sharedSubscription;
 
   List<LocationModel> get list => _locations.values.toList(growable: false);
 
@@ -38,6 +45,53 @@ class LocationRepository extends ChangeNotifier {
     ItemRepository.instance.addListener(() {
       _updateItemsCount();
     });
+
+    SubscriptionRepository.instance.addListener(() {
+      if (!SubscriptionRepository.instance.currentSubscription.isPremium)
+        return;
+      startSync();
+    });
+  }
+
+  Future<void> startSync() async {
+    if (_subscription != null) return;
+    if (FirebaseAuth.instance.currentUser == null ||
+        !SubscriptionRepository.instance.currentSubscription.isPremium) return;
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    //listen for owned firebase db item changes, to keep data in sync
+    _subscription = FirebaseFirestore.instance
+        .collection("locations")
+        .where("ownerId", isEqualTo: uid)
+        .snapshots(includeMetadataChanges: true)
+        .listen((snapshots) {
+      print("location snapshots received ${snapshots.docChanges.length}");
+      print("pendingWrites: ${snapshots.metadata.hasPendingWrites}, fromCache: ${snapshots.metadata.isFromCache}");
+      _onFirebaseItemChange(snapshots);
+    });
+
+    //resolve pending writes
+    await FirebaseFirestore.instance.waitForPendingWrites();
+  }
+
+  void _onFirebaseItemChange(QuerySnapshot<Map<String, dynamic>> snapshots){
+    //update local database only, when its not from cache & no pending writes
+    if (!snapshots.metadata.isFromCache &&
+        !snapshots.metadata.hasPendingWrites)
+      snapshots.docChanges.forEach((doc) {
+        final item = LocationModel.fromMap(doc.doc.data()!);
+        switch (doc.type) {
+          case DocumentChangeType.added:
+            putLocation(item,remoteWrite: false);
+            break;
+          case DocumentChangeType.modified:
+            updateLocation(item,remoteWrite: false);
+            break;
+          case DocumentChangeType.removed:
+            deleteLocation(item.locationId,remoteWrite: false);
+            break;
+        }
+      });
   }
 
   void fireNotify(){
@@ -84,25 +138,44 @@ class LocationRepository extends ChangeNotifier {
     return _locations[id];
   }
 
-  Future<bool> putLocation(LocationModel location) async {
+  Future<bool> putLocation(LocationModel location,{bool remoteWrite=true}) async {
     if (!SubscriptionRepository.instance.canAddLocation()) return false;
     await _box.put(location.locationId, location);
+    print("fff ${FirebaseAuth.instance.currentUser!.uid}");
+    //update in firestore
+    if(remoteWrite &&SubscriptionRepository.instance.currentSubscription.isPremium){
+      FirebaseFirestore.instance.collection("locations").doc(location.locationId).set(location.toMap());
+    }
+
     return true;
   }
 
-  Future<void> deleteLocation(String id) async {
+  Future<void> deleteLocation(String id,{bool remoteWrite=true}) async {
     _locations.remove(id);
     await _box.delete(id);
+
+    //update in firestore
+    if(remoteWrite && SubscriptionRepository.instance.currentSubscription.isPremium){
+      FirebaseFirestore.instance.collection("locations").doc(id).delete();
+    }
   }
 
-  Future<void> updateLocation(LocationModel model) async {
+  Future<void> updateLocation(LocationModel model,{bool remoteWrite=true}) async {
     if (!_box.containsKey(model.locationId)) return;
     await _box.put(model.locationId, model);
 
+    //update in firestore
+    if(remoteWrite && SubscriptionRepository.instance.currentSubscription.isPremium){
+      FirebaseFirestore.instance.collection("locations").doc(model.locationId).set(model.toMap());
+    }
   }
 
   Future<void> clear()async {
     _locations.clear();
     await _box.clear();
+    await _subscription?.cancel();
+    await _sharedSubscription?.cancel();
+    _subscription=null;
+    _sharedSubscription=null;
   }
 }

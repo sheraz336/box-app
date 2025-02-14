@@ -191,6 +191,7 @@ class ItemModel {
       this.imagePath,
       this.value = 0,
       this.quantity = 1,
+        this.boxLocationId,
       this.tags = ""});
 
   static ItemModel fromMap(Map map) {
@@ -200,8 +201,9 @@ class ItemModel {
         ownerId: map["ownerId"],
         boxId: map["boxId"],
         locationId: map["locationId"],
+        boxLocationId: map["boxLocationId"],
         description: map["description"],
-        purchaseDate: map["purchaseData"],
+        purchaseDate: map["purchaseDate"],
         value: map["value"],
         tags: map["tags"],
         imagePath: map["imagePath"],
@@ -215,6 +217,7 @@ class ItemModel {
       "ownerId": ownerId,
       "boxId": boxId,
       "locationId": locationId,
+      "boxLocationId":boxLocationId,
       "description": description,
       "purchaseDate": purchaseDate,
       "value": value,

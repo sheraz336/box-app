@@ -67,12 +67,15 @@ void main()async {
   //set up repositories listener
   await LocationRepository.instance.initListeners();
   await BoxRepository.instance.initListeners();
+  ItemRepository.instance.initListeners();
 
   //fire events once
   LocationRepository.instance.fireNotify();
   BoxRepository.instance.fireNotify();
   ItemRepository.instance.fireNotify();
-  // SubscriptionRepository.instance.fireNotify();
+  Future.delayed(const Duration(seconds: 5),(){
+    SubscriptionRepository.instance.fireNotify();
+  });
 
   // await Hive.deleteBoxFromDisk(LocationRepository.boxName);
   // await Hive.deleteBoxFromDisk(BoxRepository.boxName);

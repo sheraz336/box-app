@@ -5,6 +5,8 @@ import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/repos/location_repository.dart';
 import 'package:flutter/material.dart';
 
+import '../utils.dart';
+
 class AddLocationController with ChangeNotifier {
   TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -27,7 +29,8 @@ class AddLocationController with ChangeNotifier {
 
   Future<void> saveLocation() async {
     LocationModel location = LocationModel(
-        locationId: "location-" + Random.secure().nextInt(10000).toString(),
+      ownerId: getOwnerId(),
+        locationId:  generateRandomId("location"),
         name: nameController.text,
         address: addressController.text,
         type: selectedType!,

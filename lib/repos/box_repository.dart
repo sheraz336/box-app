@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/repos/location_repository.dart';
 import 'package:box_delivery_app/repos/subscription_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -14,6 +18,8 @@ class BoxRepository extends ChangeNotifier {
 
   List<BoxModel> get list => _boxes.values.toList(growable: false);
 
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _subscription,_sharedSubscription;
+
   Future<void> init() async {
     _box = await Hive.openBox<BoxModel>(boxName);
     _update();
@@ -24,6 +30,57 @@ class BoxRepository extends ChangeNotifier {
       _update();
       fireNotify();
     });
+
+    SubscriptionRepository.instance.addListener(() {
+      if (!SubscriptionRepository.instance.currentSubscription.isPremium)
+        return;
+      startSync();
+    });
+  }
+
+  Future<void> startSync() async {
+    if (_subscription != null) return;
+    if (FirebaseAuth.instance.currentUser == null ||
+        !SubscriptionRepository.instance.currentSubscription.isPremium) return;
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    //listen for owned firebase db item changes, to keep data in sync
+    _subscription = FirebaseFirestore.instance
+        .collection("boxes")
+        .where("ownerId", isEqualTo: uid)
+        .snapshots(includeMetadataChanges: true)
+        .listen((snapshots) {
+      print("box snapshots received ${snapshots.docChanges.length}");
+      print("pendingWrites: ${snapshots.metadata.hasPendingWrites}, fromCache: ${snapshots.metadata.isFromCache}");
+      _onFirebaseItemChange(snapshots);
+      snapshots.docChanges.forEach((doc) {
+        final item = BoxModel.fromMap(doc.doc.data()!);
+        print("box ${doc.type} ${item.toMap()}");
+      });
+    });
+
+    //resolve pending writes
+    await FirebaseFirestore.instance.waitForPendingWrites();
+  }
+
+  void _onFirebaseItemChange(QuerySnapshot<Map<String, dynamic>> snapshots){
+    //update local database only, when its not from cache & no pending writes
+    if (!snapshots.metadata.isFromCache &&
+        !snapshots.metadata.hasPendingWrites)
+      snapshots.docChanges.forEach((doc) {
+        final item = BoxModel.fromMap(doc.doc.data()!);
+        switch (doc.type) {
+          case DocumentChangeType.added:
+            putBox(item,remoteWrite: false);
+            break;
+          case DocumentChangeType.modified:
+            updateBox(item,remoteWrite: false);
+            break;
+          case DocumentChangeType.removed:
+            deleteBox(item.id,remoteWrite: false);
+            break;
+        }
+      });
   }
 
   void _update() {
@@ -81,9 +138,15 @@ class BoxRepository extends ChangeNotifier {
     return list;
   }
 
-  Future<bool> putBox(BoxModel model) async {
+  Future<bool> putBox(BoxModel model,{bool remoteWrite=true}) async {
     if (!SubscriptionRepository.instance.canAddBox()) return false;
     await _box.put(model.id, model);
+
+    //update in firestore
+    if(remoteWrite && SubscriptionRepository.instance.currentSubscription.isPremium){
+      FirebaseFirestore.instance.collection("boxes").doc(model.id).set(model.toMap());
+    }
+
     return true;
   }
 
@@ -92,18 +155,32 @@ class BoxRepository extends ChangeNotifier {
     return _boxes[id];
   }
 
-  Future<void> deleteBox(String id) async {
+  Future<void> deleteBox(String id,{bool remoteWrite=true}) async {
     _boxes.remove(id);
     await _box.delete(id);
+
+    //update in firestore
+    if(remoteWrite && SubscriptionRepository.instance.currentSubscription.isPremium){
+      FirebaseFirestore.instance.collection("boxes").doc(id).delete();
+    }
   }
 
-  Future<void> updateBox(BoxModel model) async {
+  Future<void> updateBox(BoxModel model,{bool remoteWrite=true}) async {
     if (!_box.containsKey(model.id)) return;
     await _box.put(model.id, model);
+
+    //update in firestore
+    if(remoteWrite && SubscriptionRepository.instance.currentSubscription.isPremium){
+      FirebaseFirestore.instance.collection("boxes").doc(model.id).set(model.toMap());
+    }
   }
 
   Future<void> clear()async {
     _boxes.clear();
     await _box.clear();
+    await _subscription?.cancel();
+    await _sharedSubscription?.cancel();
+    _subscription=null;
+    _sharedSubscription=null;
   }
 }
