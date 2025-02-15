@@ -91,7 +91,7 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
                           ),
                         );
                       },
-                      onViewDetails: () {
+                      onView: () {
                         BoxDetailsDialog.showDetailsDialog(
                             context,box);
                       },

@@ -67,7 +67,7 @@ class SignInScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 34),
+                    const SizedBox(height: 65),
                     const Text(
                       'Sign In',
                       style: TextStyle(

@@ -20,13 +20,16 @@ class CategoryTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap, // 👈 Enables navigation on tap
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.3) : Colors.white,
+          color: isSelected ? color.withOpacity(0.1) : color.withOpacity(0.1), // Lighter background
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color, width: isSelected ? 2 : 1),
+          border: Border.all(
+            color: isSelected ? color : color.withOpacity(0.5), // Stronger border when selected
+            width: isSelected ? 2 : 0,
+          ),
         ),
         child: Row(
           children: [

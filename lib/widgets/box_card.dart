@@ -1,96 +1,153 @@
 import 'dart:io';
-
-import 'package:box_delivery_app/models/item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../models/item_model.dart';
 
 class BoxCard extends StatelessWidget {
   final BoxModel box;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
-  final VoidCallback onViewDetails;
+  final VoidCallback onView;
 
-  const BoxCard(
-      {Key? key,
-      required this.box,
-      required this.onViewDetails,
-      required this.onEdit,
-      required this.onDelete})
-      : super(key: key);
+  const BoxCard({
+    Key? key,
+    required this.box,
+    required this.onView,
+    required this.onEdit,
+    required this.onDelete,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: onViewDetails,
-        child: Card(
-          elevation: 3,
+      onTap: onView, // Tap anywhere to view details
+      child: Container(
+        width: 161, // Fixed width
+        height: 192, // Fixed height
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(14),
+            topRight: Radius.circular(14),
+          ), // Only top edges are rounded
           color: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                ),
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-                width: double.infinity,
-                child: Text(
-                  box.name,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: box.imagePath != null
-                    ? Image.file(File(box.imagePath!), height: 80, fit: BoxFit.cover)
-                    : Image.asset(
-                  "assets/box.png",
-                    height: 80, fit: BoxFit.cover
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              blurRadius: 4,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            // Background Image (Overflows slightly)
+            Positioned(
+              top: 0,
+              left: -5,
+              right: -5,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ), // Rounded only at the top
+                child: Image.asset(
+                  'assets/final_gadget.png',
+                  width: 170,
+                  height: 195,
+                  fit: BoxFit.cover,
                 ),
               ),
+            ),
 
-              // Items Count
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  "Items: ${box.items}",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius:
-                      BorderRadius.vertical(bottom: Radius.circular(10)),
-                ),
-                padding: EdgeInsets.symmetric(vertical: 1),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      onPressed: onEdit,
-                      icon: SvgPicture.asset("assets/edit.svg", height: 20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: Text(
+                    box.name,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
                     ),
-                    Container(
-                        height: 12,
-                        width: 1,
-                        color: Colors.grey[500]), // Vertical Divider
-                    IconButton(
-                      onPressed: onDelete,
-                      icon: SvgPicture.asset("assets/delete.svg", height: 20),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ));
+
+                // Inner Box Image
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Container(
+                    width: 126.64,
+                    height: 77.14,
+                    margin: const EdgeInsets.symmetric(horizontal: 9),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 1.1),
+                    ),
+                    child: box.imagePath != null
+                        ? Image.file(File(box.imagePath!), fit: BoxFit.cover)
+                        : Image.asset("assets/box.png", fit: BoxFit.cover),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 10),
+                  child: Container(
+                    width: 125,
+                    height: 26.31,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(4), // Slightly rounded for smoothness
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 4,
+                          spreadRadius: 1,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Items: ${box.items}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 11.5,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 23),
+
+                // Bottom Actions
+                Container(
+                  width: 168,
+                  height: 38,
+                  color: const Color(0xffD9D9D9),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: onEdit,
+                        child: Image.asset('assets/pen_edit.png', width: 18.86,
+                          height: 19.5,),
+                      ),
+                      Container(width: 1, height: 28, color: Colors.black),
+                      GestureDetector(
+                        onTap: onDelete,
+                        child: Image.asset('assets/delete_box.png', width: 20, height: 20),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

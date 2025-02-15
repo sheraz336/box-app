@@ -113,7 +113,7 @@ class _AddLocationViewState extends State<AddLocationView> {
                       controller: controller.nameController,
                       labelText: "Location Name",
                       hintText: "Enter Current Location",
-                      iconPath: "assets/camera.svg",
+                      iconPath: "assets/add_camera.svg",
                       maxLength: 20,
                     ),
 
