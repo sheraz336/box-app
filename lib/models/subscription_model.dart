@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 class SubscriptionModel {
   final int id;

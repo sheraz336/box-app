@@ -16,6 +16,8 @@ class SubscriptionScreen extends StatefulWidget {
 }
 
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
+  int selectedPlan = 0; // 0 for Pro, 1 for Pro+ Cloud
+
   void onSubscribe(int id) {
     if (id > 0 && FirebaseAuth.instance.currentUser == null) {
       showConfirmDialog(
@@ -34,68 +36,212 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final subRepo = context.watch<SubscriptionRepository>();
-    final currentSub = subRepo.currentSubscription;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Subscriptions"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: Column(
-                children: [
-                  ...[0, 1, 2].map((item) {
-                    final sub = SubscriptionModel.getById(item);
-                    bool isCurrentSub = sub.id == currentSub.id;
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFE25E00), Colors.white],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Back Button and Title
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ),
+              Text(
+                "Subscribe to Premium",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 20),
 
-                    String maxLocations = !sub.isPremium
-                        ? sub.maxLocations.toString()
-                        : "Unlimited";
-                    String maxBoxes =
-                        !sub.isPremium ? sub.maxBoxes.toString() : "Unlimited";
-                    String maxItems =
-                        !sub.isPremium ? sub.maxItems.toString() : "Unlimited";
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          sub.name,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text("Max Locations: ${maxLocations}"),
-                            Text("Max Boxes: ${maxBoxes}"),
-                            Text("Max Items: ${maxItems}"),
-                            if (sub.isPremium) Text("Backed up to server"),
-                            if (sub.isPremium) Text("Sync across devices")
+              // Subscription Cards
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    // Pro Plan Card
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => selectedPlan = 0),
+                        child: SubscriptionCard(
+                          title: "Pro",
+                          price: "£9.99",
+                          subText: "One-time Purchase",
+                          features: [
+                            "More Locations",
+                            "More Boxes",
+                            "More Items",
+                            "No Ads",
+                            "No Cloud Sync"
                           ],
+                          isSelected: selectedPlan == 0,
                         ),
-                        OutlinedButton(
-                            onPressed:
-                                isCurrentSub ? null : () => onSubscribe(sub.id),
-                            child: Text(
-                              isCurrentSub ? "Current" : "Subscribe",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: const Color(0xFFE25E00),
-                            ))
-                      ],
-                    );
-                  })
+                      ),
+                    ),
+                    SizedBox(width: 16),
+
+                    // Pro+ Cloud Plan Card
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => selectedPlan = 1),
+                        child: SubscriptionCard(
+                          title: "Pro+ Cloud",
+                          price: "£49.99",
+                          subText: "Billed Annually",
+                          features: [
+                            "Unlimited Locations",
+                            "Unlimited Boxes",
+                            "Unlimited Items",
+                            "No Ads",
+                            "Cloud Sync",
+                            "Sharing"
+                          ],
+                          isSelected: selectedPlan == 1,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Spacer(),
+
+              // Subscribe Button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFE25E00),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: Text(
+                      "Subscribe Now",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SubscriptionCard extends StatelessWidget {
+  final String title;
+  final String price;
+  final String subText;
+  final List<String> features;
+  final bool isSelected;
+
+  SubscriptionCard({
+    required this.title,
+    required this.price,
+    required this.subText,
+    required this.features,
+    required this.isSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isSelected ? Colors.white : Colors.transparent,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.white, width: 2),
+        boxShadow: isSelected
+            ? [BoxShadow(color: Colors.black26, blurRadius: 6)]
+            : [],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: isSelected ? Colors.black : Colors.white,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            price,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: isSelected ? Colors.black : Colors.white,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            subText,
+            style: TextStyle(
+              fontSize: 14,
+              color: isSelected ? Colors.black54 : Colors.white70,
+            ),
+          ),
+          SizedBox(height: 10),
+          Column(
+            children: features
+                .map(
+                  (feature) => Row(
+                children: [
+                  Icon(
+                    feature == "No Cloud Sync"
+                        ? Icons.close
+                        : Icons.check,
+                    color: feature == "No Cloud Sync"
+                        ? Colors.red
+                        : isSelected
+                        ? Colors.black
+                        : Colors.white,
+                    size: 20,
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      feature,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: isSelected ? Colors.black : Colors.white,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             )
-          ],
-        ),
+                .toList(),
+          ),
+        ],
       ),
     );
   }

@@ -13,6 +13,7 @@ class QRScanScreen extends StatelessWidget {
           backgroundColor: Colors.white,
           appBar: AppBar(
             backgroundColor: Color(0xffE25E00),
+            iconTheme: const IconThemeData(color: Colors.white),
             title: Text(
               'QR Scan',
               style: TextStyle(
@@ -20,6 +21,7 @@ class QRScanScreen extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: Color(0xffFFFFFF)),
             ),
+            centerTitle: true,
           ),
           body: Padding(
             padding: EdgeInsets.all(10),

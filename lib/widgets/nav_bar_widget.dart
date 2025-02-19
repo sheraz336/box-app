@@ -2,6 +2,9 @@ import 'package:box_delivery_app/views/profile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../views/home_screen.dart';
+import '../views/qr_scan_view.dart';
+
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
 
@@ -34,25 +37,24 @@ class CustomBottomNav extends StatelessWidget {
               _buildNavItem(
                 imagePath: 'assets/navbar_1.svg',
                 isSelected: currentIndex == 0,
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (c) => HomeScreen()));
+                },
               ),
               _buildNavItem(
                 imagePath: 'assets/navbar_2.svg',
                 isSelected: currentIndex == 1,
-                onTap: () {},
-              ),
-              _buildNavItem(
-                imagePath: 'assets/navbar_3.svg',
-                isSelected: currentIndex == 2,
-                onTap: () {},
-              ),
-              _buildNavItem(
-                imagePath: 'assets/navbar_4.svg',
-                isSelected: currentIndex == 3,
                 onTap: () {
-                  print("bye");
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (c) => ProfileScreen()));
+                      MaterialPageRoute(builder: (c) => QRScanScreen()));
+                },
+              ),
+              _buildNavItem(
+                imagePath: 'assets/notifications.svg',
+                isSelected: currentIndex == 2,
+                onTap: () {
+
                 },
               ),
             ],

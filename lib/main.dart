@@ -24,6 +24,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:box_delivery_app/views/splash_screen.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ import 'controllers/verification_controller.dart';
 
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  //await MobileAds.instance.initialize();
   //firebase setup
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

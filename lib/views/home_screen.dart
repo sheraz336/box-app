@@ -5,6 +5,8 @@ import 'package:box_delivery_app/repos/box_repository.dart';
 import 'package:box_delivery_app/repos/item_repository.dart';
 import 'package:box_delivery_app/repos/location_repository.dart';
 import 'package:box_delivery_app/views/edit/edit_location_view.dart';
+import 'package:box_delivery_app/views/profile_image.dart';
+import 'package:box_delivery_app/views/subscription_screen.dart';
 import 'package:box_delivery_app/widgets/speed_dial.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -63,23 +65,28 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(color: Colors.white),
           ),
           actions: [
-            // TextButton(
-            //     onPressed: () async {
-            //       await ItemRepository.instance.startSync();
-            //     },
-            //     child: Text(
-            //       "oooo",
-            //       style: TextStyle(color: Colors.white),
-            //     ))
-            // Padding(
-            //   padding: const EdgeInsets.only(right: 16.0), // Add some spacing
-            //   child: SvgPicture.asset(
-            //     'assets/notifications.png',
-            //     width: 28,
-            //     height: 28,
-            //     fit: BoxFit.contain,
-            //   ),
-            // ),
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SubscriptionScreen()),
+                );
+              },
+              icon: Image.asset(
+                'assets/crown.png',  // Ensure this asset is in the correct path
+                width: 24,
+                height: 24,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfileScreen()),
+                );
+              },
+              icon: Icon(Icons.person, color: Colors.white),
+            ),
           ],
         ),
         body: Column(
