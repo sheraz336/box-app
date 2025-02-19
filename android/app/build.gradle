@@ -46,4 +46,5 @@ flutter {
 }
 dependencies {
     implementation("com.google.android.gms:play-services-ads:23.6.0")
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.76' // Downgrade from 1.78.1
 }

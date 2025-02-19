@@ -60,24 +60,26 @@ class _AddBoxViewState extends State<AddBoxView> {
       }
     }
   }
-  void onSave(AddBoxController controller)async{
-    try{
-      if(!_formKey.currentState!.validate())return;
+
+  void onSave(AddBoxController controller) async {
+    try {
+      if (!_formKey.currentState!.validate()) return;
+
       await controller.addBox();
-      // Show AdMob Interstitial Ad after pressing Add Location
-      _adManager.showAd(
-        onAdDismissed: () {
-          if (mounted) {
-            Navigator.pop(context); // Only navigate after the ad is dismissed
-          }
-        },
-      );
-      if(mounted)Navigator.pop(context);
-    }catch(e){
+
+      // Show AdMob Interstitial Ad after every 3 times a box is added
+      _adManager.incrementBoxCount(() {
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      });
+    } catch (e) {
       print(e);
       showSnackbar(context, e.toString());
     }
   }
+
+
   @override
   Widget build(BuildContext context) {
     final locations = context.read<LocationRepository>().list;

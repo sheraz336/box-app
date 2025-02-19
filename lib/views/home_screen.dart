@@ -11,6 +11,7 @@ import 'package:box_delivery_app/widgets/speed_dial.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import '../controllers/home_controller.dart';
@@ -41,9 +42,40 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  BannerAd? _bannerAd;
+  bool _isBannerAdLoaded = false;
+
   @override
   void initState() {
     super.initState();
+    _loadBannerAd();
+  }
+
+  void _loadBannerAd() {
+    _bannerAd = BannerAd(
+      adUnitId: 'ca-app-pub-3512120495633654/7333096507', // Replace with your AdMob banner unit ID
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isBannerAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          print('Banner Ad failed to load: $error');
+          ad.dispose();
+        },
+      ),
+    );
+
+    _bannerAd!.load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
   }
 
   @override
@@ -91,6 +123,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Column(
           children: [
+            if (_isBannerAdLoaded)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: _bannerAd!.size.width.toDouble(),
+                  height: _bannerAd!.size.height.toDouble(),
+                  child: AdWidget(ad: _bannerAd!),
+                ),
+              ),
             const StatsBar(),
             Expanded(
               child: ListView(
@@ -310,27 +351,30 @@ class _HomeScreenState extends State<HomeScreen> {
                         ...items.map((item) => Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                ItemHorizontalCard(
-                                    title: item.name,
-                                    imagePath: item.imagePath,
-                                    purchaseDate: DateTime(2019, 4, 1),
-                                    hasTimer: true,
-                                    onEdit: () => Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (c) =>
-                                                EditItemScreen(item: item))),
-                                    onDelete: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) =>
-                                            CustomDeleteDialog(
-                                          onConfirm: () {
-                                            homeController.deleteItem(item);
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      );
-                                    }),
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: ItemHorizontalCard(
+                                      title: item.name,
+                                      imagePath: item.imagePath,
+                                      purchaseDate: DateTime(2019, 4, 1),
+                                      hasTimer: true,
+                                      onEdit: () => Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (c) =>
+                                                  EditItemScreen(item: item))),
+                                      onDelete: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              CustomDeleteDialog(
+                                            onConfirm: () {
+                                              homeController.deleteItem(item);
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        );
+                                      }),
+                                ),
                                 const SizedBox(width: 12),
                               ],
                             ))

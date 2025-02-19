@@ -21,7 +21,7 @@ class StyledBoxCard extends StatelessWidget {
 
     return Container(
       width: screenWidth * 0.42, // Responsive width
-      height: screenHeight * 0.38, // Responsive height
+      height: screenHeight * 0.325, // Responsive height
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Color(0xffFFFFFF),
@@ -52,12 +52,12 @@ class StyledBoxCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.all(screenWidth * 0.015),
+                padding: EdgeInsets.all(screenWidth * 0.022),
                 child: Text(
                   box.name,
                   style: TextStyle(
                     color: Color(0xff000000),
-                    fontSize: screenWidth * 0.033,
+                    fontSize: screenWidth * 0.035,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -77,10 +77,10 @@ class StyledBoxCard extends StatelessWidget {
               ),
               SizedBox(),
               Padding(
-                padding: EdgeInsets.only(left: screenWidth * 0.04, top: screenHeight * 0.018),
+                padding: EdgeInsets.only(left: screenWidth * 0.04, top: screenHeight * 0.010),
                 child: Container(
                   width: screenWidth * 0.35,
-                  height: screenHeight * 0.12,
+                  height: screenHeight * 0.09,
                   decoration: BoxDecoration(
                     color: Color(0xffFCFCFC).withOpacity(0.9),
                     borderRadius: BorderRadius.circular(8),
@@ -94,7 +94,7 @@ class StyledBoxCard extends StatelessWidget {
                     ],
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(screenWidth * 0.025),
+                    padding: EdgeInsets.all(screenWidth * 0.02),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -110,7 +110,10 @@ class StyledBoxCard extends StatelessWidget {
               Container(
                 width: double.infinity,
                 height: screenHeight * 0.05,
-                color: Color(0xffD9D9D9),
+                decoration: BoxDecoration(
+                  color: const Color(0xffD9D9D9),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10), ), // Slightly rounded for smoothness
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

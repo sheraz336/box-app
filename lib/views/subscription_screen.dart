@@ -1,13 +1,6 @@
-import 'package:box_delivery_app/main.dart';
-import 'package:box_delivery_app/models/subscription_model.dart';
-import 'package:box_delivery_app/repos/item_repository.dart';
-import 'package:box_delivery_app/repos/subscription_repository.dart';
-import 'package:box_delivery_app/utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'auth/sign_in/sign_in.dart';
 
 class SubscriptionScreen extends StatefulWidget {
@@ -20,18 +13,24 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
   void onSubscribe(int id) {
     if (id > 0 && FirebaseAuth.instance.currentUser == null) {
-      showConfirmDialog(
-          context,
-          "Requires Sign in",
-          "This requires you to have an account. Sign in and continue?",
-          true, () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (c) => SignInScreen()));
-      });
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Requires Sign in"),
+          content: Text("This requires you to have an account. Sign in and continue?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (c) => SignInScreen()));
+              },
+              child: Text("Sign In"),
+            ),
+          ],
+        ),
+      );
       return;
     }
-    SubscriptionRepository.instance.changeTo(id);
-
+    // SubscriptionRepository.instance.changeTo(id);
   }
 
   @override
@@ -51,8 +50,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         ),
         child: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Back Button and Title
+              // Back Button
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Align(
@@ -77,46 +77,63 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start, // Ensures alignment
                   children: [
                     // Pro Plan Card
                     Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => selectedPlan = 0),
-                        child: SubscriptionCard(
-                          title: "Pro",
-                          price: "£9.99",
-                          subText: "One-time Purchase",
-                          features: [
-                            "More Locations",
-                            "More Boxes",
-                            "More Items",
-                            "No Ads",
-                            "No Cloud Sync"
-                          ],
-                          isSelected: selectedPlan == 0,
-                        ),
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () => setState(() => selectedPlan = 0),
+                            child: SubscriptionCard(
+                              title: "Pro",
+                              price: "£9.99",
+                              subText: "One-time Purchase",
+                              isSelected: selectedPlan == 0,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          FeatureList(
+                            features: [
+                              "More Locations",
+                              "More Boxes",
+                              "More Items",
+                              "No Ads",
+                              "No Cloud Sync"
+                            ],
+                            isProPlusCloud: false, // ❌ This is just Pro, not Pro+ Cloud
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(width: 16),
 
                     // Pro+ Cloud Plan Card
                     Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => selectedPlan = 1),
-                        child: SubscriptionCard(
-                          title: "Pro+ Cloud",
-                          price: "£49.99",
-                          subText: "Billed Annually",
-                          features: [
-                            "Unlimited Locations",
-                            "Unlimited Boxes",
-                            "Unlimited Items",
-                            "No Ads",
-                            "Cloud Sync",
-                            "Sharing"
-                          ],
-                          isSelected: selectedPlan == 1,
-                        ),
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () => setState(() => selectedPlan = 1),
+                            child: SubscriptionCard(
+                              title: "Pro+ Cloud",
+                              price: "£49.99",
+                              subText: "Billed Annually",
+                              isSelected: selectedPlan == 1,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          FeatureList(
+                            features: [
+                              "Unlimited Locations",
+                              "Unlimited Boxes",
+                              "Unlimited Items",
+                              "No Ads",
+                              "Cloud Sync",
+                              "Sharing"
+                            ],
+                            isProPlusCloud: true, // ✅ This is Pro+ Cloud, so "No Ads" should have a tick
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -138,7 +155,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () => onSubscribe(selectedPlan),
                     child: Text(
                       "Subscribe Now",
                       style: TextStyle(fontSize: 16, color: Colors.white),
@@ -154,29 +171,33 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 }
 
+// Subscription Card Component
 class SubscriptionCard extends StatelessWidget {
   final String title;
   final String price;
   final String subText;
-  final List<String> features;
   final bool isSelected;
 
   SubscriptionCard({
     required this.title,
     required this.price,
     required this.subText,
-    required this.features,
     required this.isSelected,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(18),
+      width: 145,
+      height: 145, // Ensures both cards have equal height
       decoration: BoxDecoration(
         color: isSelected ? Colors.white : Colors.transparent,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.white, width: 2),
+        border: Border.all(
+          color: isSelected ? Colors.black : Colors.white,
+          width: isSelected ? 1 : 1,
+        ),
         boxShadow: isSelected
             ? [BoxShadow(color: Colors.black26, blurRadius: 6)]
             : [],
@@ -201,48 +222,62 @@ class SubscriptionCard extends StatelessWidget {
               color: isSelected ? Colors.black : Colors.white,
             ),
           ),
-          SizedBox(height: 5),
+          //SizedBox(height: 5),
+          Spacer(),
           Text(
             subText,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 12,
               color: isSelected ? Colors.black54 : Colors.white70,
             ),
           ),
-          SizedBox(height: 10),
-          Column(
-            children: features
-                .map(
-                  (feature) => Row(
-                children: [
-                  Icon(
-                    feature == "No Cloud Sync"
-                        ? Icons.close
-                        : Icons.check,
-                    color: feature == "No Cloud Sync"
-                        ? Colors.red
-                        : isSelected
-                        ? Colors.black
-                        : Colors.white,
-                    size: 20,
-                  ),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      feature,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: isSelected ? Colors.black : Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-                .toList(),
-          ),
         ],
       ),
+    );
+  }
+}
+
+class FeatureList extends StatelessWidget {
+  final List<String> features;
+  final bool isProPlusCloud; // Determines if it's the Pro+ Cloud plan
+
+  FeatureList({required this.features, this.isProPlusCloud = true});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start, // Left alignment
+      children: features.map((feature) {
+        // Check if the feature is "No Ads"
+        bool isNoAds = feature.toLowerCase() == "no ads";
+
+        // Determine if it should be a cross (❌) or tick (✅)
+        bool showTick = (isNoAds && isProPlusCloud) || (!feature.toLowerCase().contains("no"));
+        String iconPath = showTick ? 'assets/tick.svg' : 'assets/Cross.svg';
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                iconPath,
+                height: 14,
+                width: 14,
+              ),
+              SizedBox(width: 8),
+              Text(
+                feature,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }

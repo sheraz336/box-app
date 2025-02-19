@@ -13,6 +13,7 @@ import '../../repos/box_repository.dart';
 import '../../repos/location_repository.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/qr_popup_container.dart';
+import '../admob/ad_manager.dart';
 
 class AddItemsView extends StatefulWidget {
   @override
@@ -40,6 +41,57 @@ void showQrPopup(BuildContext context) {
 class _AddItemsViewState extends State<AddItemsView> {
   String selectedTab = "Items";
   final _formKey = GlobalKey<FormState>();
+  final AdManager adManager = AdManager();
+  int itemLimit = 10; // Default item limit
+
+  @override
+  void initState() {
+    super.initState();
+    adManager.loadRewardedAd();
+  }
+
+  void onAddItem(AddItemsController controller) {
+   //if (controller.itemList.length >= itemLimit) {
+    if (11 >= itemLimit) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            title: const Text("Increase Item Limit"),
+            content: const Text("Would you like to watch an ad to increase your item limit by 5?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  onSave(controller); // Proceed without ad
+                },
+                child: const Text("No", style: TextStyle(color: Colors.orange)),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  adManager.showRewardedAd(() {
+                    setState(() => itemLimit += 5);
+                    onSave(controller);
+                  });
+                },
+                child: const Text("Yes", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      onSave(controller);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
 
   void navigateTo(String tab) {
     if (tab != selectedTab) {
@@ -247,7 +299,8 @@ class _AddItemsViewState extends State<AddItemsView> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: ()=>onSave(controller),
+                     // onPressed: ()=>onSave(controller),
+                      onPressed: ()=>onAddItem(controller),
                       child: const Text("Add Item"),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xffe25e00),

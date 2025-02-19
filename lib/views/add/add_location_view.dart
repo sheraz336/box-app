@@ -34,19 +34,19 @@ class _AddLocationViewState extends State<AddLocationView> {
 
       await controller.saveLocation();
 
-      // Show AdMob Interstitial Ad after pressing Add Location
-      _adManager.showAd(
-        onAdDismissed: () {
-          if (mounted) {
-            Navigator.pop(context); // Only navigate after the ad is dismissed
-          }
-        },
-      );
+      // Show AdMob Interstitial Ad after every 2 times a location is added
+      _adManager.incrementLocationCount(() {
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      });
     } catch (e) {
       print(e);
       showSnackbar(context, e.toString());
     }
   }
+
+
 
 
   @override

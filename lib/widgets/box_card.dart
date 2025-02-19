@@ -25,9 +25,7 @@ class BoxCard extends StatelessWidget {
         width: 161, // Fixed width
         height: 192, // Fixed height
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(14),
-            topRight: Radius.circular(14),
+          borderRadius:  BorderRadius.circular(12
           ), // Only top edges are rounded
           color: Colors.white,
           boxShadow: [
@@ -43,18 +41,18 @@ class BoxCard extends StatelessWidget {
             // Background Image (Overflows slightly)
             Positioned(
               top: 0,
-              left: -5,
-              right: -5,
+              left: -3,
+              right: -3,
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
                 ), // Rounded only at the top
                 child: Image.asset(
                   'assets/final_gadget.png',
                   width: 170,
                   height: 195,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                 ),
               ),
             ),
@@ -62,13 +60,16 @@ class BoxCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 5,),
                 Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Text(
+                  padding: const EdgeInsets.all(8.0),
+                  child:
+
+                  Text(
                     box.name,
                     style: const TextStyle(
                       color: Colors.black,
-                      fontSize: 12,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -120,13 +121,17 @@ class BoxCard extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 23),
+                const SizedBox(height: 10),
 
                 // Bottom Actions
                 Container(
                   width: 168,
-                  height: 38,
-                  color: const Color(0xffD9D9D9),
+                  height: 39.2,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffD9D9D9),
+                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10), ), // Slightly rounded for smoothness
+                  ),
+
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
