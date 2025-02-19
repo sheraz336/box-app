@@ -37,7 +37,7 @@ import 'controllers/verification_controller.dart';
 
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await MobileAds.instance.initialize();
+  await MobileAds.instance.initialize();
   //firebase setup
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

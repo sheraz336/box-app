@@ -8,7 +8,7 @@ class AdManager {
 
   void loadAd() {
     InterstitialAd.load(
-      adUnitId: 'your-ad-unit-id', // Replace with your actual AdMob unit ID
+      adUnitId: 'ca-app-pub-3512120495633654/5731406074', // Replace with your actual AdMob unit ID
       request: AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {

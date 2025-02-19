@@ -11,6 +11,7 @@ import '../../repos/location_repository.dart';
 import '../../widgets/category_tabs.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/qr_popup_container.dart';
+import '../admob/ad_manager.dart';
 
 class AddBoxView extends StatefulWidget {
   @override
@@ -38,6 +39,13 @@ void showQrPopup(BuildContext context) {
 class _AddBoxViewState extends State<AddBoxView> {
   String selectedTab = "Boxes";
   final _formKey = GlobalKey<FormState>();
+  final AdManager _adManager = AdManager(); // Create an instance of AdManager
+
+  @override
+  void initState() {
+    super.initState();
+    _adManager.loadAd(); // Load the ad when the screen initializes
+  }
 
   void navigateTo(String tab) {
     if (tab != selectedTab) {
@@ -56,6 +64,14 @@ class _AddBoxViewState extends State<AddBoxView> {
     try{
       if(!_formKey.currentState!.validate())return;
       await controller.addBox();
+      // Show AdMob Interstitial Ad after pressing Add Location
+      _adManager.showAd(
+        onAdDismissed: () {
+          if (mounted) {
+            Navigator.pop(context); // Only navigate after the ad is dismissed
+          }
+        },
+      );
       if(mounted)Navigator.pop(context);
     }catch(e){
       print(e);
