@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:box_delivery_app/repos/subscription_repository.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdManager {
+  bool disabled = false;
   InterstitialAd? _interstitialAd;
   bool _isAdLoaded = false;
   Timer? _adTimer;
@@ -13,11 +15,14 @@ class AdManager {
   bool _isRewardedAdLoaded = false;
 
   AdManager() {
+    disabled=SubscriptionRepository.instance.currentSubscription.isPremium;
+    if(disabled)return;
     loadAd();
     _startAdTimer(); // Start the 3-minute ad timer
   }
 
   void loadAd() {
+    if(disabled)return;
     InterstitialAd.load(
       adUnitId: 'ca-app-pub-3512120495633654/5731406074', // Replace with your actual AdMob unit ID
       request: const AdRequest(),
@@ -42,6 +47,7 @@ class AdManager {
   }
 
   void showAd({VoidCallback? onAdDismissed}) {
+    if(disabled)return;
     if (_isAdLoaded && _interstitialAd != null) {
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (InterstitialAd ad) {
@@ -70,6 +76,7 @@ class AdManager {
   }
 
   void loadRewardedAd() {
+    if(disabled)return;
     RewardedAd.load(
       adUnitId: 'ca-app-pub-3512120495633654/9283600285', // Replace with actual Rewarded Ad ID
       request: const AdRequest(),
@@ -88,6 +95,7 @@ class AdManager {
   }
 
   void showRewardedAd(VoidCallback onRewardEarned) {
+    if(disabled)return;
     if (_isRewardedAdLoaded && _rewardedAd != null) {
       _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (RewardedAd ad) {
@@ -117,6 +125,7 @@ class AdManager {
 
   // Show an ad every 3 minutes
   void _startAdTimer() {
+    if(disabled)return;
     _adTimer?.cancel();
     _adTimer = Timer.periodic(Duration(minutes: 3), (timer) {
       showAd();
@@ -125,19 +134,31 @@ class AdManager {
 
   // Increment box count and show ad after 3 boxes
   void incrementBoxCount(VoidCallback? onAdDismissed) {
+    if(disabled){
+      onAdDismissed?.call();
+      return;
+    }
     _boxAddCount++;
     if (_boxAddCount >= 3) {
       _boxAddCount = 0; // Reset count after showing ad
       showAd(onAdDismissed: onAdDismissed);
+    }else{
+
     }
   }
 
   // Increment location count and show ad after 2 locations
   void incrementLocationCount(VoidCallback? onAdDismissed) {
+    if(disabled){
+      onAdDismissed?.call();
+      return;
+    }
     _locationAddCount++;
     if (_locationAddCount >= 2) {
       _locationAddCount = 0; // Reset count after showing ad
       showAd(onAdDismissed: onAdDismissed);
+    }else{
+      onAdDismissed?.call();
     }
   }
 

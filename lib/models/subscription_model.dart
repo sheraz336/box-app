@@ -41,9 +41,11 @@ class SubscriptionModel {
           maxLocations: 10,
           price: 100);
   static SubscriptionModel get Premium =>
-      SubscriptionModel(id: 2,
+      SubscriptionModel(
+          id: 2,
           name: "Premium",
           isPremium: true,
+          duration: Duration(days: 365),
           maxBoxes: 999999999999999,// 9 x 15
           maxItems: 999999999999999,//
           maxLocations: 999999999999999,//

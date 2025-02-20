@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/repos/box_repository.dart';
+import 'package:box_delivery_app/repos/location_repository.dart';
 import 'package:flutter/material.dart';
 
+import '../repos/subscription_repository.dart';
 import '../utils.dart';
 
 class AddBoxController extends ChangeNotifier {
@@ -21,9 +23,19 @@ class AddBoxController extends ChangeNotifier {
   }
 
   Future<void> addBox() async {
+    String? ownerId = getOwnerId();
+
+    //if adding, to a shared location, the owner would be the location owner
+    final location = LocationRepository.instance.getLocation(locationId);
+    if (ownerId != null &&
+        locationId != null &&
+        location != null &&
+        location.isShared()) {
+      ownerId = location.ownerId!;
+    }
     BoxModel box = BoxModel(
-      ownerId: getOwnerId(),
-      id:  generateRandomId("box"),
+      ownerId: ownerId,
+      id: generateRandomId("box"),
       locationId: locationId,
       name: boxNameController.text,
       description:
@@ -33,7 +45,14 @@ class AddBoxController extends ChangeNotifier {
     );
 
     bool success = await BoxRepository.instance.putBox(box);
-    if(!success)throw Exception("You have reached your subscription limit");
+    if (!success) {
+      final msg =
+          (SubscriptionRepository.instance.currentSubscription.isPremium &&
+                  SubscriptionRepository.instance.isExpired())
+              ? "Your subscription is expired"
+              : "You have reached your boxes limit";
+      throw Exception(msg);
+    }
 
     // Save logic (send to API or database)
     print("Box Saved: ${box.name}");

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../controllers/profile_image_controller.dart';
 import '../widgets/profile_image.dart';
@@ -22,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await FirebaseFirestore.instance.terminate();
     await FirebaseFirestore.instance.clearPersistence();
     await FirebaseFirestore.instance;
-    FirebaseFirestore.instance.settings=Settings(persistenceEnabled: true);
+    FirebaseFirestore.instance.settings = Settings(persistenceEnabled: true);
     Navigator.of(context).pushNamedAndRemoveUntil("/splash", (route) => false);
   }
 
@@ -89,7 +90,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Expanded(
                         child: ProfileTextField(
                       label: 'Subscription',
-                      value: currentSub.name,
+                      value: currentSub.name +
+                          (currentSub.isPremium
+                              ? " until ${DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(SubscriptionRepository.instance.expiry)}"
+                              : ""),
                       isPassword: false,
                     )),
                     IconButton(
@@ -100,10 +104,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 35,
                           height: 35,
                           decoration: BoxDecoration(
-                            color: Colors.orange,
-                            borderRadius: BorderRadius.circular(10)
+                              color: Color(0xFFE25E00),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Icon(
+                            Icons.navigate_next,
+                            color: Colors.white,
                           ),
-                          child: Icon(Icons.navigate_next,color: Colors.white,),
                         ))
                   ],
                 ),

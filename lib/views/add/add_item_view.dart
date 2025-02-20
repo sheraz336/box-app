@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:box_delivery_app/repos/subscription_repository.dart';
 import 'package:box_delivery_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -52,7 +53,7 @@ class _AddItemsViewState extends State<AddItemsView> {
 
   void onAddItem(AddItemsController controller) {
    //if (controller.itemList.length >= itemLimit) {
-    if (11 >= itemLimit) {
+    if (!SubscriptionRepository.instance.canAddItem()) {
       showDialog(
         context: context,
         builder: (context) {

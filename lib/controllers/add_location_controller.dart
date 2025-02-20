@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/repos/location_repository.dart';
+import 'package:box_delivery_app/repos/subscription_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../utils.dart';
@@ -29,19 +30,25 @@ class AddLocationController with ChangeNotifier {
 
   Future<void> saveLocation() async {
     LocationModel location = LocationModel(
-      ownerId: getOwnerId(),
-        locationId:  generateRandomId("location"),
+        ownerId: getOwnerId(),
+        locationId: generateRandomId("location"),
         name: nameController.text,
         address: addressController.text,
         type: selectedType!,
         description: descriptionController.text.isEmpty
             ? ""
             : descriptionController.text,
-        imagePath: imageUrl
-    );
+        imagePath: imageUrl);
 
     final success = await LocationRepository.instance.putLocation(location);
-    if(!success)throw Exception("You have reached your subscription limit");
+    if (!success) {
+      final msg =
+          (SubscriptionRepository.instance.currentSubscription.isPremium &&
+                  SubscriptionRepository.instance.isExpired())
+              ? "Your subscription is expired"
+              : "You have reached your locations limit";
+      throw Exception(msg);
+    }
     // Save logic (send to API or database)
     print("Location Saved: ${location.name}");
   }

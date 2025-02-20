@@ -4,6 +4,8 @@ import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/repos/box_repository.dart';
 import 'package:box_delivery_app/repos/item_repository.dart';
 import 'package:box_delivery_app/repos/location_repository.dart';
+import 'package:box_delivery_app/repos/subscription_repository.dart';
+import 'package:box_delivery_app/utils.dart';
 import 'package:box_delivery_app/views/edit/edit_location_view.dart';
 import 'package:box_delivery_app/views/profile_image.dart';
 import 'package:box_delivery_app/views/subscription_screen.dart';
@@ -15,7 +17,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import '../controllers/home_controller.dart';
+import '../repos/invite_repository.dart';
 import '../widgets/custom_delete_dailogue.dart';
+import '../widgets/share_location_dialoge.dart';
 import '../widgets/stats_bar_widget.dart';
 import '../widgets/gadget_box.dart';
 import '../widgets/horizontal_card.dart';
@@ -52,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _loadBannerAd() {
+    if(SubscriptionRepository.instance.currentSubscription.isPremium)return;
     _bannerAd = BannerAd(
       adUnitId: 'ca-app-pub-3512120495633654/7333096507', // Replace with your AdMob banner unit ID
       size: AdSize.banner,
@@ -70,6 +75,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     _bannerAd!.load();
+  }
+
+  void onShare(LocationModel item) {
+    if(FirebaseAuth.instance.currentUser == null){
+      showAlertDialog(context, "Error", "Only pro users can share location", true, (){});
+      return;
+    }
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    if(uid != item.ownerId){
+      showAlertDialog(context, "Error", "Only owner can share location", true, (){});
+      return;
+    }
+    showDialog(
+      context: context,
+      builder: (context) => ShareLocationDialog(onUserSelected: (String id,String name){
+        InviteRepository.instance.createInvite(item, name, id);
+      }),
+    );
   }
 
   @override
@@ -169,12 +192,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                         builder: (context) =>
                                             CustomDeleteDialog(
                                           onConfirm: () {
-                                            homeController.deleteLocation(item);
+                                           try{
+                                             homeController.deleteLocation(item);
+                                           }catch(e){
+                                             print(e);
+                                             showSnackbar(context, e.toString());
+                                           }
                                             Navigator.pop(context);
                                           },
                                         ),
                                       );
-                                    }),
+                                    },
+                                onShare: (){
+                                  onShare(item);
+                                },
+                                ),
                                 const SizedBox(width: 12),
                               ],
                             ))
@@ -266,7 +298,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         builder: (context) =>
                                             CustomDeleteDialog(
                                           onConfirm: () {
-                                            homeController.deleteBox(item);
+                                            try{
+                                              homeController.deleteBox(item);
+                                            }catch(e){
+                                              print(e);
+                                              showSnackbar(context, e.toString());
+                                            }
                                             Navigator.pop(context);
                                           },
                                         ),
@@ -368,7 +405,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                           builder: (context) =>
                                               CustomDeleteDialog(
                                             onConfirm: () {
-                                              homeController.deleteItem(item);
+                                              try{
+                                                homeController.deleteItem(item);
+                                              }catch(e){
+                                                print(e);
+                                                showSnackbar(context, e.toString());
+                                              }
                                               Navigator.pop(context);
                                             },
                                           ),

@@ -8,6 +8,7 @@ import 'package:box_delivery_app/firebase_options.dart';
 import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/models/profile_iamge_model.dart';
 import 'package:box_delivery_app/repos/box_repository.dart';
+import 'package:box_delivery_app/repos/invite_repository.dart';
 import 'package:box_delivery_app/repos/item_repository.dart';
 import 'package:box_delivery_app/repos/location_repository.dart';
 import 'package:box_delivery_app/repos/profile_repository.dart';
@@ -69,6 +70,7 @@ void main()async {
   await LocationRepository.instance.initListeners();
   await BoxRepository.instance.initListeners();
   ItemRepository.instance.initListeners();
+  InviteRepository.instance.initListeners();
 
   //fire events once
   LocationRepository.instance.fireNotify();
@@ -89,6 +91,7 @@ void main()async {
         ChangeNotifierProvider(create: (_) => ItemRepository.instance),
         ChangeNotifierProvider(create: (_) => SubscriptionRepository.instance),
         ChangeNotifierProvider(create: (_) => ProfileRepository.instance),
+        ChangeNotifierProvider(create: (_) => InviteRepository.instance),
 
         ChangeNotifierProvider(create: (_) => AuthController()),
         ChangeNotifierProvider(create: (_) => OTPController()),

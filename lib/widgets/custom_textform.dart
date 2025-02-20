@@ -8,10 +8,12 @@ class CustomTextFormField extends StatelessWidget {
   final TextStyle? textStyle;
   final String? Function(String?)? validator;
   final int? maxLength;
+  final TextEditingController? controller;
 
   CustomTextFormField(
       {this.maxLength,
       this.validator,
+        this.controller,
       required this.hintText,
       this.obscureText = false,
       required this.onChanged,
@@ -24,6 +26,7 @@ class CustomTextFormField extends StatelessWidget {
       obscureText: obscureText,
       onChanged: onChanged,
       validator: validator,
+      controller: controller,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       maxLength: maxLength,
       decoration: InputDecoration(

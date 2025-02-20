@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../../models/item_model.dart';
 import '../../repos/location_repository.dart';
 import '../../repos/box_repository.dart';
+import '../../repos/subscription_repository.dart';
+import '../../utils.dart';
 import '../../widgets/box_card.dart';
 import '../../widgets/custom_delete_dailogue.dart';
 import '../../widgets/scan_qr.dart';
@@ -18,12 +20,21 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
   LocationModel? selectedLocation;
 
   void onEdit(BoxModel item) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (c) => EditBoxesScreen(box: item)));
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (c) => EditBoxesScreen(box: item)));
   }
 
   void onDelete(BoxModel item) {
-    BoxRepository.instance.deleteBox(item.id);
+    try {
+      if(SubscriptionRepository.instance.currentSubscription.isPremium && item.isShared()){
+        throw Exception("Only owner can delete the box");
+      }
+      BoxRepository.instance.deleteBox(item.id);
+      Navigator.pop(context);
+    } catch (e) {
+      print(e);
+      showSnackbar(context, e.toString());
+    }
   }
 
   @override
@@ -38,7 +49,8 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
     List<dynamic> combinedList = [];
     for (int i = 0; i < boxes.length; i++) {
       combinedList.add(boxes[i]);
-      if ((i + 1) % 4 == 0) combinedList.add('ad'); // Insert an ad every 4 items
+      if ((i + 1) % 4 == 0)
+        combinedList.add('ad'); // Insert an ad every 4 items
     }
 
     return Column(

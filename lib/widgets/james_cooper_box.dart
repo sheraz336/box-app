@@ -5,13 +5,14 @@ import '../models/item_model.dart';
 class StyledBoxCard extends StatelessWidget {
   final LocationModel box;
   final Function() onEdit;
-  final Function() onDelete;
+  final Function() onDelete,onShare;
 
   const StyledBoxCard({
     Key? key,
     required this.box,
     required this.onEdit,
     required this.onDelete,
+    required this.onShare,
   }) : super(key: key);
 
   @override
@@ -53,14 +54,21 @@ class StyledBoxCard extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.all(screenWidth * 0.022),
-                child: Text(
-                  box.name,
-                  style: TextStyle(
-                    color: Color(0xff000000),
-                    fontSize: screenWidth * 0.035,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      box.name,
+                      style: TextStyle(
+                        color: Color(0xff000000),
+                        fontSize: screenWidth * 0.035,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GestureDetector(onTap: onShare, child: Icon(Icons.share,color: Colors.white,size: 16,))
+                  ],
+                )
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),

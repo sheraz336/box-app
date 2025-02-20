@@ -19,6 +19,7 @@ class SubscriptionRepository extends ChangeNotifier {
   static final instance = SubscriptionRepository();
 
   SubscriptionModel get currentSubscription => _currentSubscription;
+  DateTime get expiry => _expiry;
 
   Future<void> init() async {
     _box = await Hive.openBox(boxName);
@@ -51,8 +52,12 @@ class SubscriptionRepository extends ChangeNotifier {
   }
 
   bool isExpired() {
-    return _currentSubscription.id != SubscriptionModel.Free.id &&
+    return _currentSubscription.id == SubscriptionModel.Premium.id &&
         _expiry.difference(DateTime.now().toUtc()).inSeconds < 0;
+  }
+
+  bool isPremiumActive(){
+    return _currentSubscription.isPremium && !isExpired();
   }
 
   bool canAddBox() {

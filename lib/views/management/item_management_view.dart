@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../repos/location_repository.dart';
+import '../../repos/subscription_repository.dart';
+import '../../utils.dart';
 import '../../widgets/custom_delete_dailogue.dart';
 import '../../widgets/management_category_tabs.dart';
 import '../../models/item_model.dart';
@@ -19,12 +21,22 @@ class ItemManagementScreen extends StatefulWidget {
 class _ItemManagementScreenState extends State<ItemManagementScreen> {
   BoxModel? selectedBox;
 
-  void onEdit(ItemModel item){
-    Navigator.of(context).push(MaterialPageRoute(builder: (c)=>EditItemScreen(item: item)));
+  void onEdit(ItemModel item) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (c) => EditItemScreen(item: item)));
   }
 
-  void onDelete(ItemModel item){
-    ItemRepository.instance.deleteItem(item.id);
+  void onDelete(ItemModel item) {
+    try {
+      if(SubscriptionRepository.instance.currentSubscription.isPremium && item.isShared()){
+        throw Exception("Only owner can delete the item");
+      }
+      ItemRepository.instance.deleteItem(item.id);
+      Navigator.pop(context);
+    } catch (e) {
+      print(e);
+      showSnackbar(context, e.toString());
+    }
   }
 
   @override
@@ -36,7 +48,7 @@ class _ItemManagementScreenState extends State<ItemManagementScreen> {
     final items = selectedBox != null
         ? itemsRepo.getBoxItems(selectedBox!.id)
         : itemsRepo.list;
-    items.forEach((item){
+    items.forEach((item) {
       print("${item.boxId},,");
     });
 
@@ -58,8 +70,8 @@ class _ItemManagementScreenState extends State<ItemManagementScreen> {
                 value: selectedBox,
                 hint: Text("Boxes"),
                 items: [
-                  ...boxes.map((item) => DropdownMenuItem(
-                      value: item, child: Text(item.name)))
+                  ...boxes.map((item) =>
+                      DropdownMenuItem(value: item, child: Text(item.name)))
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -71,7 +83,7 @@ class _ItemManagementScreenState extends State<ItemManagementScreen> {
           ),
         ),
         SizedBox(height: 1),
-        if(items.isNotEmpty)
+        if (items.isNotEmpty)
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
@@ -86,8 +98,8 @@ class _ItemManagementScreenState extends State<ItemManagementScreen> {
                     purchaseDate: item.purchaseDate.isEmpty
                         ? null
                         : DateFormat(DateFormat.YEAR_MONTH_DAY)
-                        .parse(item.purchaseDate),
-                    onDelete:(){
+                            .parse(item.purchaseDate),
+                    onDelete: () {
                       showDialog(
                         context: context,
                         builder: (context) => CustomDeleteDialog(
@@ -98,14 +110,17 @@ class _ItemManagementScreenState extends State<ItemManagementScreen> {
                         ),
                       );
                     },
-                    onEdit: ()=>onEdit(item),
+                    onEdit: () => onEdit(item),
                   ),
                 );
               },
             ),
           ),
-
-        if(items.isEmpty) Expanded(child: Center(child: Text("You have 0 items saved"),))
+        if (items.isEmpty)
+          Expanded(
+              child: Center(
+            child: Text("You have 0 items saved"),
+          ))
       ],
     );
   }

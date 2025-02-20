@@ -1,4 +1,5 @@
 // this model is for home_screen.dart
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/adapters.dart';
 
 part 'item_model.g.dart';
@@ -56,6 +57,12 @@ class LocationModel extends HiveObject {
       ..value = value;
   }
 
+  bool isShared() {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    return uid != null && uid != ownerId;
+  }
+
+
   static LocationModel fromMap(Map map) {
     return LocationModel(
         ownerId: map["ownerId"],
@@ -100,7 +107,6 @@ class BoxModel extends HiveObject {
   LocationModel? location;
   int items;
   double value;
-  bool isShared;
 
   BoxModel({
     this.ownerId,
@@ -114,7 +120,6 @@ class BoxModel extends HiveObject {
     this.location,
     this.items = 0,
     this.value = 0,
-    this.isShared = false,
   });
 
   void update(BoxModel model) {
@@ -124,6 +129,11 @@ class BoxModel extends HiveObject {
     this.locationId = model.locationId;
     this.description = model.description;
     this.imagePath = model.imagePath;
+  }
+
+  bool isShared() {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    return uid != null && uid != ownerId;
   }
 
   static BoxModel fromMap(Map map) {
@@ -191,8 +201,14 @@ class ItemModel {
       this.imagePath,
       this.value = 0,
       this.quantity = 1,
-        this.boxLocationId,
+      this.boxLocationId,
       this.tags = ""});
+
+  bool isShared() {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    return uid != null && uid != ownerId;
+  }
+
 
   static ItemModel fromMap(Map map) {
     return ItemModel(
@@ -217,7 +233,7 @@ class ItemModel {
       "ownerId": ownerId,
       "boxId": boxId,
       "locationId": locationId,
-      "boxLocationId":boxLocationId,
+      "boxLocationId": boxLocationId,
       "description": description,
       "purchaseDate": purchaseDate,
       "value": value,

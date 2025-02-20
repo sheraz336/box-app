@@ -1,3 +1,4 @@
+import 'package:box_delivery_app/views/notifications_view.dart';
 import 'package:box_delivery_app/views/profile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -54,7 +55,8 @@ class CustomBottomNav extends StatelessWidget {
                 imagePath: 'assets/notifications.svg',
                 isSelected: currentIndex == 2,
                 onTap: () {
-
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (c) => NotificationsView()));
                 },
               ),
             ],

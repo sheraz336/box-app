@@ -20,6 +20,7 @@ class AddLocationView extends StatefulWidget {
 class _AddLocationViewState extends State<AddLocationView> {
   String selectedTab = "Location";
   final _formKey = GlobalKey<FormState>();
+  bool _isAdding = false;
   final AdManager _adManager = AdManager(); // Create an instance of AdManager
 
   @override
@@ -30,9 +31,10 @@ class _AddLocationViewState extends State<AddLocationView> {
 
   void onSave(AddLocationController controller) async {
     try {
-      if (!_formKey.currentState!.validate()) return;
-
+      if (_isAdding || !_formKey.currentState!.validate()) return;
+      _isAdding=true;
       await controller.saveLocation();
+      _isAdding=false;
 
       // Show AdMob Interstitial Ad after every 2 times a location is added
       _adManager.incrementLocationCount(() {
@@ -42,6 +44,7 @@ class _AddLocationViewState extends State<AddLocationView> {
       });
     } catch (e) {
       print(e);
+      _isAdding=false;
       showSnackbar(context, e.toString());
     }
   }

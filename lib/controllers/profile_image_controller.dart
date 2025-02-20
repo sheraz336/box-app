@@ -1,4 +1,5 @@
 import 'package:box_delivery_app/repos/box_repository.dart';
+import 'package:box_delivery_app/repos/invite_repository.dart';
 import 'package:box_delivery_app/repos/item_repository.dart';
 import 'package:box_delivery_app/repos/location_repository.dart';
 import 'package:box_delivery_app/repos/profile_repository.dart';
@@ -37,6 +38,7 @@ class ProfileController with ChangeNotifier {
     await BoxRepository.instance.clear();
     await LocationRepository.instance.clear();
     await SubscriptionRepository.instance.clear();
+    await InviteRepository.instance.clear();
   }
 
   Future<void> deleteAccount() async {
