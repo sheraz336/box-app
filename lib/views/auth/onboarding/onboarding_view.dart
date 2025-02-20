@@ -48,7 +48,7 @@ class OnboardingScreen extends StatelessWidget {
                   },
                 ),
                 Positioned(
-                  top: 30,
+                  top: 65,
                   right: 20,
                   child: TextButton(
                     onPressed: () {
@@ -74,7 +74,7 @@ class OnboardingScreen extends StatelessWidget {
                   child: PageIndicator(currentPage: provider.currentPage),
                 ),
                 Positioned(
-                  bottom: 36,
+                  bottom: 75,
                   left: 0,
                   right: 0,
                   child: CustomButton(
@@ -114,7 +114,7 @@ class _OnboardingPage extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const SizedBox(height: 90),
+          const SizedBox(height: 150),
           Image.asset(
             data['image']!,
             width: 323,

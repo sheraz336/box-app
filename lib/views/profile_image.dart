@@ -38,10 +38,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           backgroundColor: Colors.white,
           appBar: AppBar(
             backgroundColor: Color(0xffe25e00),
+            iconTheme: const IconThemeData(color: Colors.white),
             title: Text(
               'My Profile',
               style: TextStyle(color: Colors.white),
             ),
+            centerTitle: true,
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(20),
@@ -56,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Color(0xffFFFFFF),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   user.name,
                   style: TextStyle(
@@ -64,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 10),
                 ProfileTextField(
                   label: 'Your Email',
                   value: user.email,
@@ -105,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ))
                   ],
                 ),
-                SizedBox(height: 50),
+                SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

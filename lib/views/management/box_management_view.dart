@@ -1,13 +1,13 @@
-import 'package:box_delivery_app/models/item_model.dart';
-import 'package:box_delivery_app/repos/box_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../../models/item_model.dart';
 import '../../repos/location_repository.dart';
+import '../../repos/box_repository.dart';
 import '../../widgets/box_card.dart';
 import '../../widgets/custom_delete_dailogue.dart';
 import '../../widgets/scan_qr.dart';
 import '../edit/edit_boxes_view.dart';
+import '../../widgets/native_ad_widget.dart'; // Import Native Ad Widget
 
 class BoxManagementScreen extends StatefulWidget {
   @override
@@ -16,20 +16,31 @@ class BoxManagementScreen extends StatefulWidget {
 
 class _BoxManagementScreenState extends State<BoxManagementScreen> {
   LocationModel? selectedLocation;
-  void onEdit(BoxModel item){
-    Navigator.of(context).push(MaterialPageRoute(builder: (c)=>EditBoxesScreen( box: item,)));
+
+  void onEdit(BoxModel item) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (c) => EditBoxesScreen(box: item)));
   }
 
-  void onDelete(BoxModel item){
+  void onDelete(BoxModel item) {
     BoxRepository.instance.deleteBox(item.id);
   }
+
   @override
   Widget build(BuildContext context) {
     final locationRepo = context.read<LocationRepository>();
     final boxRepo = context.read<BoxRepository>();
     final locations = locationRepo.list;
-    final boxes = selectedLocation !=null? boxRepo.getBoxes(selectedLocation!.locationId):boxRepo.list;
-  print("aaaaa");
+    final boxes = selectedLocation != null
+        ? boxRepo.getBoxes(selectedLocation!.locationId)
+        : boxRepo.list;
+
+    List<dynamic> combinedList = [];
+    for (int i = 0; i < boxes.length; i++) {
+      combinedList.add(boxes[i]);
+      if ((i + 1) % 4 == 0) combinedList.add('ad'); // Insert an ad every 4 items
+    }
+
     return Column(
       children: [
         Padding(
@@ -52,7 +63,7 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
                 ],
                 onChanged: (value) {
                   setState(() {
-                    selectedLocation=value;
+                    selectedLocation = value;
                   });
                 },
               ),
@@ -65,10 +76,12 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                if(boxes.isEmpty)return Center(child: Text("You have 0 boxes saved"),);
+                if (boxes.isEmpty) {
+                  return Center(child: Text("You have 0 boxes saved"));
+                }
                 return GridView.builder(
                   physics: BouncingScrollPhysics(),
-                  itemCount: boxes.length,
+                  itemCount: combinedList.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: constraints.maxWidth > 600 ? 3 : 2,
                     crossAxisSpacing: 10,
@@ -76,10 +89,16 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
                     childAspectRatio: 0.8,
                   ),
                   itemBuilder: (context, index) {
-                    final box = boxes[index];
+                    final item = combinedList[index];
+
+                    if (item == 'ad') {
+                      return NativeAdWidget(); // Show Native Ad
+                    }
+
+                    final box = item as BoxModel;
                     return BoxCard(
                       box: box,
-                      onEdit: ()=>onEdit(box),
+                      onEdit: () => onEdit(box),
                       onDelete: () {
                         showDialog(
                           context: context,
@@ -91,9 +110,8 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
                           ),
                         );
                       },
-                      onViewDetails: () {
-                        BoxDetailsDialog.showDetailsDialog(
-                            context,box);
+                      onView: () {
+                        BoxDetailsDialog.showDetailsDialog(context, box);
                       },
                     );
                   },

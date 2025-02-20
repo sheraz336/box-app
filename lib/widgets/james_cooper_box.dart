@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import '../models/item_model.dart';
 
@@ -17,158 +16,143 @@ class StyledBoxCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
-      // width: 159,
-      height: 263,
+      width: screenWidth * 0.42, // Responsive width
+      height: screenHeight * 0.325, // Responsive height
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Color(0xffFFFFFF),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.25),
-            blurRadius: 4,
-            offset: Offset(0, 4),
+            color: Colors.black.withOpacity(0.15), // Softer shadow
+            blurRadius: 6,
+            spreadRadius: 1,
+            offset: Offset(0, 3), // Natural shadow positioning
           ),
         ],
       ),
       child: Stack(
         children: [
           // Background Image
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              'assets/final.png', // Path to your background image
-              width: 165,
-              height: 263,
-              fit: BoxFit.cover, // Ensure the image covers the entire container
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                'assets/final.png',
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          // Gradient Overlay
 
           // Content
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(6.0),
+                padding: EdgeInsets.all(screenWidth * 0.022),
                 child: Text(
                   box.name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Color(0xff000000),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
+                    fontSize: screenWidth * 0.035,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 3),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                 child: Container(
-                  width: 141,
-                  height: 94,
-                  margin: const EdgeInsets.symmetric(horizontal: 9),
+                  width: screenWidth * 0.35,
+                  height: screenHeight * 0.12,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 1.5),
                   ),
                   child: box.imagePath != null
-                      ? Image.file(File(box.imagePath!))
-                      : Image.asset(
-                    "assets/box.png",
-                    fit: BoxFit.cover,
-                  ),
+                      ? Image.file(File(box.imagePath!), fit: BoxFit.cover)
+                      : Image.asset("assets/box.png", fit: BoxFit.cover),
                 ),
               ),
+              SizedBox(),
               Padding(
-                padding: const EdgeInsets.only(left: 3, top: 5),
+                padding: EdgeInsets.only(left: screenWidth * 0.04, top: screenHeight * 0.010),
                 child: Container(
-                  width: 141,
-                  height: 81,
-                  margin: const EdgeInsets.only(left: 9, top: 5),
+                  width: screenWidth * 0.35,
+                  height: screenHeight * 0.09,
                   decoration: BoxDecoration(
                     color: Color(0xffFCFCFC).withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(0.1),
+                    borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0x66000000),
+                        color: Colors.black.withOpacity(0.1),
                         blurRadius: 4,
                         spreadRadius: 1,
-                        offset: Offset(0, 0),
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(5.0),
+                    padding: EdgeInsets.all(screenWidth * 0.02),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Boxes: ${box.boxes.length}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: Color(0xff4D4D4D),
-                          ),
-                        ),
-                        Text(
-                          'Items: ${box.items}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: Color(0xff4D4D4D),
-                          ),
-                        ),
-                        Text(
-                          'Value: £${box.value}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: Color(0xff4D4D4D),
-                          ),
-                        ),
-                        if (false)
-                          Text(
-                            'Shared: Yes',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                              color: Color(0xff4D4D4D),
-                            ),
-                          ),
+                        _detailText('Boxes: ${box.boxes.length}', screenWidth),
+                        _detailText('Items: ${box.items}', screenWidth),
+                        _detailText('Value: £${box.value}', screenWidth),
                       ],
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              Spacer(),
               Container(
-                width: 167,
-                height: 39,
-                color: Color(0xffD9D9D9),
+                width: double.infinity,
+                height: screenHeight * 0.05,
+                decoration: BoxDecoration(
+                  color: const Color(0xffD9D9D9),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10), ), // Slightly rounded for smoothness
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                   GestureDetector(onTap: onEdit,child:  Image.asset(
-                     'assets/pen_edit.png',
-                     width: 18.86,
-                     height: 19.5,
-                   ),),
+                    GestureDetector(
+                      onTap: onEdit,
+                      child: Image.asset(
+                        'assets/pen_edit.png',
+                        width: screenWidth * 0.05,
+                      ),
+                    ),
                     Container(
                       width: 1,
-                      height: 28,
+                      height: screenHeight * 0.03,
                       color: Colors.black,
                     ),
-                   GestureDetector(
-                     onTap: onDelete,
-                     child:  Image.asset(
-                     'assets/delete_box.png',
-                     width: 18.86,
-                     height: 19.5,
-                   ),)
+                    GestureDetector(
+                      onTap: onDelete,
+                      child: Image.asset(
+                        'assets/delete_box.png',
+                        width: screenWidth * 0.05,
+                      ),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Text _detailText(String text, double screenWidth) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: screenWidth * 0.032,
+        color: Color(0xff4D4D4D),
       ),
     );
   }

@@ -41,29 +41,32 @@ class _LocationManagementScreenState extends State<LocationManagementScreen> {
       child: Column(
         children: [
           for (var i = 0; i < pairs; i += 2)
-            Row(
-              children: [
-                Expanded(
-                    child: StyledBoxCard(
-                      box: locations[i],
-                      onEdit: () => onLocationEdit(locations[i]),
-                      onDelete: () => onLocationDelete(locations[i]),
-                    )),
-                const SizedBox(
-                  width: 12,
-                ),
-                (i + 1 >= locations.length)
-                    ? Expanded(
-                    child: Container(
-                      height: 263,
-                    ))
-                    : Expanded(
-                    child: StyledBoxCard(
-                      box: locations[i + 1],
-                      onEdit: () => onLocationEdit(locations[i + 1]),
-                      onDelete: () => onLocationDelete(locations[i + 1]),
-                    )),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: StyledBoxCard(
+                        box: locations[i],
+                        onEdit: () => onLocationEdit(locations[i]),
+                        onDelete: () => onLocationDelete(locations[i]),
+                      )),
+                  const SizedBox(
+                    width: 12,
+                  ),
+                  (i + 1 >= locations.length)
+                      ? Expanded(
+                      child: Container(
+                        height: 263,
+                      ))
+                      : Expanded(
+                      child: StyledBoxCard(
+                        box: locations[i + 1],
+                        onEdit: () => onLocationEdit(locations[i + 1]),
+                        onDelete: () => onLocationDelete(locations[i + 1]),
+                      )),
+                ],
+              ),
             ),
         ],
       ),

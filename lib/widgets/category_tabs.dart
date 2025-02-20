@@ -19,14 +19,14 @@ class CategoryTabs extends StatelessWidget {
         CategoryTab(
           iconPath: "assets/location.svg",
           text: "Location",
-          color: Color(0xffe25e00),
+          color: Colors.amber[300]!,
           isSelected: selectedTab == "Location",
           onTap: () => onTabSelected("Location"),
         ),
         CategoryTab(
           iconPath: "assets/boxes.svg",
           text: "Boxes",
-          color: Colors.purple,
+          color: Colors.purple.shade300,
           isSelected: selectedTab == "Boxes",
           onTap: () => onTabSelected("Boxes"),
         ),

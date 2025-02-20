@@ -50,7 +50,7 @@ class SignUpView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: 30,
+                height: 60,
               ),
               Center(
                 child: const Text(
@@ -63,7 +63,7 @@ class SignUpView extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 60),
+              const SizedBox(height: 50),
               Align(
                 alignment: Alignment.centerLeft,
                 child: const Text(
@@ -76,7 +76,7 @@ class SignUpView extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 2),
               CustomTextFormField(
                 maxLength: 30,
                 hintText: 'Enter your name',
@@ -87,7 +87,7 @@ class SignUpView extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                     color: Color(0xffBABFC5)),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 2),
               Align(
                 alignment: Alignment.centerLeft,
                 child: const Text(
@@ -99,7 +99,7 @@ class SignUpView extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 2),
               CustomTextFormField(
                 hintText: 'Enter email address',
                 obscureText: false,
@@ -110,7 +110,7 @@ class SignUpView extends StatelessWidget {
                     fontSize: 16,
                     color: Color(0xffBABFC5)),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
               Align(
                 alignment: Alignment.centerLeft,
                 child: const Text(
@@ -122,7 +122,7 @@ class SignUpView extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 2),
               CustomTextFormField(
                 maxLength: 16,
                 hintText: 'Enter password',
@@ -134,7 +134,7 @@ class SignUpView extends StatelessWidget {
                     fontSize: 16,
                     color: Color(0xffBABFC5)),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 2),
               Align(
                 alignment: Alignment.centerLeft,
                 child: const Text(
@@ -146,7 +146,7 @@ class SignUpView extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 2),
               CustomTextFormField(
                 maxLength: 16,
                 hintText: 'Confirm Password',
@@ -165,7 +165,7 @@ class SignUpView extends StatelessWidget {
                     fontSize: 16,
                     color: Color(0xffBABFC5)),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
               CustomButton(
                 text: "Sign Up",
                 onPressed: () => onRegister(context, authController),
@@ -266,6 +266,7 @@ class SignUpView extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
             ],
           ),
         ),

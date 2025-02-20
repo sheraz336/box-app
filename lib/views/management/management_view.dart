@@ -45,6 +45,7 @@ class _AddViewState extends State<ManagementView> {
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Color(0xffe25e00),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [

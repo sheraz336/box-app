@@ -1,3 +1,4 @@
+import 'package:box_delivery_app/views/qr_scan_view.dart';
 import 'package:box_delivery_app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,7 @@ class InvalidQRScreen extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: Color(0xffFFFFFF)),
             ),
+            centerTitle: true,
           ),
           body: Padding(
             padding: EdgeInsets.all(10),
@@ -64,7 +66,9 @@ class InvalidQRScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 50),
-                  CustomButton(text: 'Scan Again', onPressed: () {})
+                  CustomButton(text: 'Scan Again', onPressed: () {Navigator.push(context,
+        MaterialPageRoute(builder: (c) => QRScanScreen()));
+        })
                 ],
               ),
             ),
