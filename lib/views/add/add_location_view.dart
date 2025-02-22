@@ -39,7 +39,7 @@ class _AddLocationViewState extends State<AddLocationView> {
       // Show AdMob Interstitial Ad after every 2 times a location is added
       _adManager.incrementLocationCount(() {
         if (mounted) {
-          Navigator.pop(context);
+          Navigator.pop(context); // Only pop after ad is closed
         }
       });
     } catch (e) {

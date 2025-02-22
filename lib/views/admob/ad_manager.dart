@@ -24,23 +24,16 @@ class AdManager {
   void loadAd() {
     if(disabled)return;
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3512120495633654/5731406074', // Replace with your actual AdMob unit ID
+      adUnitId: 'ca-app-pub-3512120495633654/5731406074',
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
           _interstitialAd = ad;
           _isAdLoaded = true;
-          print("Ad Loaded Successfully");
-
-          // Make the ad skippable after 5 seconds
-          Future.delayed(Duration(seconds: 5), () {
-            _interstitialAd?.setImmersiveMode(true);
-          });
         },
         onAdFailedToLoad: (LoadAdError error) {
           _interstitialAd = null;
           _isAdLoaded = false;
-          print('Ad failed to load: $error');
         },
       ),
     );
@@ -54,24 +47,22 @@ class AdManager {
           ad.dispose();
           _interstitialAd = null;
           _isAdLoaded = false;
-          if (onAdDismissed != null) onAdDismissed(); // Execute callback after ad
           loadAd(); // Load the next ad
+          if (onAdDismissed != null) onAdDismissed();
         },
         onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
           ad.dispose();
           _interstitialAd = null;
           _isAdLoaded = false;
-          print("Ad failed to show: $error");
-          if (onAdDismissed != null) onAdDismissed();
           loadAd();
+          if (onAdDismissed != null) onAdDismissed();
         },
       );
 
       _interstitialAd!.show();
     } else {
-      print("Ad not ready yet.");
+      loadAd();
       if (onAdDismissed != null) onAdDismissed();
-      loadAd(); // Attempt to load a new ad
     }
   }
 
