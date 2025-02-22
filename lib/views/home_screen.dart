@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _loadBannerAd() {
-    if(SubscriptionRepository.instance.currentSubscription.isPremium)return;
+    if(!SubscriptionRepository.instance.isFree())return;
     _bannerAd = BannerAd(
       adUnitId: 'ca-app-pub-3512120495633654/7333096507', // Replace with your AdMob banner unit ID
       size: AdSize.banner,

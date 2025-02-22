@@ -15,7 +15,7 @@ class AdManager {
   bool _isRewardedAdLoaded = false;
 
   AdManager() {
-    disabled=SubscriptionRepository.instance.currentSubscription.isPremium;
+    disabled=!SubscriptionRepository.instance.isFree();
     if(disabled)return;
     loadAd();
     _startAdTimer(); // Start the 3-minute ad timer

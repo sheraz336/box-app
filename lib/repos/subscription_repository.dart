@@ -60,6 +60,10 @@ class SubscriptionRepository extends ChangeNotifier {
     return _currentSubscription.isPremium && !isExpired();
   }
 
+  bool isFree(){
+    return _currentSubscription.id == SubscriptionModel.Free.id;
+  }
+
   bool canAddBox() {
     return !isExpired() &&
         BoxRepository.instance.list.length < _currentSubscription.maxBoxes;
