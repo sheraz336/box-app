@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import '../models/item_model.dart';
 
 class BoxCard extends StatelessWidget {
@@ -19,14 +19,17 @@ class BoxCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double textScale = MediaQuery.of(context).textScaleFactor;
+
     return GestureDetector(
       onTap: onView, // Tap anywhere to view details
       child: Container(
-        width: 161, // Fixed width
-        height: 192, // Fixed height
+        width: screenWidth * 0.42, // Scales width dynamically (42% of screen)
+        height: screenHeight * 0.22, // Scales height dynamically (22% of screen)
         decoration: BoxDecoration(
-          borderRadius:  BorderRadius.circular(12
-          ), // Only top edges are rounded
+          borderRadius: BorderRadius.circular(screenWidth * 0.03), // Adjust radius based on screen width
           color: Colors.white,
           boxShadow: [
             BoxShadow(
@@ -38,20 +41,20 @@ class BoxCard extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // Background Image (Overflows slightly)
+            // Background Image
             Positioned(
               top: 0,
               left: -3,
               right: -3,
               child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ), // Rounded only at the top
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(screenWidth * 0.04),
+                  topRight: Radius.circular(screenWidth * 0.04),
+                ),
                 child: Image.asset(
                   'assets/final_gadget.png',
-                  width: 170,
-                  height: 195,
+                  width: screenWidth * 0.44, // Adjust image width
+                  height: screenHeight * 0.23, // Adjust image height
                   fit: BoxFit.fill,
                 ),
               ),
@@ -60,16 +63,15 @@ class BoxCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 5,),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child:
+                SizedBox(height: screenHeight * 0.005),
 
-                  Text(
+                Padding(
+                  padding: EdgeInsets.all(screenWidth * 0.02),
+                  child: Text(
                     box.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.black,
-                      fontSize: 14,
+                      fontSize: 14 * textScale, // Adjust font size dynamically
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -77,11 +79,11 @@ class BoxCard extends StatelessWidget {
 
                 // Inner Box Image
                 Padding(
-                  padding: const EdgeInsets.only(left: 10),
+                  padding: EdgeInsets.only(left: screenWidth * 0.03),
                   child: Container(
-                    width: 126.64,
-                    height: 77.14,
-                    margin: const EdgeInsets.symmetric(horizontal: 9),
+                    width: screenWidth * 0.33, // Adjust width dynamically
+                    height: screenHeight * 0.10, // Adjust height dynamically
+                    margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width: 1.1),
                     ),
@@ -92,28 +94,28 @@ class BoxCard extends StatelessWidget {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 10),
+                  padding: EdgeInsets.only(left: screenWidth * 0.05, top: screenHeight * 0.01),
                   child: Container(
-                    width: 125,
-                    height: 26.31,
+                    width: screenWidth * 0.33, // Adjust width dynamically
+                    height: screenHeight * 0.04, // Adjust height dynamically
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(4), // Slightly rounded for smoothness
+                      borderRadius: BorderRadius.circular(screenWidth * 0.02),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.2),
                           blurRadius: 4,
                           spreadRadius: 1,
-                          offset: const Offset(0, 2),
+                          offset: Offset(0, 2),
                         ),
                       ],
                     ),
                     child: Center(
                       child: Text(
                         'Items: ${box.items}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 11.5,
+                          fontSize: 11.5 * textScale, // Adjust font size dynamically
                           color: Colors.black,
                         ),
                       ),
@@ -121,29 +123,42 @@ class BoxCard extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                SizedBox(height: screenHeight * 0.010),
 
                 // Bottom Actions
                 Container(
-                  width: 168,
-                  height: 39.2,
+                  width: screenWidth * 0.48, // Adjust width dynamically
+                  height: screenHeight * 0.059, // Adjust height dynamically
                   decoration: BoxDecoration(
-                    color: const Color(0xffD9D9D9),
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10), ), // Slightly rounded for smoothness
+                    color: Color(0xffD9D9D9),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(screenWidth * 0.03),
+                      bottomRight: Radius.circular(screenWidth * 0.03),
+                    ),
                   ),
-
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       GestureDetector(
                         onTap: onEdit,
-                        child: Image.asset('assets/pen_edit.png', width: 18.86,
-                          height: 19.5,),
+                        child: Image.asset(
+                          'assets/pen_edit.png',
+                          width: screenWidth * 0.05, // Adjust size dynamically
+                          height: screenHeight * 0.025, // Adjust size dynamically
+                        ),
                       ),
-                      Container(width: 1, height: 28, color: Colors.black),
+                      Container(
+                        width: 1,
+                        height: screenHeight * 0.04,
+                        color: Colors.black,
+                      ),
                       GestureDetector(
                         onTap: onDelete,
-                        child: Image.asset('assets/delete_box.png', width: 20, height: 20),
+                        child: Image.asset(
+                          'assets/delete_box.png',
+                          width: screenWidth * 0.05, // Adjust size dynamically
+                          height: screenHeight * 0.025, // Adjust size dynamically
+                        ),
                       ),
                     ],
                   ),

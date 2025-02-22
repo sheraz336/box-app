@@ -19,23 +19,16 @@ class AdManager {
 
   void loadAd() {
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3512120495633654/5731406074', // Replace with your actual AdMob unit ID
+      adUnitId: 'ca-app-pub-3512120495633654/5731406074',
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
           _interstitialAd = ad;
           _isAdLoaded = true;
-          print("Ad Loaded Successfully");
-
-          // Make the ad skippable after 5 seconds
-          Future.delayed(Duration(seconds: 5), () {
-            _interstitialAd?.setImmersiveMode(true);
-          });
         },
         onAdFailedToLoad: (LoadAdError error) {
           _interstitialAd = null;
           _isAdLoaded = false;
-          print('Ad failed to load: $error');
         },
       ),
     );
@@ -48,24 +41,22 @@ class AdManager {
           ad.dispose();
           _interstitialAd = null;
           _isAdLoaded = false;
-          if (onAdDismissed != null) onAdDismissed(); // Execute callback after ad
           loadAd(); // Load the next ad
+          if (onAdDismissed != null) onAdDismissed();
         },
         onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
           ad.dispose();
           _interstitialAd = null;
           _isAdLoaded = false;
-          print("Ad failed to show: $error");
-          if (onAdDismissed != null) onAdDismissed();
           loadAd();
+          if (onAdDismissed != null) onAdDismissed();
         },
       );
 
       _interstitialAd!.show();
     } else {
-      print("Ad not ready yet.");
+      loadAd();
       if (onAdDismissed != null) onAdDismissed();
-      loadAd(); // Attempt to load a new ad
     }
   }
 
@@ -123,21 +114,23 @@ class AdManager {
     });
   }
 
-  // Increment box count and show ad after 3 boxes
-  void incrementBoxCount(VoidCallback? onAdDismissed) {
+  void incrementBoxCount(VoidCallback onActionCompleted) {
     _boxAddCount++;
     if (_boxAddCount >= 3) {
-      _boxAddCount = 0; // Reset count after showing ad
-      showAd(onAdDismissed: onAdDismissed);
+      _boxAddCount = 0; // Reset counter
+      showAd(onAdDismissed: onActionCompleted);
+    } else {
+      onActionCompleted(); // Proceed normally if ad is not triggered
     }
   }
 
-  // Increment location count and show ad after 2 locations
-  void incrementLocationCount(VoidCallback? onAdDismissed) {
+  void incrementLocationCount(VoidCallback onActionCompleted) {
     _locationAddCount++;
     if (_locationAddCount >= 2) {
-      _locationAddCount = 0; // Reset count after showing ad
-      showAd(onAdDismissed: onAdDismissed);
+      _locationAddCount = 0; // Reset counter
+      showAd(onAdDismissed: onActionCompleted);
+    } else {
+      onActionCompleted(); // Proceed normally if ad is not triggered
     }
   }
 

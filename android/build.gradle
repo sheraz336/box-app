@@ -1,9 +1,28 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.3.0' // Android Gradle Plugin
+        classpath 'com.google.gms.google-services:com.google.gms.google-services.gradle.plugin:4.4.1' // Firebase
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0" // Kotlin
+    }
+}
 allprojects {
     repositories {
         google()
         mavenCentral()
         jcenter()
         maven { url 'https://storage.googleapis.com/download.flutter.io' }
+    }
+    configurations.all {
+        resolutionStrategy {
+            // Force Bouncy Castle to use 1.77
+            force 'org.bouncycastle:bcprov-jdk18on:1.77'
+            // Exclude conflicting versions
+            exclude group: 'org.bouncycastle', module: 'bcprov-jdk18on'
+        }
     }
 }
 

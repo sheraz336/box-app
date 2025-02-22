@@ -32,12 +32,12 @@ class _AddLocationViewState extends State<AddLocationView> {
     try {
       if (!_formKey.currentState!.validate()) return;
 
-      await controller.saveLocation();
+      await controller.saveLocation(); // Ensure action completes first
 
       // Show AdMob Interstitial Ad after every 2 times a location is added
       _adManager.incrementLocationCount(() {
         if (mounted) {
-          Navigator.pop(context);
+          Navigator.pop(context); // Only pop after ad is closed
         }
       });
     } catch (e) {
@@ -45,9 +45,6 @@ class _AddLocationViewState extends State<AddLocationView> {
       showSnackbar(context, e.toString());
     }
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {

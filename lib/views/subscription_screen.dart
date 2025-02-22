@@ -1,7 +1,14 @@
+import 'dart:async';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'auth/sign_in/sign_in.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
+import 'package:flutter/services.dart';
+
 
 class SubscriptionScreen extends StatefulWidget {
   @override
@@ -10,14 +17,81 @@ class SubscriptionScreen extends StatefulWidget {
 
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
   int selectedPlan = 0; // 0 for Pro, 1 for Pro+ Cloud
+  final String _proProductId = 'pro'; // One-time purchase
+  final String _proPlusCloudProductId = 'pro_plus_cloud'; // Subscription
+  final InAppPurchase _inAppPurchase = InAppPurchase.instance;
+  List<ProductDetails> _products = [];
+  late StreamSubscription<List<PurchaseDetails>> _subscription;
+  bool _isAvailable = false;
 
-  void onSubscribe(int id) {
+  @override
+  void initState() {
+    super.initState();
+    _initializeInAppPurchase();
+  }
+
+  void _initializeInAppPurchase() async {
+    final bool isAvailable = await _inAppPurchase.isAvailable();
+    setState(() {
+      _isAvailable = isAvailable;
+    });
+
+    if (!isAvailable) return;
+
+    final ProductDetailsResponse response = await _inAppPurchase.queryProductDetails({
+      _proProductId,
+      _proPlusCloudProductId,
+    });
+
+    if (response.notFoundIDs.isNotEmpty) {
+      print('Some products not found: ${response.notFoundIDs}');
+    }
+
+    setState(() {
+      _products = response.productDetails;
+    });
+
+    _subscription = _inAppPurchase.purchaseStream.listen(
+          (purchaseDetailsList) {
+        _handlePurchaseUpdates(purchaseDetailsList);
+      },
+      onDone: () {
+        _subscription.cancel();
+      },
+      onError: (error) {
+        print('Purchase Stream Error: $error');
+      },
+    );
+  }
+  void _handlePurchaseUpdates(List<PurchaseDetails> purchaseDetailsList) {
+    for (PurchaseDetails purchaseDetails in purchaseDetailsList) {
+      if (purchaseDetails.status == PurchaseStatus.purchased) {
+        _verifyPurchase(purchaseDetails);
+      } else if (purchaseDetails.status == PurchaseStatus.error) {
+        print('Purchase Error: ${purchaseDetails.error}');
+      }
+
+      if (purchaseDetails.pendingCompletePurchase) {
+        _inAppPurchase.completePurchase(purchaseDetails);
+      }
+    }
+  }
+  void _verifyPurchase(PurchaseDetails purchaseDetails) {
+    if (purchaseDetails.productID == _proProductId) {
+      print('Pro Purchase Successful!');
+    } else if (purchaseDetails.productID == _proPlusCloudProductId) {
+      print('Pro+ Cloud Subscription Successful!');
+    }
+  }
+
+
+  void onSubscribe(int id) async {
     if (id > 0 && FirebaseAuth.instance.currentUser == null) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text("Requires Sign in"),
-          content: Text("This requires you to have an account. Sign in and continue?"),
+          content: Text("Sign in to continue."),
           actions: [
             TextButton(
               onPressed: () {
@@ -30,8 +104,30 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       );
       return;
     }
-    // SubscriptionRepository.instance.changeTo(id);
+
+    final productId = id == 0 ? _proProductId : _proPlusCloudProductId;
+    final ProductDetails? product = _products.firstWhereOrNull((p) => p.id == productId);
+
+
+    if (product == null) {
+      print("Product not found");
+      return;
+    }
+
+    final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
+    if (id == 0) {
+      await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+    } else {
+      await _inAppPurchase.buyConsumable(purchaseParam: purchaseParam);
+    }
   }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {

@@ -65,12 +65,12 @@ class _AddBoxViewState extends State<AddBoxView> {
     try {
       if (!_formKey.currentState!.validate()) return;
 
-      await controller.addBox();
+      await controller.addBox(); // Ensure action completes first
 
       // Show AdMob Interstitial Ad after every 3 times a box is added
       _adManager.incrementBoxCount(() {
         if (mounted) {
-          Navigator.pop(context);
+          Navigator.pop(context); // Only pop after ad is closed
         }
       });
     } catch (e) {
@@ -78,6 +78,7 @@ class _AddBoxViewState extends State<AddBoxView> {
       showSnackbar(context, e.toString());
     }
   }
+
 
 
   @override
