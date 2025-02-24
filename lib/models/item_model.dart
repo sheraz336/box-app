@@ -137,6 +137,7 @@ class BoxModel extends HiveObject {
   }
 
   static BoxModel fromMap(Map map) {
+    print("map ${map}");
     return BoxModel(
         value: map["value"],
         ownerId: map["ownerId"],

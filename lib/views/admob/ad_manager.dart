@@ -22,7 +22,7 @@ class AdManager {
   }
 
   void loadAd() {
-    if(disabled)return;
+    if(disabled || _isAdLoaded)return;
     InterstitialAd.load(
       adUnitId: 'ca-app-pub-3512120495633654/5731406074',
       request: const AdRequest(),
@@ -134,7 +134,7 @@ class AdManager {
       _boxAddCount = 0; // Reset count after showing ad
       showAd(onAdDismissed: onAdDismissed);
     }else{
-
+      onAdDismissed?.call();
     }
   }
 

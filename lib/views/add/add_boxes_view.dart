@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:box_delivery_app/models/item_model.dart';
+import 'package:box_delivery_app/models/qr_model.dart';
 import 'package:box_delivery_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -18,23 +19,6 @@ class AddBoxView extends StatefulWidget {
   State<AddBoxView> createState() => _AddBoxViewState();
 }
 
-void showQrPopup(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (context) {
-      return QrPopupContainer(
-        onPrint: () {
-          Navigator.pop(context);
-        },
-        onDone: () {
-          Navigator.pop(context);
-        },
-      );
-    },
-  );
-}
 
 class _AddBoxViewState extends State<AddBoxView> {
   String selectedTab = "Boxes";
@@ -65,11 +49,16 @@ class _AddBoxViewState extends State<AddBoxView> {
     try {
       if (!_formKey.currentState!.validate()) return;
 
-      await controller.addBox(); // Ensure action completes first
+      final box  = await controller.addBox(); // Ensure action completes first
 
       // Show AdMob Interstitial Ad after every 3 times a box is added
       _adManager.incrementBoxCount(() {
         if (mounted) {
+          if(controller.generateQrCode){
+            showQrPopup(context, QrModel(type: ObjectType.Box,box:box ));
+            showSnackbar(context, "Box added successfully");
+            return;
+          }
           Navigator.pop(context); // Only pop after ad is closed
         }
       });

@@ -1,3 +1,4 @@
+import 'package:box_delivery_app/models/qr_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/item_model.dart';
@@ -123,7 +124,8 @@ class _BoxManagementScreenState extends State<BoxManagementScreen> {
                         );
                       },
                       onView: () {
-                        BoxDetailsDialog.showDetailsDialog(context, box);
+                        showQrPopup(context, QrModel(type: ObjectType.Box,box: box));
+                        // BoxDetailsDialog.showDetailsDialog(context, box);
                       },
                     );
                   },

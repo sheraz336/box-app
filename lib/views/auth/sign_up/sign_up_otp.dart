@@ -186,8 +186,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                               text: 'Submit',
                               onPressed: () async {
                                 if (otpController.otpModel.otp.length == 6) {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
                                   final verified = await controller
                                       .verifyOtp(otpController.otpModel.otp);
+                                  setState(() {
+                                    isLoading = false;
+                                  });
                                 }
                                 // otpController.setPhoneNumber("+1234567890");
                                 // Navigator.push(

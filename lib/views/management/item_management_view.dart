@@ -4,6 +4,7 @@ import 'package:box_delivery_app/widgets/horizontal_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../../models/qr_model.dart';
 import '../../repos/location_repository.dart';
 import '../../repos/subscription_repository.dart';
 import '../../utils.dart';
@@ -28,7 +29,8 @@ class _ItemManagementScreenState extends State<ItemManagementScreen> {
 
   void onDelete(ItemModel item) {
     try {
-      if(SubscriptionRepository.instance.currentSubscription.isPremium && item.isShared()){
+      if (SubscriptionRepository.instance.currentSubscription.isPremium &&
+          item.isShared()) {
         throw Exception("Only owner can delete the item");
       }
       ItemRepository.instance.deleteItem(item.id);
@@ -99,6 +101,10 @@ class _ItemManagementScreenState extends State<ItemManagementScreen> {
                         ? null
                         : DateFormat(DateFormat.YEAR_MONTH_DAY)
                             .parse(item.purchaseDate),
+                    onView: () {
+                      showQrPopup(
+                          context, QrModel(type: ObjectType.Item, item: item));
+                    },
                     onDelete: () {
                       showDialog(
                         context: context,

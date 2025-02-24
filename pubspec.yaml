@@ -55,6 +55,10 @@ dependencies:
   purchases_flutter: ^8.5.0
   onepref: ^0.0.19
   collection: ^1.17.2
+  simple_barcode_scanner: ^0.3.0
+  barcode: ^2.2.9
+  pdf: ^3.11.3
+  file_picker: ^9.0.0
 
 
 

@@ -21,12 +21,20 @@ class AddItemsController extends ChangeNotifier {
 
   String? imageUrl;
 
+
+  bool generateQrCode = false;
+
+  void toggleQrCode() {
+    generateQrCode = !generateQrCode;
+    notifyListeners();
+  }
+
   void selectImage(String url) {
     imageUrl = url;
     notifyListeners();
   }
 
-  Future<void> addItem() async {
+  Future<ItemModel> addItem() async {
     if ((locationId != null && boxId != null)) {
       throw Exception("Either choose Box Or Location");
     }
@@ -71,5 +79,6 @@ class AddItemsController extends ChangeNotifier {
 
     // Save the newItem to Firestore, database, or local storage
     debugPrint("Item Added: ${item.name}");
+    return item;
   }
 }

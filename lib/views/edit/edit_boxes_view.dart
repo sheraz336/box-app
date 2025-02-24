@@ -4,8 +4,8 @@ import 'package:box_delivery_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/qr_model.dart';
 import '../../repos/location_repository.dart';
-
 
 class EditBoxesScreen extends StatefulWidget {
   final BoxModel box;
@@ -57,95 +57,123 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Box ID Field
-                Text("Box ID",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                SizedBox(height: 8),
-                TextFormField(
-                  enabled: false,
-                  controller: _boxIdController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                  ),
-                ),
-                SizedBox(height: 20),
-
-                // Location Dropdown
-                Text("Location",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                SizedBox(height: 8),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<LocationModel>(
-                      isExpanded: true,
-                      value: selectedLocation,
-                      hint: Text("Select your Location"),
-                      items: locations
-                          .map((location) => DropdownMenuItem(
-                                value: location,
-                                child: Text(location.name),
-                              ))
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedLocation = value;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-
-                // Description Field
-                Text("Description",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                SizedBox(height: 8),
-                TextFormField(
-                  controller: _descriptionController,
-                  maxLines: 4,
-                  maxLength: 100,
-                  decoration: InputDecoration(
-                    hintText: "Enter Description",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                  ),
-                ),
-                SizedBox(height: 30),
-
-                // Update Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xffe25e00),
-                      padding: EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
+      body: SingleChildScrollView(
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Box ID Field
+                  Text("Box ID",
+                      style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    enabled: false,
+                    controller: _boxIdController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8)),
                     ),
-                    onPressed: onUpdateBox,
-                    child: Text("Update Box",
-                        style: TextStyle(fontSize: 16, color: Colors.white)),
                   ),
-                ),
-              ],
-            ),
-          )),
+                  SizedBox(height: 20),
+
+                  // Location Dropdown
+                  Text("Location",
+                      style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade400),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<LocationModel>(
+                        isExpanded: true,
+                        value: selectedLocation,
+                        hint: Text("Select your Location"),
+                        items: locations
+                            .map((location) => DropdownMenuItem(
+                          value: location,
+                          child: Text(location.name),
+                        ))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedLocation = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+
+                  // Description Field
+                  Text("Description",
+                      style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: _descriptionController,
+                    maxLines: 4,
+                    maxLength: 100,
+                    decoration: InputDecoration(
+                      hintText: "Enter Description",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+
+                  // Update Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xffe25e00),
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                      onPressed: onUpdateBox,
+                      child: Text("Update Box",
+                          style: TextStyle(fontSize: 16, color: Colors.white)),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  //generate qr
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(color: Color(0xffe25e00))),
+                      ),
+                      onPressed: () => showQrPopup(
+                          context,
+                          QrModel(
+                              type: ObjectType.Box,
+                              box: BoxRepository.instance.getBox(widget.box.id))),
+                      child: Text(
+                        'Generate QR',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xffe25e00)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )),
+      ),
     );
   }
 }

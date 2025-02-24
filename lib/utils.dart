@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:box_delivery_app/models/qr_model.dart';
+import 'package:box_delivery_app/widgets/qr_popup_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,27 @@ String generateRandomId(String prefix){
 String? getOwnerId(){
   return FirebaseAuth.instance.currentUser?.uid ?? null;
 }
+
+//qr
+void showQrPopup(BuildContext context,QrModel model,) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) {
+      return QrPopupContainer(
+        model: model,
+        onPrint: () {
+          Navigator.pop(context);
+        },
+        onDone: () {
+          Navigator.pop(context);
+        },
+      );
+    },
+  );
+}
+
 // UI Utilities
 void showSnackbar(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));

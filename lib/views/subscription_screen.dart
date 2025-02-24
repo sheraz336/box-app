@@ -1,6 +1,12 @@
+import 'dart:async';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import '../repos/subscription_repository.dart';
+import '../utils.dart';
 import 'auth/sign_in/sign_in.dart';
 
 class SubscriptionScreen extends StatefulWidget {
@@ -11,12 +17,11 @@ class SubscriptionScreen extends StatefulWidget {
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
   var selectedPlan = 1;
   bool isLoading = false;
-  int selectedPlan = 0; // 0 for Pro, 1 for Pro+ Cloud
   final String _proProductId = 'pro'; // One-time purchase
   final String _proPlusCloudProductId = 'pro_plus_cloud'; // Subscription
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
   List<ProductDetails> _products = [];
-  late StreamSubscription<List<PurchaseDetails>> _subscription;
+  StreamSubscription<List<PurchaseDetails>>? _subscription;
   bool _isAvailable = false;
 
   @override
@@ -30,40 +35,63 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     try {
       if (id == SubscriptionRepository.instance.currentSubscription.id &&
           !SubscriptionRepository.instance.isExpired()) {
-        showAlertDialog(
-            context, "Error", "You already are subscribed to this plan",
-            true, () {});
+        showAlertDialog(context, "Error",
+            "You already are subscribed to this plan", true, () {});
         return;
       }
+      print("aaaa ${FirebaseAuth.instance.currentUser}");
       if (FirebaseAuth.instance.currentUser == null) {
         showDialog(
           context: context,
-          builder: (context) =>
-              AlertDialog(
-                title: Text("Requires Sign in"),
-                content: Text(
-                    "This requires you to have an account. Sign in and continue?"),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .push(
-                          MaterialPageRoute(builder: (c) => SignInScreen()));
-                    },
-                    child: Text("Sign In"),
-                  ),
-                ],
+          builder: (context) => AlertDialog(
+            title: Text("Requires Sign in"),
+            content: Text(
+                "This requires you to have an account. Sign in and continue?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (c) => SignInScreen()));
+                },
+                child: Text("Sign In"),
               ),
+            ],
+          ),
         );
         return;
       }
 
       isLoading = true;
-      await SubscriptionRepository.instance.changeTo(id);
-      isLoading = false;
+      setState(() {});
+      //subscription
+      final productId = id == 1 ? _proProductId : _proPlusCloudProductId;
+      final ProductDetails? product =
+          _products.firstWhereOrNull((p) => p.id == productId);
+
+      if (product == null) {
+        print("Product not found");
+        // showAlertDialog(context, "Error", "Product not found", true, (){});
+        await SubscriptionRepository.instance.changeTo(selectedPlan);
+        showAlertDialog(context, "Info", "DevMode: Granted subscription for testing", true, (){});
+        isLoading = false;
+        setState(() {});
+        return;
+      }
+
+      final PurchaseParam purchaseParam =
+          PurchaseParam(productDetails: product);
+      if (id == 1) {
+        await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+      } else {
+        await _inAppPurchase.buyConsumable(purchaseParam: purchaseParam);
+      }
     } catch (e) {
       print(e);
       isLoading = false;
+      setState(() {});
+    }
+  }
+
   void _initializeInAppPurchase() async {
     final bool isAvailable = await _inAppPurchase.isAvailable();
     setState(() {
@@ -72,7 +100,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
     if (!isAvailable) return;
 
-    final ProductDetailsResponse response = await _inAppPurchase.queryProductDetails({
+    final ProductDetailsResponse response =
+        await _inAppPurchase.queryProductDetails({
       _proProductId,
       _proPlusCloudProductId,
     });
@@ -86,23 +115,26 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     });
 
     _subscription = _inAppPurchase.purchaseStream.listen(
-          (purchaseDetailsList) {
+      (purchaseDetailsList) {
         _handlePurchaseUpdates(purchaseDetailsList);
       },
       onDone: () {
-        _subscription.cancel();
+        _subscription?.cancel();
       },
       onError: (error) {
         print('Purchase Stream Error: $error');
       },
     );
   }
+
   void _handlePurchaseUpdates(List<PurchaseDetails> purchaseDetailsList) {
     for (PurchaseDetails purchaseDetails in purchaseDetailsList) {
       if (purchaseDetails.status == PurchaseStatus.purchased) {
         _verifyPurchase(purchaseDetails);
       } else if (purchaseDetails.status == PurchaseStatus.error) {
         print('Purchase Error: ${purchaseDetails.error}');
+        isLoading = false;
+        setState(() {});
       }
 
       if (purchaseDetails.pendingCompletePurchase) {
@@ -110,43 +142,28 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       }
     }
   }
-  void _verifyPurchase(PurchaseDetails purchaseDetails) {
+
+  void _verifyPurchase(PurchaseDetails purchaseDetails) async {
     if (purchaseDetails.productID == _proProductId) {
       print('Pro Purchase Successful!');
+      await SubscriptionRepository.instance.changeTo(1);
+      isLoading = false;
+      setState(() {});
+      return;
     } else if (purchaseDetails.productID == _proPlusCloudProductId) {
       print('Pro+ Cloud Subscription Successful!');
-    }
-  }
-
-
-  void onSubscribe(int id) async {
-    if (id > 0 && FirebaseAuth.instance.currentUser == null) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Requires Sign in"),
-          content: Text("Sign in to continue."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (c) => SignInScreen()));
-              },
-              child: Text("Sign In"),
-            ),
-          ],
-        ),
-      );
+      await SubscriptionRepository.instance.changeTo(2);
+      isLoading = false;
+      setState(() {});
       return;
     }
-    // SubscriptionRepository.instance.changeTo(id);
   }
 
   @override
   void dispose() {
-    _subscription.cancel();
+    _subscription?.cancel();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -192,19 +209,20 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start, // Ensures alignment
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // Ensures alignment
                   children: [
                     // Pro Plan Card
                     Expanded(
                       child: Column(
                         children: [
                           GestureDetector(
-                            onTap: () => setState(() => selectedPlan = 0),
+                            onTap: () => setState(() => selectedPlan = 1),
                             child: SubscriptionCard(
                               title: "Pro",
                               price: "£9.99",
                               subText: "One-time Purchase",
-                              isSelected: selectedPlan == 0,
+                              isSelected: selectedPlan == 1,
                             ),
                           ),
                           SizedBox(height: 10),
@@ -216,7 +234,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                               "No Ads",
                               "No Cloud Sync"
                             ],
-                            isProPlusCloud: false, // ❌ This is just Pro, not Pro+ Cloud
+                            isProPlusCloud:
+                                false, // ❌ This is just Pro, not Pro+ Cloud
                           ),
                         ],
                       ),
@@ -228,12 +247,12 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       child: Column(
                         children: [
                           GestureDetector(
-                            onTap: () => setState(() => selectedPlan = 1),
+                            onTap: () => setState(() => selectedPlan = 2),
                             child: SubscriptionCard(
                               title: "Pro+ Cloud",
                               price: "£49.99",
                               subText: "Billed Annually",
-                              isSelected: selectedPlan == 1,
+                              isSelected: selectedPlan == 2,
                             ),
                           ),
                           SizedBox(height: 10),
@@ -246,7 +265,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                               "Cloud Sync",
                               "Sharing"
                             ],
-                            isProPlusCloud: true, // ✅ This is Pro+ Cloud, so "No Ads" should have a tick
+                            isProPlusCloud:
+                                true, // ✅ This is Pro+ Cloud, so "No Ads" should have a tick
                           ),
                         ],
                       ),
@@ -259,7 +279,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
               // Subscribe Button
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -271,10 +292,19 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       ),
                     ),
                     onPressed: () => onSubscribe(selectedPlan),
-                    child: Text(
-                      "Subscribe Now",
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
+                    child: isLoading
+                        ? SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 4,
+                            ),
+                          )
+                        : Text(
+                            "Subscribe Now",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
                   ),
                 ),
               ),
@@ -305,7 +335,8 @@ class SubscriptionCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(18),
       width: 145,
-      height: 145, // Ensures both cards have equal height
+      height: 145,
+      // Ensures both cards have equal height
       decoration: BoxDecoration(
         color: isSelected ? Colors.white : Colors.transparent,
         borderRadius: BorderRadius.circular(10),
@@ -313,9 +344,8 @@ class SubscriptionCard extends StatelessWidget {
           color: isSelected ? Colors.black : Colors.white,
           width: isSelected ? 1 : 1,
         ),
-        boxShadow: isSelected
-            ? [BoxShadow(color: Colors.black26, blurRadius: 6)]
-            : [],
+        boxShadow:
+            isSelected ? [BoxShadow(color: Colors.black26, blurRadius: 6)] : [],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -367,7 +397,8 @@ class FeatureList extends StatelessWidget {
         bool isNoAds = feature.toLowerCase() == "no ads";
 
         // Determine if it should be a cross (❌) or tick (✅)
-        bool showTick = (isNoAds && isProPlusCloud) || (!feature.toLowerCase().contains("no"));
+        bool showTick = (isNoAds && isProPlusCloud) ||
+            (!feature.toLowerCase().contains("no"));
         String iconPath = showTick ? 'assets/tick.svg' : 'assets/Cross.svg';
 
         return Padding(

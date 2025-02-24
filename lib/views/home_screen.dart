@@ -181,6 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 StyledBoxCard(
                                     box: item,
+                                    onView: (){},
                                     onEdit: () => Navigator.of(context)
                                         .push(MaterialPageRoute(
                                             builder: (c) => EditLocationScreen(

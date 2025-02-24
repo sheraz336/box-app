@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:box_delivery_app/models/qr_model.dart';
 import 'package:box_delivery_app/repos/subscription_repository.dart';
 import 'package:box_delivery_app/utils.dart';
 import 'package:flutter/material.dart';
@@ -21,23 +22,6 @@ class AddItemsView extends StatefulWidget {
   State<AddItemsView> createState() => _AddItemsViewState();
 }
 
-void showQrPopup(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (context) {
-      return QrPopupContainer(
-        onPrint: () {
-          Navigator.pop(context);
-        },
-        onDone: () {
-          Navigator.pop(context);
-        },
-      );
-    },
-  );
-}
 
 class _AddItemsViewState extends State<AddItemsView> {
   String selectedTab = "Items";
@@ -65,7 +49,7 @@ class _AddItemsViewState extends State<AddItemsView> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  onSave(controller); // Proceed without ad
+                  // onSave(controller); // Proceed without ad
                 },
                 child: const Text("No", style: TextStyle(color: Colors.orange)),
               ),
@@ -73,7 +57,7 @@ class _AddItemsViewState extends State<AddItemsView> {
                 onPressed: () {
                   Navigator.pop(context);
                   adManager.showRewardedAd(() {
-                    setState(() => itemLimit += 5);
+                    SubscriptionRepository.instance.increaseItemLimit(3);
                     onSave(controller);
                   });
                 },
@@ -111,8 +95,15 @@ class _AddItemsViewState extends State<AddItemsView> {
   void onSave(AddItemsController controller)async{
     try{
       if(!_formKey.currentState!.validate())return;
-      await controller.addItem();
-      if(mounted)Navigator.pop(context);
+      final item = await controller.addItem();
+      if(mounted) {
+        if(controller.generateQrCode){
+          showSnackbar(context, "Item added successfully");
+          showQrPopup(context, QrModel(type: ObjectType.Item,item:item ));
+          return;
+        }
+        Navigator.pop(context);
+      }
     }catch(e){
       print(e);
       showSnackbar(context, e.toString());
@@ -258,45 +249,68 @@ class _AddItemsViewState extends State<AddItemsView> {
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      // Text Field (Takes 3/4 width)
-                      Expanded(
-                        flex: 3,
-                        child: CustomTextField(
-                          controller: controller.qrBarcodeController,
-                          labelText: "Scan QR/Barcode (Optional)",
-                          hintText: "Scan or enter barcode",
-                        ),
+                      Checkbox(
+                        value: controller.generateQrCode,
+                        onChanged: (value) => controller.toggleQrCode(),
                       ),
-
-                      SizedBox(width: 8), // Small spacing
-
-                      // QR Icon (Takes 1/4 width)
-                      Expanded(
-                        flex: 1,
-                        child: GestureDetector(
-                          onTap: () {
-                            // Implement QR scanning functionality here
-                          },
-                          child: Container(
-                            height: 55, // Matches text field height
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.transparent), // Grey border
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: Image.asset(
-                                "assets/QR.png",
-                                // Replace with your actual SVG path
-                                height: 30, // Adjust size as needed
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      Text("Generate QR Code (Optional)"),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  Container(
+                    height: 55,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.transparent),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        "assets/QR.png",
+                        height: 30,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  // Row(
+                  //   children: [
+                  //     // Text Field (Takes 3/4 width)
+                  //     Expanded(
+                  //       flex: 3,
+                  //       child: CustomTextField(
+                  //         controller: controller.qrBarcodeController,
+                  //         labelText: "Scan QR/Barcode (Optional)",
+                  //         hintText: "Scan or enter barcode",
+                  //       ),
+                  //     ),
+                  //
+                  //     SizedBox(width: 8), // Small spacing
+                  //
+                  //     // QR Icon (Takes 1/4 width)
+                  //     Expanded(
+                  //       flex: 1,
+                  //       child: GestureDetector(
+                  //         onTap: () {
+                  //           // Implement QR scanning functionality here
+                  //         },
+                  //         child: Container(
+                  //           height: 55, // Matches text field height
+                  //           decoration: BoxDecoration(
+                  //             border: Border.all(
+                  //                 color: Colors.transparent), // Grey border
+                  //             borderRadius: BorderRadius.circular(10),
+                  //           ),
+                  //           child: Center(
+                  //             child: Image.asset(
+                  //               "assets/QR.png",
+                  //               // Replace with your actual SVG path
+                  //               height: 30, // Adjust size as needed
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(

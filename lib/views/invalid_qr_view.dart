@@ -66,9 +66,11 @@ class InvalidQRScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 50),
-                  CustomButton(text: 'Scan Again', onPressed: () {Navigator.push(context,
-        MaterialPageRoute(builder: (c) => QRScanScreen()));
-        })
+                  CustomButton(
+                      text: 'Scan Again',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      })
                 ],
               ),
             ),

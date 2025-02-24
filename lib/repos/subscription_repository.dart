@@ -16,9 +16,11 @@ class SubscriptionRepository extends ChangeNotifier {
   late SubscriptionModel _currentSubscription;
   late final Box _box;
   late DateTime _expiry;
+  late int _rewardedItemsCount;
   static final instance = SubscriptionRepository();
 
   SubscriptionModel get currentSubscription => _currentSubscription;
+
   DateTime get expiry => _expiry;
 
   Future<void> init() async {
@@ -26,6 +28,7 @@ class SubscriptionRepository extends ChangeNotifier {
     final int id = _box.get("currentId", defaultValue: 0);
     final expiryTime = _box.get("expiryTime",
         defaultValue: DateTime.now().toUtc().millisecondsSinceEpoch);
+    _rewardedItemsCount = _box.get("rewardedItemsCount", defaultValue: 0);
     _currentSubscription = SubscriptionModel.getById(id);
     _expiry = DateTime.fromMillisecondsSinceEpoch(expiryTime, isUtc: true);
   }
@@ -47,7 +50,7 @@ class SubscriptionRepository extends ChangeNotifier {
     fireNotify();
   }
 
-  void fireNotify(){
+  void fireNotify() {
     notifyListeners();
   }
 
@@ -56,31 +59,41 @@ class SubscriptionRepository extends ChangeNotifier {
         _expiry.difference(DateTime.now().toUtc()).inSeconds < 0;
   }
 
-  bool isPremiumActive(){
+  bool isPremiumActive() {
     return _currentSubscription.isPremium && !isExpired();
   }
 
-  bool isFree(){
+  bool isFree() {
     return _currentSubscription.id == SubscriptionModel.Free.id;
   }
 
   bool canAddBox() {
     return !isExpired() &&
-        BoxRepository.instance.list.length < _currentSubscription.maxBoxes;
+        (_currentSubscription.isPremium ||
+            BoxRepository.instance.list.length < _currentSubscription.maxBoxes);
   }
 
   bool canAddItem() {
     return !isExpired() &&
-        ItemRepository.instance.list.length < _currentSubscription.maxItems;
+        (_currentSubscription.isPremium ||
+            (ItemRepository.instance.list.length <
+                (_currentSubscription.maxItems + _rewardedItemsCount)));
   }
 
   bool canAddLocation() {
     return !isExpired() &&
-        LocationRepository.instance.list.length <
-            _currentSubscription.maxLocations;
+        (_currentSubscription.isPremium ||
+            LocationRepository.instance.list.length <
+                _currentSubscription.maxLocations);
   }
 
-  Future<void> clear()async {
+  void increaseItemLimit(int amount) {
+    _rewardedItemsCount += amount;
+    _box.put("rewardedItemsCount", _rewardedItemsCount);
+  }
+
+  Future<void> clear() async {
     _currentSubscription = SubscriptionModel.Free;
+    _rewardedItemsCount = 0;
   }
 }

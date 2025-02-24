@@ -7,6 +7,7 @@ import 'package:box_delivery_app/widgets/share_location_dialoge.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../models/qr_model.dart';
 import '../../repos/subscription_repository.dart';
 import '../../widgets/custom_delete_dailogue.dart';
 import '../../widgets/james_cooper_box.dart';
@@ -28,38 +29,45 @@ class _LocationManagementScreenState extends State<LocationManagementScreen> {
       context: context,
       builder: (context) => CustomDeleteDialog(
         onConfirm: () {
-          try{
-            if(SubscriptionRepository.instance.currentSubscription.isPremium && item.isShared()){
+          try {
+            if (SubscriptionRepository.instance.currentSubscription.isPremium &&
+                item.isShared()) {
               throw Exception("Only owner can delete the location");
             }
             LocationRepository.instance.deleteLocation(item.locationId);
             Navigator.pop(context);
-          }catch(e){
+          } catch (e) {
             print(e);
             showSnackbar(context, e.toString());
           }
-
         },
       ),
     );
   }
 
   void onShare(LocationModel item) {
-    if(FirebaseAuth.instance.currentUser == null){
-      showAlertDialog(context, "Error", "Only pro users can share location", true, (){});
+    if (FirebaseAuth.instance.currentUser == null) {
+      showAlertDialog(
+          context, "Error", "Only pro users can share location", true, () {});
       return;
     }
     final uid = FirebaseAuth.instance.currentUser!.uid;
-    if(uid != item.ownerId){
-      showAlertDialog(context, "Error", "Only owner can share location", true, (){});
+    if (uid != item.ownerId) {
+      showAlertDialog(
+          context, "Error", "Only owner can share location", true, () {});
       return;
     }
     showDialog(
       context: context,
-      builder: (context) => ShareLocationDialog(onUserSelected: (String id,String name){
+      builder: (context) =>
+          ShareLocationDialog(onUserSelected: (String id, String name) {
         InviteRepository.instance.createInvite(item, name, id);
       }),
     );
+  }
+
+  onView(LocationModel loc) {
+    showQrPopup(context, QrModel(type: ObjectType.Item, location: loc));
   }
 
   @override
@@ -79,26 +87,28 @@ class _LocationManagementScreenState extends State<LocationManagementScreen> {
                 children: [
                   Expanded(
                       child: StyledBoxCard(
-                        box: locations[i],
-                        onEdit: () => onLocationEdit(locations[i]),
-                        onDelete: () => onLocationDelete(locations[i]),
-                        onShare: () => onShare(locations[i]),
-                      )),
+                    box: locations[i],
+                    onView: ()=>onView(locations[i]),
+                    onEdit: () => onLocationEdit(locations[i]),
+                    onDelete: () => onLocationDelete(locations[i]),
+                    onShare: () => onShare(locations[i]),
+                  )),
                   const SizedBox(
                     width: 12,
                   ),
                   (i + 1 >= locations.length)
                       ? Expanded(
-                      child: Container(
-                        height: 263,
-                      ))
+                          child: Container(
+                          height: 263,
+                        ))
                       : Expanded(
-                      child: StyledBoxCard(
-                        box: locations[i + 1],
-                        onEdit: () => onLocationEdit(locations[i + 1]),
-                        onDelete: () => onLocationDelete(locations[i + 1]),
-                        onShare: () => onShare(locations[i]),
-                      )),
+                          child: StyledBoxCard(
+                            onView: ()=>onView(locations[i]),
+                          box: locations[i + 1],
+                          onEdit: () => onLocationEdit(locations[i + 1]),
+                          onDelete: () => onLocationDelete(locations[i + 1]),
+                          onShare: () => onShare(locations[i]),
+                        )),
                 ],
               ),
             ),

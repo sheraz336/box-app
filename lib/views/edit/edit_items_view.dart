@@ -4,6 +4,7 @@ import 'package:box_delivery_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/qr_model.dart';
 import '../../repos/box_repository.dart';
 
 class EditItemScreen extends StatefulWidget {
@@ -128,6 +129,29 @@ class _EditItemScreenState extends State<EditItemScreen> {
                   ),
                   onPressed: onUpdate,
                   child: Text("Update Item", style: TextStyle(fontSize: 16, color: Colors.white)),
+                ),
+              ),
+              SizedBox(height: 20),
+              //generate qr
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: BorderSide(color: Color(0xffe25e00))
+                    ),
+                  ),
+                  onPressed: ()=>showQrPopup(context,QrModel(type: ObjectType.Item,item: itemToEdit)),
+                  child: Text(
+                    'Generate QR',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xffe25e00)),
+                  ),
                 ),
               ),
             ],

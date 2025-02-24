@@ -155,6 +155,11 @@ class LocationRepository extends ChangeNotifier {
             break;
         }
       });
+    else{
+      _updateBoxes();
+      _updateItemsCount();
+      fireNotify();
+    }
   }
 
   void fireNotify() {
@@ -209,7 +214,6 @@ class LocationRepository extends ChangeNotifier {
       {bool remoteWrite = true}) async {
     if (!SubscriptionRepository.instance.canAddLocation()) return false;
     await _box.put(location.locationId, location);
-    print("fff ${FirebaseAuth.instance.currentUser!.uid}");
     //update in firestore
     if (remoteWrite &&
         SubscriptionRepository.instance.currentSubscription.isPremium) {

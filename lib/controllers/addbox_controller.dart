@@ -22,7 +22,7 @@ class AddBoxController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addBox() async {
+  Future<BoxModel> addBox() async {
     String? ownerId = getOwnerId();
 
     //if adding, to a shared location, the owner would be the location owner
@@ -56,5 +56,6 @@ class AddBoxController extends ChangeNotifier {
 
     // Save logic (send to API or database)
     print("Box Saved: ${box.name}");
+    return box;
   }
 }
