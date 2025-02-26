@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class SpeedDialFAB extends StatefulWidget {
@@ -13,55 +12,43 @@ class _SpeedDialFABState extends State<SpeedDialFAB> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // width: 300,
-      height: 370,
+    return SizedBox(
+      height: 300,
       child: Stack(
         alignment: Alignment.bottomRight,
         children: [
           if (isOpen) ...[
-            Positioned(
-              bottom: 180,
-              right: 0,
-              child: _buildMiniButton(
-                Icons.location_on,
-                Color(0xffe25e00),
-                    () {
-                  setState(() => isOpen = false);
-                  // Add location logic
-                  Navigator.pushNamed(context, "/add_location");
-                },
-              ),
+            _buildMiniButton(
+              icon: Icons.location_on,
+              color: const Color(0xff06a3e0),
+              position: 180,
+              onPressed: () {
+                setState(() => isOpen = false);
+                Navigator.pushNamed(context, "/add_location");
+              },
             ),
-            Positioned(
-              bottom: 120,
-              right: 0,
-              child: _buildMiniButton(
-                Icons.inbox,
-                Color(0xffe25e00),
-                    () {
-                  setState(() => isOpen = false);
-                  Navigator.pushNamed(context, "/add_box");
-                  // Add box logic
-                },
-              ),
+            _buildMiniButton(
+              icon: Icons.inbox,
+              color: const Color(0xff06a3e0),
+              position: 120,
+              onPressed: () {
+                setState(() => isOpen = false);
+                Navigator.pushNamed(context, "/add_box");
+              },
             ),
-            Positioned(
-              bottom: 60,
-              right: 0,
-              child: _buildMiniButton(
-                Icons.widgets,
-                Color(0xffe25e00),
-                    () {
-                  setState(() => isOpen = false);
-                  Navigator.pushNamed(context, "/items");
-                  // Add item logic
-                },
-              ),
+            _buildMiniButton(
+              icon: Icons.widgets,
+              color: const Color(0xff06a3e0),
+              position: 60,
+              onPressed: () {
+                setState(() => isOpen = false);
+                Navigator.pushNamed(context, "/items");
+              },
             ),
           ],
           FloatingActionButton(
-            backgroundColor: Color(0xffe25e00),
+            backgroundColor: const Color(0xff06a3e0),
+            shape: const CircleBorder(), // Ensures circular shape
             onPressed: () {
               setState(() {
                 isOpen = !isOpen;
@@ -77,11 +64,18 @@ class _SpeedDialFABState extends State<SpeedDialFAB> {
     );
   }
 
-  Widget _buildMiniButton(IconData icon, Color color, VoidCallback onPressed) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
+  Widget _buildMiniButton({
+    required IconData icon,
+    required Color color,
+    required double position,
+    required VoidCallback onPressed,
+  }) {
+    return Positioned(
+      bottom: position,
+      right: 0,
       child: FloatingActionButton.small(
         backgroundColor: color,
+        shape: const CircleBorder(), // Ensures circular shape
         onPressed: onPressed,
         child: Icon(
           icon,
@@ -90,4 +84,5 @@ class _SpeedDialFABState extends State<SpeedDialFAB> {
         ),
       ),
     );
-  }}
+  }
+}

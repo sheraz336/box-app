@@ -12,7 +12,7 @@ class InvalidQRScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Color(0xffE25E00),
+            backgroundColor: Color(0xff06a3e0),
             leading: Icon(
               Icons.arrow_back_ios,
               color: Color(0xffFFFFFF),

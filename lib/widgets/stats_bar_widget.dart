@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../repos/box_repository.dart';
@@ -23,22 +24,23 @@ class StatsBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildStatItem(locations.length.toString(), "Locations", const Color(0xFFFEF8E1),
-                const Color(0xFFE25E00), "assets/onboarding3.png",onTap: (){
+            _buildStatItem(locations.length.toString(), "Locations", const Color(
+                0xFFE1EFFE),
+                const Color(0xFF06a3e0), "assets/location.svg",onTap: (){
                   Navigator.pushNamed(context,"/manage_location");
                 }),
             SizedBox(
               width: 3,
             ),
             _buildStatItem(boxes.length.toString(), "Boxes", const Color(0xFFF5E0FF),
-                const Color(0xFFBB2BFF), "assets/onboarding3.png", onTap: () {
+                const Color(0xFFBB2BFF), "assets/boxes.svg", onTap: () {
               Navigator.pushNamed(context,"/manage_boxes");
             }),
             SizedBox(
               width: 3,
             ),
             _buildStatItem(items.length.toString(), "Items", const Color(0xFFE4FBE4),
-                const Color(0xFF00B100), "assets/onboarding3.png",onTap: (){
+                const Color(0xFF00B100), "assets/items.svg",onTap: (){
                   Navigator.pushNamed(context,"/manage_items");
                 }),
           ],
@@ -74,7 +76,7 @@ class StatsBar extends StatelessWidget {
                 child: SizedBox(
                   width: 20,
                   height: 20,
-                  child: Image.asset(imagePath, fit: BoxFit.contain),
+                  child: SvgPicture.asset(imagePath, fit: BoxFit.contain),
                 ),
               ),
             ),

@@ -20,7 +20,7 @@ class PageIndicator extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
             color: currentPage == index
-                ? const Color(0xFFE25E00)
+                ? const Color(0xFF06a3e0)
                 : const Color(0xFFD2D6DB),
             borderRadius: BorderRadius.circular(2),
           ),

@@ -12,7 +12,7 @@ class QRScanScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Color(0xffE25E00),
+            backgroundColor: Color(0xff06a3e0),
             iconTheme: const IconThemeData(color: Colors.white),
             title: Text(
               'QR Scan',

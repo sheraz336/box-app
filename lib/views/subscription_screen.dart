@@ -108,19 +108,16 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     final productId = id == 0 ? _proProductId : _proPlusCloudProductId;
     final ProductDetails? product = _products.firstWhereOrNull((p) => p.id == productId);
 
-
     if (product == null) {
       print("Product not found");
       return;
     }
 
     final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
-    if (id == 0) {
-      await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
-    } else {
-      await _inAppPurchase.buyConsumable(purchaseParam: purchaseParam);
-    }
+
+    await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam); // Subscriptions use buyNonConsumable
   }
+
 
   @override
   void dispose() {
@@ -139,7 +136,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFE25E00), Colors.white],
+            colors: [Color(0xFF06a3e0), Colors.white],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -212,11 +209,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                             onTap: () => setState(() => selectedPlan = 1),
                             child: SubscriptionCard(
                               title: "Pro+ Cloud",
-                              price: "£49.99",
-                              subText: "Billed Annually",
+                              price: _products.firstWhereOrNull((p) => p.id == _proPlusCloudProductId)?.price ?? "£49.99",
+                              subText: "Billed Annually", // Manually setting since `ProductDetails` does not provide a period
                               isSelected: selectedPlan == 1,
                             ),
                           ),
+
+
                           SizedBox(height: 10),
                           FeatureList(
                             features: [
@@ -246,7 +245,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFE25E00),
+                      backgroundColor: Color(0xFF06a3e0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),

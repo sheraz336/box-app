@@ -23,7 +23,7 @@ class ManagementCategoryTabs extends StatelessWidget {
             CategoryTab(
               iconPath: "assets/location.svg",
               text: "Location Management",
-              color: Colors.amber[300]!,
+              color: Colors.blue[300]!,
               isSelected: selectedTab == "Location Management",
               onTap: () => onTabSelected("Locations Management"),
             ),

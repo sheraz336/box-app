@@ -6,11 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../controllers/add_location_controller.dart';
 import '../../widgets/custom_text_field.dart';
-import '../../widgets/qr_popup_container.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../admob/ad_manager.dart';
- // Import AdManager class
 
 class AddLocationView extends StatefulWidget {
   @override
@@ -20,24 +18,30 @@ class AddLocationView extends StatefulWidget {
 class _AddLocationViewState extends State<AddLocationView> {
   String selectedTab = "Location";
   final _formKey = GlobalKey<FormState>();
-  final AdManager _adManager = AdManager(); // Create an instance of AdManager
+  final AdManager _adManager = AdManager();
+  String? _imageError; // Track image validation error
 
   @override
   void initState() {
     super.initState();
-    _adManager.loadAd(); // Load the ad when the screen initializes
+    _adManager.loadAd();
   }
 
   void onSave(AddLocationController controller) async {
     try {
-      if (!_formKey.currentState!.validate()) return;
+      setState(() {
+        _imageError = controller.imageUrl == null ? "Photo is required" : null;
+      });
 
-      await controller.saveLocation(); // Ensure action completes first
+      if (!_formKey.currentState!.validate() || controller.imageUrl == null) {
+        return; // Stop if form is invalid or image is missing
+      }
 
-      // Show AdMob Interstitial Ad after every 2 times a location is added
+      await controller.saveLocation();
+
       _adManager.incrementLocationCount(() {
         if (mounted) {
-          Navigator.pop(context); // Only pop after ad is closed
+          Navigator.pop(context);
         }
       });
     } catch (e) {
@@ -60,7 +64,10 @@ class _AddLocationViewState extends State<AddLocationView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Upload Photo (Optional)", style: TextStyle(color: Colors.grey)),
+                  const Text(
+                    "Upload Photo (Required)",
+                    style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                  ),
                   GestureDetector(
                     onTap: () async {
                       try {
@@ -68,6 +75,7 @@ class _AddLocationViewState extends State<AddLocationView> {
                         if (image == null) return;
                         setState(() {
                           controller.imageUrl = image.path;
+                          _imageError = null; // Clear error when image is selected
                         });
                       } catch (e) {
                         print(e);
@@ -78,7 +86,7 @@ class _AddLocationViewState extends State<AddLocationView> {
                       height: 150,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
+                        border: Border.all(color: _imageError != null ? Colors.red : Colors.grey),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
@@ -88,6 +96,14 @@ class _AddLocationViewState extends State<AddLocationView> {
                       ),
                     ),
                   ),
+                  if (_imageError != null) // Show error message if no image
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        _imageError!,
+                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
                   const SizedBox(height: 16),
                   CustomTextField(
                     validator: Validators.locationValidator,
@@ -141,9 +157,9 @@ class _AddLocationViewState extends State<AddLocationView> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () => onSave(controller), // Show ad after pressing Add Location
+                      onPressed: () => onSave(controller),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xffe25e00),
+                        backgroundColor: const Color(0xff06a3e0),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
                       child: const Text("Add Location", style: TextStyle(color: Colors.white, fontSize: 14)),

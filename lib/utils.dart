@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ColorUtils {
-  static final primaryColor = Color(0xffe25e00);
+  static final primaryColor = Color(0xff06a3e0);
 }
 
 // UI Utilities

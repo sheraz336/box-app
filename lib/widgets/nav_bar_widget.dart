@@ -76,7 +76,7 @@ class CustomBottomNav extends StatelessWidget {
         children: [
           SvgPicture.asset(
             imagePath,
-            // color: isSelected ? const Color(0xffe25e00) : Colors.grey,
+            color: isSelected ? const Color(0xff06a3e0) : Colors.grey,
             width: 28,
             height: 28,
           ),

@@ -36,7 +36,7 @@ class ProfileImageWidget extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Color(0xffe25e00),
+                color: Color(0xff06a3e0),
                 shape: BoxShape.circle,
               ),
               child: icon, // Use the custom icon
@@ -72,7 +72,7 @@ class ProfileCustomButton extends StatelessWidget {
             backgroundColor: const Color(0xffFFFFFF),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
-              side: const BorderSide(color: Color(0xFFE25E00)),
+              side: const BorderSide(color: Color(0xFF06a3e0)),
             ),
             elevation: 0,
             padding: const EdgeInsets.symmetric(vertical: 16), // Padding
@@ -89,7 +89,7 @@ class ProfileCustomButton extends StatelessWidget {
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   height: 1.5,
-                  color: Color(0xffE25E00),
+                  color: Color(0xff06a3e0),
                 ),
               ),
             ),

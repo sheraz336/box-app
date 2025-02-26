@@ -50,7 +50,7 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Boxes", style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xffe25e00),
+        backgroundColor: Color(0xff06a3e0),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -133,7 +133,7 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xffe25e00),
+                      backgroundColor: Color(0xff06a3e0),
                       padding: EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
