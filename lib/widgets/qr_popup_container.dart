@@ -87,7 +87,7 @@ class QrPopupContainer extends StatelessWidget {
                     }
                   },
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Color(0xffe25e00)),
+                    side: BorderSide(color: Color(0xff06a3e0)),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -97,6 +97,7 @@ class QrPopupContainer extends StatelessWidget {
                     "Print",
                     style: TextStyle(
                         color: Color(0xffe25e00), fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Color(0xff06a3e0), fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -108,7 +109,7 @@ class QrPopupContainer extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: onDone,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffe25e00),
+                    backgroundColor: Color(0xff06a3e0),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

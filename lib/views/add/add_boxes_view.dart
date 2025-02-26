@@ -189,7 +189,7 @@ class _AddBoxViewState extends State<AddBoxView> {
                         onPressed: ()=>onSave(controller),
                         child: Text("Add Box"),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xffe25e00),
+                          backgroundColor: Color(0xff06a3e0),
                           padding: EdgeInsets.all(14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),

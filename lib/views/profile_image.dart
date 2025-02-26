@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Color(0xffe25e00),
+            backgroundColor: Color(0xff06a3e0),
             iconTheme: const IconThemeData(color: Colors.white),
             title: Text(
               'My Profile',
@@ -125,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: OutlinedButton.styleFrom(
                             backgroundColor: Colors.white,
                             side: BorderSide(
-                                color: Color(0xFFE25E00),
+                                color: Color(0xFF06a3e0),
                                 width: 1), // Orange border
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
@@ -133,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Text(
                             'Log Out',
                             style: TextStyle(
-                              color: Color(0xFFE25E00), // Orange text color
+                              color: Color(0xFF06a3e0), // Orange text color
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
@@ -148,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     //     child: ElevatedButton(
                     //       onPressed: controller.deleteAccount,
                     //       style: ElevatedButton.styleFrom(
-                    //         backgroundColor: Color(0xFFE25E00),
+                    //         backgroundColor: Color(0xFF06a3e0),
                     //         shape: RoundedRectangleBorder(
                     //             borderRadius: BorderRadius.circular(8)),
                     //       ),

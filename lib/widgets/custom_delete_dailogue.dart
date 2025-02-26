@@ -16,7 +16,7 @@ class CustomDeleteDialog extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 30,
-            backgroundColor: Color(0xffe25e00),
+            backgroundColor: Color(0xff06a3e0),
             child: Icon(Icons.delete, color: Colors.white, size: 35),
           ),
           SizedBox(height: 15),
@@ -32,17 +32,17 @@ class CustomDeleteDialog extends StatelessWidget {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
-                  side: BorderSide(color: Color(0xffe25e00)),
+                  side: BorderSide(color: Color(0xff06a3e0)),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                 ),
                 onPressed: () => Navigator.pop(context),
                 child:
-                    Text("Cancel", style: TextStyle(color: Color(0xffe25e00))),
+                    Text("Cancel", style: TextStyle(color: Color(0xff06a3e0))),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xffe25e00),
+                  backgroundColor: Color(0xff06a3e0),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                 ),

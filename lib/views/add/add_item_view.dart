@@ -318,7 +318,7 @@ class _AddItemsViewState extends State<AddItemsView> {
                       onPressed: ()=>onAddItem(controller),
                       child: const Text("Add Item"),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xffe25e00),
+                        backgroundColor: Color(0xff06a3e0),
                         padding: const EdgeInsets.all(14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
-          backgroundColor: Color(0xffe25e00),
+          backgroundColor: Color(0xff06a3e0),
           title: const Text(
             'Finditorium',
             style: TextStyle(color: Colors.white),

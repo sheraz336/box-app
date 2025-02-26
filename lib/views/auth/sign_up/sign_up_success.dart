@@ -27,7 +27,7 @@ class SignUpCompletedScreen extends StatelessWidget {
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xffE25E00)),
+                  color: Color(0xff06a3e0)),
             ),
           ),
           SizedBox(height: 60),

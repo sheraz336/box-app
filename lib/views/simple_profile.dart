@@ -17,7 +17,7 @@ class SimpleProfileScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Color(0xffE25E00),
+            backgroundColor: Color(0xff06a3e0),
             title: Text(
               'My Profile',
               style: TextStyle(color: Color(0xffFFFFFF,),fontSize: 16,fontWeight: FontWeight.w600),

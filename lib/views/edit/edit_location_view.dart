@@ -43,7 +43,7 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xffe25e00),
+        backgroundColor: Color(0xff06a3e0),
         elevation: 0,
         title: Text(
           'Edit Location',
@@ -123,7 +123,7 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffe25e00),
+                    backgroundColor: Color(0xff06a3e0),
                     padding: EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

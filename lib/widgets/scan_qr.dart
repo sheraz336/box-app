@@ -53,8 +53,8 @@ class BoxDetailsDialog {
                     _buildButton(
                       text: "Print PDF",
                       backgroundColor: Colors.white,
-                      textColor: Color(0xffE25E00),
-                      borderColor: Color(0xFFE25E00),
+                      textColor: Color(0xff06a3e0),
+                      borderColor: Color(0xFF06a3e0),
                       onPressed: () {
                         // Print PDF logic here
                       },
@@ -62,9 +62,9 @@ class BoxDetailsDialog {
                     SizedBox(width: 10), // Gap between buttons
                     _buildButton(
                       text: "Download PDF",
-                      backgroundColor: Color(0xFFE25E00),
+                      backgroundColor: Color(0xFF06a3e0),
                       textColor: Color(0xffFFFFFF),
-                      borderColor: Color(0xFFE25E00),
+                      borderColor: Color(0xFF06a3e0),
                       onPressed: () {
                         Navigator.pop(context);
                       },

@@ -78,7 +78,7 @@ class ForgetPassOtp extends StatelessWidget {
                       style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xffe25e00)),
+                          color: Color(0xff06a3e0)),
                       decoration: InputDecoration(
                         counterText: "",
                         enabledBorder: OutlineInputBorder(
@@ -87,7 +87,7 @@ class ForgetPassOtp extends StatelessWidget {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                              const BorderSide(color: Color(0xffe25e00)),
+                              const BorderSide(color: Color(0xff06a3e0)),
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),

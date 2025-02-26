@@ -140,7 +140,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xffe25e00),
+                                color: Color(0xff06a3e0),
                               ),
                             ),
                           ),
@@ -280,7 +280,7 @@ class _PinInputFieldState extends State<PinInputField> {
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Color(0xFFE25E00), width: 2),
+        border: Border.all(color: Color(0xFF06a3e0), width: 2),
         borderRadius: BorderRadius.circular(7.5),
       ),
     );
@@ -302,7 +302,7 @@ class _PinInputFieldState extends State<PinInputField> {
           height: size.height * _focusScaleFactor,
           width: size.width * _focusScaleFactor,
           decoration: defaultPinTheme.decoration!.copyWith(
-            border: Border.all(color: Color(0xFFE25E00), width: 2),
+            border: Border.all(color: Color(0xFF06a3e0), width: 2),
             color: Colors.white,
           ),
         ),

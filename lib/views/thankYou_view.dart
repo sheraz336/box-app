@@ -25,7 +25,7 @@ class ThankYouScreen extends StatelessWidget {
                   width: 90,
                   height: 90,
                   decoration: BoxDecoration(
-                    color: Color(0xffe25e00),
+                    color: Color(0xff06a3e0),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
@@ -44,7 +44,7 @@ class ThankYouScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w600,
-                color: Color(0xffe25e00),
+                color: Color(0xff06a3e0),
               ),
             ),
             SizedBox(height: 8),
@@ -67,7 +67,7 @@ class ThankYouScreen extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffe25e00),
+                    backgroundColor: Color(0xff06a3e0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),

@@ -44,7 +44,7 @@ class _AddViewState extends State<ManagementView> {
           tabNames[currentPageIdx],
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Color(0xffe25e00),
+        backgroundColor: Color(0xff06a3e0),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(

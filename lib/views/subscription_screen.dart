@@ -155,9 +155,43 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       await SubscriptionRepository.instance.changeTo(2);
       isLoading = false;
       setState(() {});
-      return;
     }
   }
+
+
+  void onSubscribe(int id) async {
+    if (id > 0 && FirebaseAuth.instance.currentUser == null) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Requires Sign in"),
+          content: Text("Sign in to continue."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (c) => SignInScreen()));
+              },
+              child: Text("Sign In"),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    final productId = id == 0 ? _proProductId : _proPlusCloudProductId;
+    final ProductDetails? product = _products.firstWhereOrNull((p) => p.id == productId);
+
+    if (product == null) {
+      print("Product not found");
+      return;
+    }
+
+    final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
+
+    await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam); // Subscriptions use buyNonConsumable
+  }
+
 
   @override
   void dispose() {
@@ -175,7 +209,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFE25E00), Colors.white],
+            colors: [Color(0xFF06a3e0), Colors.white],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -253,8 +287,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                               price: "£49.99",
                               subText: "Billed Annually",
                               isSelected: selectedPlan == 2,
+                              price: _products.firstWhereOrNull((p) => p.id == _proPlusCloudProductId)?.price ?? "£49.99",
+                              subText: "Billed Annually", // Manually setting since `ProductDetails` does not provide a period
+                              isSelected: selectedPlan == 1,
                             ),
                           ),
+
+
                           SizedBox(height: 10),
                           FeatureList(
                             features: [
@@ -286,7 +325,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFE25E00),
+                      backgroundColor: Color(0xFF06a3e0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),

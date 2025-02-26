@@ -120,11 +120,11 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
-          primaryColor: const Color(0xFFE25E00),
+          primaryColor: const Color(0xFF06a3e0),
           scaffoldBackgroundColor: Colors.white,
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFE25E00),
+              backgroundColor: const Color(0xFF06a3e0),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -133,8 +133,8 @@ class MyApp extends StatelessWidget {
             ),
           ),
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFFE25E00),
-            primary: const Color(0xFFE25E00),
+            seedColor: const Color(0xFF06a3e0),
+            primary: const Color(0xFF06a3e0),
             secondary: const Color(0xFF76889A),
             background: Colors.white,
           ),
