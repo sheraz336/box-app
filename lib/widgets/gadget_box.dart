@@ -16,6 +16,9 @@ class BoxCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
       width: 161, // Fixed width
       height: 192, // Fixed height
@@ -33,7 +36,7 @@ class BoxCard extends StatelessWidget {
       child: Stack(
         children: [
           // Background Image (Overflows slightly)
-          Positioned(
+          /* Positioned(
             top: 0,
             left: -3,
             right: -3,
@@ -50,69 +53,86 @@ class BoxCard extends StatelessWidget {
               ),
             ),
           ),
+           */
 
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text(
-                  box.name,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
+              Container(
+                width: double.infinity,
+                decoration:BoxDecoration(
+                  color:Colors.lightGreenAccent,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(screenWidth * 0.04),
+                    topRight: Radius.circular(screenWidth * 0.04),
+                  ),
+                ),
+                child:Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text(
+                    box.name,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
-
+              ),
+              SizedBox(height: screenHeight*0.008,),
               // Inner Box Image
               Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Container(
-                  width: 122.64,
-                  height: 69.2,
-                  margin: const EdgeInsets.symmetric(horizontal: 9),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 1.1),
+                padding: const EdgeInsets.only(left: 0),
+                child: Center(
+                  child: Container(
+                    width: 122.64,
+                    height: 69.2,
+                    margin: const EdgeInsets.symmetric(horizontal: 9),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 1.1),
+                    ),
+                    child: box.imagePath != null
+                        ? Image.file(File(box.imagePath!), fit: BoxFit.cover)
+                        : Image.asset("assets/box.png", fit: BoxFit.cover),
                   ),
-                  child: box.imagePath != null
-                      ? Image.file(File(box.imagePath!), fit: BoxFit.cover)
-                      : Image.asset("assets/box.png", fit: BoxFit.cover),
                 ),
               ),
 
               Padding(
-                padding: const EdgeInsets.only(left: 20, top: 10),
-                child: Container(
-                  width: 125,
-                  height: 26.31,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(4), // Slightly rounded for smoothness
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 4,
-                        spreadRadius: 1,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Items: ${box.items}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 11.5,
-                        color: Colors.black,
+                padding: const EdgeInsets.only(left: 0, top: 10),
+                child: Center(
+                  child: Container(
+                    width: 125,
+                    height: 26.31,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(4), // Slightly rounded for smoothness
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 4,
+                          spreadRadius: 1,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Items: ${box.items}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 11.5,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 10),
+              Spacer(),
 
               // Bottom Actions
               Container(

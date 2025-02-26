@@ -37,7 +37,7 @@ class StyledBoxCard extends StatelessWidget {
       child: Stack(
         children: [
           // Background Image
-          Positioned.fill(
+          /*Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.asset(
@@ -47,21 +47,36 @@ class StyledBoxCard extends StatelessWidget {
             ),
           ),
 
+           */
+
           // Content
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: EdgeInsets.all(screenWidth * 0.022),
-                child: Text(
-                  box.name,
-                  style: TextStyle(
-                    color: Color(0xff000000),
-                    fontSize: screenWidth * 0.035,
-                    fontWeight: FontWeight.bold,
+              Container(
+                width: double.infinity,
+                decoration:BoxDecoration(
+                  color:Color(0xFF06a3e0),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(screenWidth * 0.04),
+                    topRight: Radius.circular(screenWidth * 0.04),
+                  ),
+                ),
+                child:Padding(
+                padding: EdgeInsets.all(screenWidth * 0.018),
+                child: Center(
+                  child: Text(
+                    box.name,
+                    style: TextStyle(
+                      color: Color(0xff000000),
+                      fontSize: screenWidth * 0.036,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
+              ),
+              SizedBox(height: screenHeight*0.005,),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                 child: Container(
