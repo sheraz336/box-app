@@ -11,7 +11,7 @@ class ScannedQrModelView extends StatelessWidget{
     return Scaffold(
       appBar: AppBar(
         title: Text("Scanned ${model.type.name}", style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xffe25e00),
+        backgroundColor: Color(0xFF06a3e0),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),

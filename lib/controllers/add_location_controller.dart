@@ -29,6 +29,7 @@ class AddLocationController with ChangeNotifier {
   }
 
   Future<void> saveLocation() async {
+
     LocationModel location = LocationModel(
         ownerId: getOwnerId(),
         locationId: generateRandomId("location"),

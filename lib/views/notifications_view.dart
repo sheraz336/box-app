@@ -107,7 +107,7 @@ class _NotificationsViewState extends State<NotificationsView> {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 3,
-                color: Colors.orange,
+                color: Color(0xFF06a3e0),
               ),
             )
                 : (isMyInvite ||
@@ -117,7 +117,7 @@ class _NotificationsViewState extends State<NotificationsView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(invite.status.name, style: TextStyle(
-                  color: Colors.orange,
+                  color:Color(0xFF06a3e0),
                 ),),
                 if(isMyInvite && invite.status == InviteStatus.PENDING)
                   TextButton(

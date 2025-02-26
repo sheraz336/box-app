@@ -142,7 +142,7 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
                       onPressed: onUpdateBox,
                       child: Text("Update Box",
                           style: TextStyle(fontSize: 16, color: Colors.white)),
-                    ),
+                    )),
                 // Update Button
                 SizedBox(
                   width: double.infinity,
@@ -156,7 +156,7 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
                     onPressed: onUpdateBox,
                     child: Text("Update Box",
                         style: TextStyle(fontSize: 16, color: Colors.white)),
-                  ),
+                  )),
                   SizedBox(height: 20),
                   //generate qr
                   SizedBox(

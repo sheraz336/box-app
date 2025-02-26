@@ -42,88 +42,109 @@ class BoxCard extends StatelessWidget {
         child: Stack(
           children: [
             // Background Image
-            Positioned(
+            /*Positioned(
               top: 0,
               left: -3,
               right: -3,
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
+              child: Container(
+                decoration:BoxDecoration(
+                  color:Colors.green,
+                  borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(screenWidth * 0.04),
                   topRight: Radius.circular(screenWidth * 0.04),
                 ),
-                child: Image.asset(
+                ),
+                /*child: Image.asset(
                   'assets/final_gadget.png',
                   width: screenWidth * 0.44, // Adjust image width
                   height: screenHeight * 0.23, // Adjust image height
                   fit: BoxFit.fill,
-                ),
+                ),*/
               ),
             ),
-
+*/
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: screenHeight * 0.005),
 
-                Padding(
-                  padding: EdgeInsets.all(screenWidth * 0.02),
-                  child: Text(
-                    box.name,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14 * textScale, // Adjust font size dynamically
-                      fontWeight: FontWeight.w600,
+
+    Container(
+      width: double.infinity,
+    decoration:BoxDecoration(
+    color:Colors.lightGreenAccent,
+    borderRadius: BorderRadius.only(
+    topLeft: Radius.circular(screenWidth * 0.04),
+    topRight: Radius.circular(screenWidth * 0.04),
+    ),
+    ),
+    child:Padding(
+                  padding: EdgeInsets.all(screenWidth * 0.015),
+                  child: Center(
+                    child: Text(
+                      box.name,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14 * textScale, // Adjust font size dynamically
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
+    ),
 
+                SizedBox(height: screenHeight*0.008,),
                 // Inner Box Image
                 Padding(
-                  padding: EdgeInsets.only(left: screenWidth * 0.03),
-                  child: Container(
-                    width: screenWidth * 0.33, // Adjust width dynamically
-                    height: screenHeight * 0.10, // Adjust height dynamically
-                    margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1.1),
+                  padding: EdgeInsets.only(left: screenWidth * 0),
+                  child: Center(
+                    child: Container(
+                      width: screenWidth * 0.33, // Adjust width dynamically
+                      height: screenHeight * 0.10, // Adjust height dynamically
+                      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 1.1),
+                      ),
+                      child: box.imagePath != null
+                          ? Image.file(File(box.imagePath!), fit: BoxFit.cover)
+                          : Image.asset("assets/box.png", fit: BoxFit.cover),
                     ),
-                    child: box.imagePath != null
-                        ? Image.file(File(box.imagePath!), fit: BoxFit.cover)
-                        : Image.asset("assets/box.png", fit: BoxFit.cover),
                   ),
                 ),
 
                 Padding(
-                  padding: EdgeInsets.only(left: screenWidth * 0.05, top: screenHeight * 0.01),
-                  child: Container(
-                    width: screenWidth * 0.33, // Adjust width dynamically
-                    height: screenHeight * 0.04, // Adjust height dynamically
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(screenWidth * 0.02),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 4,
-                          spreadRadius: 1,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Items: ${box.items}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 11.5 * textScale, // Adjust font size dynamically
-                          color: Colors.black,
+                  padding: EdgeInsets.only( top: screenHeight * 0.01),
+                  child: Center(
+                    child: Container(
+                      width: screenWidth * 0.33, // Adjust width dynamically
+                      height: screenHeight * 0.04, // Adjust height dynamically
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(screenWidth * 0.02),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 4,
+                            spreadRadius: 1,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Items: ${box.items}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11.5 * textScale, // Adjust font size dynamically
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
 
-                SizedBox(height: screenHeight * 0.010),
+                //SizedBox(height: screenHeight * 0.010),
+                Spacer(),
 
                 // Bottom Actions
                 Container(

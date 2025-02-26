@@ -30,10 +30,10 @@ class SubscriptionModel {
       id: 0,
       name: "Free",
       isPremium: false,
+      //25 boxes
       maxBoxes: 5 * 5,
-      //5 box per location
+      //125 items
       maxItems: (5 * 5) * 5,
-      //5 items per box
       maxLocations: 5,
       price: 0);
 
@@ -41,10 +41,10 @@ class SubscriptionModel {
       id: 1,
       name: "Basic",
       isPremium: false,
+      //100 boxes
       maxBoxes: 10 * 10,
-      //10 boxes per location
+      //1000 items
       maxItems: (10 * 10) * 10,
-      //10 items per box
       maxLocations: 10,
       price: 100);
 

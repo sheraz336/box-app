@@ -247,4 +247,10 @@ class BoxRepository extends ChangeNotifier {
     _subscription = null;
     _sharedSubscription = null;
   }
+
+  Future<void> deleteAll() async {
+    for(var item in _box.values){
+      await deleteBox(item.id);
+    }
+  }
 }

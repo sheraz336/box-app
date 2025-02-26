@@ -95,8 +95,8 @@ class QrPopupContainer extends StatelessWidget {
                   ),
                   child: const Text(
                     "Print",
-                    style: TextStyle(
-                        color: Color(0xffe25e00), fontWeight: FontWeight.bold),
+                    // style: TextStyle(
+                    //     color: Color(0xffe25e00), fontWeight: FontWeight.bold),
                     style: TextStyle(color: Color(0xff06a3e0), fontWeight: FontWeight.bold),
                   ),
                 ),

@@ -1,4 +1,8 @@
+import 'package:box_delivery_app/repos/box_repository.dart';
+import 'package:box_delivery_app/repos/item_repository.dart';
+import 'package:box_delivery_app/repos/location_repository.dart';
 import 'package:box_delivery_app/repos/subscription_repository.dart';
+import 'package:box_delivery_app/utils.dart';
 import 'package:box_delivery_app/views/subscription_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../controllers/profile_image_controller.dart';
 import '../widgets/profile_image.dart';
 import '../widgets/profile_text_field.dart';
+import 'auth/sign_in/sign_in.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -25,6 +30,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await FirebaseFirestore.instance;
     FirebaseFirestore.instance.settings = Settings(persistenceEnabled: true);
     Navigator.of(context).pushNamedAndRemoveUntil("/splash", (route) => false);
+  }
+
+  void onLogin() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (c) => SignInScreen()));
+  }
+
+  void onDeleteAccount(ProfileController controller)async{
+    try{
+
+      //clear data
+      await LocationRepository.instance.deleteAll();
+      await BoxRepository.instance.deleteAll();
+      await ItemRepository.instance.deleteAll();
+
+      //delete user
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance.doc(uid).delete();
+      await FirebaseAuth.instance.currentUser!.delete();
+
+      //logout
+      await controller.logOut();
+      await FirebaseAuth.instance.signOut();
+      await FirebaseFirestore.instance.terminate();
+      await FirebaseFirestore.instance.clearPersistence();
+      await FirebaseFirestore.instance;
+      FirebaseFirestore.instance.settings = Settings(persistenceEnabled: true);
+
+      showAlertDialog(context, "Success", "All account data deleted.", false,(){
+        Navigator.of(context).pushNamedAndRemoveUntil("/splash", (route) => false);
+      });
+    }catch(e){
+      showSnackbar(context, e.toString());
+    }
   }
 
   @override
@@ -104,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 35,
                           height: 35,
                           decoration: BoxDecoration(
-                              color: Color(0xFFE25E00),
+                              color:Color(0xFF06a3e0),
                               borderRadius: BorderRadius.circular(10)),
                           child: Icon(
                             Icons.navigate_next,
@@ -121,7 +160,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: SizedBox(
                         height: 56,
                         child: OutlinedButton(
-                          onPressed: () => onSignout(controller),
+                          onPressed: () =>
+                              user.isGuest ? onLogin() : onSignout(controller),
                           style: OutlinedButton.styleFrom(
                             backgroundColor: Colors.white,
                             side: BorderSide(
@@ -131,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 borderRadius: BorderRadius.circular(8)),
                           ),
                           child: Text(
-                            'Log Out',
+                            user.isGuest ? 'Log In' : 'Log Out',
                             style: TextStyle(
                               color: Color(0xFF06a3e0), // Orange text color
                               fontSize: 16,
@@ -165,6 +205,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // ),
                   ],
                 ),
+                SizedBox(height: 20,),
+                if (!user.isGuest)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 56,
+                          child: OutlinedButton(
+                            onPressed: () => onDeleteAccount(controller),
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              side: BorderSide(
+                                  color: Color(0xFF06a3e0),
+                                  width: 1), // Orange border
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                            ),
+                            child: Text(
+                              'Delete Account',
+                              style: TextStyle(
+                                color: Color(0xFF06a3e0), // Orange text color
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                    ],
+                  ),
               ],
             ),
           ),

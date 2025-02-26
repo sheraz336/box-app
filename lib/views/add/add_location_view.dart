@@ -21,8 +21,7 @@ class _AddLocationViewState extends State<AddLocationView> {
   String selectedTab = "Location";
   final _formKey = GlobalKey<FormState>();
   bool _isAdding = false;
-  final AdManager _adManager = AdManager(); // Create an instance of AdManager
-  final AdManager _adManager = AdManager();
+  final AdManager _adManager = AdManager(); //
   String? _imageError; // Track image validation error
 
   @override
@@ -34,12 +33,14 @@ class _AddLocationViewState extends State<AddLocationView> {
   void onSave(AddLocationController controller) async {
     try {
       if (_isAdding || !_formKey.currentState!.validate()) return;
-      _isAdding=true;
-      await controller.saveLocation();
-      _isAdding=false;
       setState(() {
         _imageError = controller.imageUrl == null ? "Photo is required" : null;
       });
+      if(_imageError == null)return;
+
+      _isAdding=true;
+      await controller.saveLocation();
+      _isAdding=false;
 
       if (!_formKey.currentState!.validate() || controller.imageUrl == null) {
         return; // Stop if form is invalid or image is missing

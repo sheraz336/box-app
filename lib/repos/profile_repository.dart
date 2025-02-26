@@ -26,6 +26,10 @@ class ProfileRepository extends ChangeNotifier{
     _profile=null;
   }
 
+  bool isGuest(){
+    return _profile?.isGuest ?? true;
+  }
+
   bool isLoggedIn(){
     return _profile != null;
   }

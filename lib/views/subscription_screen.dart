@@ -159,38 +159,6 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 
 
-  void onSubscribe(int id) async {
-    if (id > 0 && FirebaseAuth.instance.currentUser == null) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Requires Sign in"),
-          content: Text("Sign in to continue."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (c) => SignInScreen()));
-              },
-              child: Text("Sign In"),
-            ),
-          ],
-        ),
-      );
-      return;
-    }
-
-    final productId = id == 0 ? _proProductId : _proPlusCloudProductId;
-    final ProductDetails? product = _products.firstWhereOrNull((p) => p.id == productId);
-
-    if (product == null) {
-      print("Product not found");
-      return;
-    }
-
-    final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
-
-    await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam); // Subscriptions use buyNonConsumable
-  }
 
 
   @override
@@ -284,12 +252,12 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                             onTap: () => setState(() => selectedPlan = 2),
                             child: SubscriptionCard(
                               title: "Pro+ Cloud",
-                              price: "£49.99",
-                              subText: "Billed Annually",
+                              // price: "£49.99",
+                              // subText: "Billed Annually",
                               isSelected: selectedPlan == 2,
                               price: _products.firstWhereOrNull((p) => p.id == _proPlusCloudProductId)?.price ?? "£49.99",
                               subText: "Billed Annually", // Manually setting since `ProductDetails` does not provide a period
-                              isSelected: selectedPlan == 1,
+                              // isSelected: selectedPlan == 1,
                             ),
                           ),
 

@@ -110,7 +110,7 @@ class AuthController extends ChangeNotifier {
       return false;
     }
 
-    //sign in user
+    //1.sign in user
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
     final OAuthCredential credential = GoogleAuthProvider.credential(
@@ -120,7 +120,7 @@ class AuthController extends ChangeNotifier {
     final userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-    //create user if does not exist in 'users' collection
+    //2.create user if does not exist in 'users' collection
     final snapshot = await FirebaseFirestore.instance
         .collection("users")
         .doc(userCredential.user!.uid)
@@ -134,6 +134,32 @@ class AuthController extends ChangeNotifier {
         "email": userCredential.user!.email,
       });
     }
+
+    final userSnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userCredential.user!.uid)
+        .get();
+    final userData = userSnapshot.data()!;
+
+    //save proile
+    ProfileRepository.instance.update(UserModel(
+        name: userData["name"],
+        email: userData["email"],
+        password: "______",
+        phoneNumber: userData["phone"] ?? "______"));
+
+    //get subscription
+    final subSnapshot = await FirebaseFirestore.instance
+        .collection("subscriptions")
+        .doc(userCredential.user!.uid)
+        .get();
+    if (subSnapshot.exists) {
+      SubscriptionRepository.instance.changeTo(subSnapshot.data()!["id"],
+          expiry: DateTime.fromMillisecondsSinceEpoch(
+              subSnapshot.data()!["expiryTime"],
+              isUtc: true));
+    }
+
     return true;
   }
 }

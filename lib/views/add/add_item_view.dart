@@ -28,7 +28,7 @@ class _AddItemsViewState extends State<AddItemsView> {
   final _formKey = GlobalKey<FormState>();
   final AdManager adManager = AdManager();
   int itemLimit = 10; // Default item limit
-
+  String? _imageError;
   @override
   void initState() {
     super.initState();
@@ -95,6 +95,11 @@ class _AddItemsViewState extends State<AddItemsView> {
   void onSave(AddItemsController controller)async{
     try{
       if(!_formKey.currentState!.validate())return;
+      setState(() {
+        _imageError = controller.imageUrl == null ? "Photo is required" : null;
+      });
+      if(_imageError == null)return;
+
       final item = await controller.addItem();
       if(mounted) {
         if(controller.generateQrCode){
@@ -127,17 +132,20 @@ class _AddItemsViewState extends State<AddItemsView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Upload Photo (Optional)",
-                      style: TextStyle(color: Colors.grey)),
+                  const Text(
+                    "Upload Photo (Required)",
+                    style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                  ),
                   GestureDetector(
-                    onTap: ()async{
-                      try{
+                    onTap: () async {
+                      try {
                         final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                        if(image==null)return;
+                        if (image == null) return;
                         setState(() {
-                          controller.imageUrl=image.path;
+                          controller.imageUrl = image.path;
+                          _imageError = null; // Clear error when image is selected
                         });
-                      }catch(e){
+                      } catch (e) {
                         print(e);
                         showSnackbar(context, e.toString());
                       }
@@ -146,17 +154,24 @@ class _AddItemsViewState extends State<AddItemsView> {
                       height: 150,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
+                        border: Border.all(color: _imageError != null ? Colors.red : Colors.grey),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
                         child: controller.imageUrl == null
                             ? SvgPicture.asset("assets/camera.svg", height: 40)
-                            : Image.file(File(controller.imageUrl!),
-                            fit: BoxFit.cover),
+                            : Image.file(File(controller.imageUrl!), fit: BoxFit.cover),
                       ),
                     ),
                   ),
+                  if (_imageError != null) // Show error message if no image
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        _imageError!,
+                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
                   const SizedBox(height: 16),
                   CustomTextField(
                     validator: Validators.itemNameValidator,
