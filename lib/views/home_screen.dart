@@ -114,7 +114,14 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
-          backgroundColor: Color(0xff06a3e0),
+          backgroundColor: const Color(0xff06a3e0),
+          iconTheme: const IconThemeData(color: Colors.white), // Ensures back arrow is white
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white), // White back arrow
+            onPressed: () {
+              Navigator.pop(context); // Navigates back when pressed
+            },
+          ),
           title: const Text(
             'Finditorium',
             style: TextStyle(color: Colors.white),
@@ -140,11 +147,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   MaterialPageRoute(builder: (context) => ProfileScreen()),
                 );
               },
-              icon: Icon(Icons.person, color: Colors.white),
+              icon: const Icon(Icons.person, color: Colors.white),
             ),
           ],
         ),
-        body: Column(
+
+          body: Column(
           children: [
             if (_isBannerAdLoaded)
               Padding(

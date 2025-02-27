@@ -1,5 +1,6 @@
 import 'package:box_delivery_app/controllers/login_controller.dart';
 import 'package:box_delivery_app/utils.dart';
+import 'package:box_delivery_app/views/auth/sign_up/sign_up_email_verify.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../controllers/signup_controller.dart';
@@ -15,7 +16,7 @@ class SignUpView extends StatelessWidget {
     try {
       if (!formKey.currentState!.validate()) return;
       Navigator.push(
-          context, MaterialPageRoute(builder: (c) => VerificationView()));
+          context, MaterialPageRoute(builder: (c) => EmailVerificationScreen()));
     } catch (e) {
       showSnackbar(context, e.toString());
     }

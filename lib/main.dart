@@ -14,6 +14,7 @@ import 'package:box_delivery_app/repos/location_repository.dart';
 import 'package:box_delivery_app/repos/profile_repository.dart';
 import 'package:box_delivery_app/repos/subscription_repository.dart';
 import 'package:box_delivery_app/views/add/add_view.dart';
+import 'package:box_delivery_app/views/auth/sign_up/sign_up_success.dart';
 import 'package:box_delivery_app/views/home_screen.dart';
 import 'package:box_delivery_app/views/management/management_view.dart';
 
@@ -150,6 +151,7 @@ class MyApp extends StatelessWidget {
           '/manage_boxes': (context) => ManagementView(pageIndex: 1),
           '/manage_location': (context) => ManagementView(pageIndex: 0),
           '/manage_items': (context) => ManagementView(pageIndex: 2),
+          '/verification_success': (context) => SignUpCompletedScreen(),
           // '/edit_boxes': (context) => EditBoxesScreen(),
           // '/edit_location': (context) => EditLocationScreen(),
           // '/edit_items': (context) => EditItemScreen(),

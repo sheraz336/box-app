@@ -13,14 +13,32 @@ class SignUpCompletedScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
-            height: 80,
+            height: 200,
           ),
+      Stack(
+        alignment: Alignment.center, // Center aligns everything inside
+        children: [
           Container(
             height: 196.57,
             width: 245.18,
-            child: Image.asset('assets/signup_completed.png'),
+            child: Image.asset(
+              'assets/signup_completed.png',
+              color: const Color(0xff06a3e0),
+            ),
           ),
+
+          Center(
+            child: const Icon(
+              Icons.check, // White check mark
+              size: 50, // Adjust size as needed
+              color: Colors.white, // White color
+            ),
+          ),
+        ],
+      ),
           SizedBox(height: 50),
+
+          Spacer(),
           Center(
             child: Text(
               'Sign Up Completed \n       Successfully',
@@ -30,7 +48,7 @@ class SignUpCompletedScreen extends StatelessWidget {
                   color: Color(0xff06a3e0)),
             ),
           ),
-          SizedBox(height: 60),
+          Spacer(),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CustomButton(

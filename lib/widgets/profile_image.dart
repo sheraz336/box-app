@@ -22,6 +22,10 @@ class ProfileImageWidget extends StatelessWidget {
           width: 100,
           height: 100,
           decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.black, // Border color
+              width: 0.2, // Border thickness
+            ),
             shape: BoxShape.circle,
             color: Colors.grey[200],
           ),
