@@ -34,7 +34,7 @@ class EmailVerificationScreen extends StatelessWidget {
                   fontSize: 16,
                 ),
               ),
-              const SizedBox(height: 30),
+              Spacer(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CustomButton(
