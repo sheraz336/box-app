@@ -9,17 +9,37 @@ import '../../../widgets/custom_textform.dart';
 import '../sign_in/sign_in.dart';
 import 'sign_up_verify.dart';
 
-class SignUpView extends StatelessWidget {
-  final formKey = GlobalKey<FormState>();
+class SignUpView extends StatefulWidget {
+  @override
+  State<SignUpView> createState() => _SignUpViewState();
+}
 
-  void onRegister(BuildContext context, UserController controller) async {
+class _SignUpViewState extends State<SignUpView> {
+  final formKey = GlobalKey<FormState>();
+  bool isLoading=false;
+
+  void onRegister(BuildContext context, UserController authController) async {
+    if (isLoading) return;
     try {
-      if (!formKey.currentState!.validate()) return;
-      Navigator.push(
-          context, MaterialPageRoute(builder: (c) => EmailVerificationScreen()));
+      setState(() {
+        isLoading = true;
+      });
+      final loginController = AuthController();
+      loginController.setEmail(authController.user.email);
+      loginController.setPassword(authController.user.password);
+
+      await authController.signUp();
+      await loginController.signIn();
+
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (c) => EmailVerificationScreen()),
+              (route) => false);
     } catch (e) {
       showSnackbar(context, e.toString());
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void googleSignin(BuildContext context) async {
@@ -169,6 +189,7 @@ class SignUpView extends StatelessWidget {
               const SizedBox(height: 12),
               CustomButton(
                 text: "Sign Up",
+                isLoading:isLoading,
                 onPressed: () => onRegister(context, authController),
               ),
               const SizedBox(height: 20),

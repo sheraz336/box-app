@@ -134,7 +134,7 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xffe25e00),
+                        backgroundColor: Color(0xff06a3e0),
                         padding: EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
@@ -143,20 +143,8 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
                       child: Text("Update Box",
                           style: TextStyle(fontSize: 16, color: Colors.white)),
                     )),
-                // Update Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xff06a3e0),
-                      padding: EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                    onPressed: onUpdateBox,
-                    child: Text("Update Box",
-                        style: TextStyle(fontSize: 16, color: Colors.white)),
-                  )),
+
+
                   SizedBox(height: 20),
                   //generate qr
                   SizedBox(
@@ -167,7 +155,7 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
                         padding: EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
-                            side: BorderSide(color: Color(0xffe25e00))),
+                            side: BorderSide(color: Color(0xff06a3e0))),
                       ),
                       onPressed: () => showQrPopup(
                           context,
@@ -179,7 +167,7 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xffe25e00)),
+                            color: Color(0xff06a3e0)),
                       ),
                     ),
                   ),

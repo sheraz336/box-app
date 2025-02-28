@@ -52,7 +52,8 @@ class _AddBoxViewState extends State<AddBoxView> {
       setState(() {
         _imageError = controller.imageUrl == null ? "Photo is required" : null;
       });
-      if(_imageError == null)return;
+      if(_imageError != null)return;
+
       final box  = await controller.addBox(); // Ensure action completes first
 
       // Show AdMob Interstitial Ad after every 3 times a box is added

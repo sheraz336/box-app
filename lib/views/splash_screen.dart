@@ -1,7 +1,9 @@
 import 'package:box_delivery_app/repos/profile_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'auth/onboarding/onboarding_view.dart';
+import 'auth/sign_up/sign_up_email_verify.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -22,6 +24,12 @@ class _SplashScreenState extends State<SplashScreen> {
     if (mounted) {
       final isLoggedIn = ProfileRepository.instance.isLoggedIn();
       if (isLoggedIn) {
+        final user = FirebaseAuth.instance.currentUser;
+        if(user !=null && !user.emailVerified){
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => EmailVerificationScreen()));
+          return;
+        }
         Navigator.pushReplacementNamed(context, "/home");
       } else
         Navigator.pushReplacement(

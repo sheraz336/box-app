@@ -98,7 +98,7 @@ class _AddItemsViewState extends State<AddItemsView> {
       setState(() {
         _imageError = controller.imageUrl == null ? "Photo is required" : null;
       });
-      if(_imageError == null)return;
+      if(_imageError != null)return;
 
       final item = await controller.addItem();
       if(mounted) {

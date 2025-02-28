@@ -47,6 +47,8 @@ class UserController with ChangeNotifier {
       final cred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: user.email, password: user.password);
 
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
+
       //create user in database
       await FirebaseFirestore.instance
           .collection("users")

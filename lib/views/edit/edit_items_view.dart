@@ -11,6 +11,7 @@ class EditItemScreen extends StatefulWidget {
   final ItemModel item;
 
   const EditItemScreen({super.key, required this.item});
+
   @override
   _EditItemScreenState createState() => _EditItemScreenState();
 }
@@ -24,16 +25,19 @@ class _EditItemScreenState extends State<EditItemScreen> {
   void initState() {
     super.initState();
     final itemToEdit = widget.item;
-    _itemIdController.text=itemToEdit.id;
+    _itemIdController.text = itemToEdit.id;
     _descriptionController.text = itemToEdit.description;
   }
 
-  void onUpdate()async{
-    try{
+  void onUpdate() async {
+    try {
       final description = _descriptionController.text.toString();
-      await ItemRepository.instance.updateItem(widget.item..description=description);
-      if(mounted)showSnackbar(context, "Successfully Updated");
-    }catch(e){
+      await ItemRepository.instance.updateItem(widget.item
+        ..description = description
+        ..boxId = selectedBox?.id
+        ..boxLocationId = selectedBox?.locationId);
+      if (mounted) showSnackbar(context, "Successfully Updated");
+    } catch (e) {
       print(e);
       showSnackbar(context, e.toString());
     }
@@ -44,7 +48,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
     final boxes = context.watch<BoxRepository>().list;
 
     final itemToEdit = widget.item;
-    if(selectedBox == null)selectedBox=BoxRepository.instance.getBox(itemToEdit.boxId);
+    if (selectedBox == null)
+      selectedBox = BoxRepository.instance.getBox(itemToEdit.boxId);
 
     return Scaffold(
       appBar: AppBar(
@@ -63,19 +68,22 @@ class _EditItemScreenState extends State<EditItemScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Item ID Field
-              Text("Item ID", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              Text("Item ID",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
               SizedBox(height: 8),
               TextField(
                 controller: _itemIdController,
                 enabled: false,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
               ),
               SizedBox(height: 20),
 
               // Box Dropdown
-              Text("Box", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              Text("Box",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
               SizedBox(height: 8),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12),
@@ -90,9 +98,9 @@ class _EditItemScreenState extends State<EditItemScreen> {
                     hint: Text("Select your Box"),
                     items: boxes
                         .map((box) => DropdownMenuItem(
-                      value: box,
-                      child: Text(box.name),
-                    ))
+                              value: box,
+                              child: Text(box.name),
+                            ))
                         .toList(),
                     onChanged: (value) {
                       setState(() {
@@ -105,7 +113,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
               SizedBox(height: 20),
 
               // Description Field
-              Text("Description", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              Text("Description",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
               SizedBox(height: 8),
               TextField(
                 controller: _descriptionController,
@@ -113,7 +122,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 maxLength: 100,
                 decoration: InputDecoration(
                   hintText: "Enter Description",
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
               ),
               SizedBox(height: 30),
@@ -125,10 +135,12 @@ class _EditItemScreenState extends State<EditItemScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xff06a3e0),
                     padding: EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                   onPressed: onUpdate,
-                  child: Text("Update Item", style: TextStyle(fontSize: 16, color: Colors.white)),
+                  child: Text("Update Item",
+                      style: TextStyle(fontSize: 16, color: Colors.white)),
                 ),
               ),
               SizedBox(height: 20),
@@ -141,16 +153,16 @@ class _EditItemScreenState extends State<EditItemScreen> {
                     padding: EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(color: Color(0xffe25e00))
-                    ),
+                        side: BorderSide(color: Color(0xff06a3e0))),
                   ),
-                  onPressed: ()=>showQrPopup(context,QrModel(type: ObjectType.Item,item: itemToEdit)),
+                  onPressed: () => showQrPopup(context,
+                      QrModel(type: ObjectType.Item, item: itemToEdit)),
                   child: Text(
                     'Generate QR',
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xffe25e00)),
+                        color: Color(0xff06a3e0)),
                   ),
                 ),
               ),

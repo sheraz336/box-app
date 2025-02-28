@@ -49,6 +49,8 @@ void main()async {
     androidProvider: AndroidProvider.playIntegrity,
  appleProvider: AppleProvider.appAttest,
   );
+  // await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(false);
+
   FirebaseFirestore.instance.settings = Settings(persistenceEnabled: true);
 
   //hive setup

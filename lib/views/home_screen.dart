@@ -116,12 +116,12 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           backgroundColor: const Color(0xff06a3e0),
           iconTheme: const IconThemeData(color: Colors.white), // Ensures back arrow is white
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white), // White back arrow
-            onPressed: () {
-              Navigator.pop(context); // Navigates back when pressed
-            },
-          ),
+          // leading: IconButton(
+          //   icon: const Icon(Icons.arrow_back, color: Colors.white), // White back arrow
+          //   onPressed: () {
+          //     Navigator.pop(context); // Navigates back when pressed
+          //   },
+          // ),
           title: const Text(
             'Finditorium',
             style: TextStyle(color: Colors.white),

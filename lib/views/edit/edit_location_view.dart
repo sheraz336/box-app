@@ -149,7 +149,7 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                     padding: EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
-                      side: BorderSide(color: Color(0xffe25e00))
+                      side: BorderSide(color: Color(0xff06a3e0))
                     ),
                   ),
                   onPressed: ()=>showQrPopup(context,QrModel(type: ObjectType.Location,location: locationToEdit)),
@@ -158,7 +158,7 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xffe25e00)),
+                        color: Color(0xff06a3e0)),
                   ),
                 ),
               ),

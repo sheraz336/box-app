@@ -36,18 +36,11 @@ class _AddLocationViewState extends State<AddLocationView> {
       setState(() {
         _imageError = controller.imageUrl == null ? "Photo is required" : null;
       });
-      if(_imageError == null)return;
+      if(_imageError != null)return;
 
       _isAdding=true;
       await controller.saveLocation();
       _isAdding=false;
-
-      if (!_formKey.currentState!.validate() || controller.imageUrl == null) {
-        return; // Stop if form is invalid or image is missing
-      }
-
-      await controller.saveLocation();
-
       _adManager.incrementLocationCount(() {
         if (mounted) {
           Navigator.pop(context);
