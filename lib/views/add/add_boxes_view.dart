@@ -25,6 +25,7 @@ class _AddBoxViewState extends State<AddBoxView> {
   final _formKey = GlobalKey<FormState>();
   final AdManager _adManager = AdManager(); // Create an instance of AdManager
   String? _imageError; //
+  final ImagePicker _picker = ImagePicker(); // ImagePicker instance
 
   @override
   void initState() {
@@ -72,6 +73,53 @@ class _AddBoxViewState extends State<AddBoxView> {
     }
   }
 
+  /// Show Bottom Sheet for Image Selection
+  void _showImagePicker(AddBoxController controller) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          height: 150,
+          child: Column(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt, color: Colors.blue),
+                title: const Text("Take a Photo"),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? image = await _picker.pickImage(
+                      source: ImageSource.camera);
+                  if (image != null) {
+                    setState(() {
+                      controller.imageUrl = image.path;
+                      _imageError = null;
+                    });
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.image, color: Colors.green),
+                title: const Text("Choose from Gallery"),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? image = await _picker.pickImage(
+                      source: ImageSource.gallery);
+                  if (image != null) {
+                    setState(() {
+                      controller.imageUrl = image.path;
+                      _imageError = null;
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 
 
   @override
@@ -94,19 +142,7 @@ class _AddBoxViewState extends State<AddBoxView> {
                       style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
                     ),
                     GestureDetector(
-                      onTap: () async {
-                        try {
-                          final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                          if (image == null) return;
-                          setState(() {
-                            controller.imageUrl = image.path;
-                            _imageError = null; // Clear error when image is selected
-                          });
-                        } catch (e) {
-                          print(e);
-                          showSnackbar(context, e.toString());
-                        }
-                      },
+                      onTap: () => _showImagePicker(controller),
                       child: Container(
                         height: 150,
                         width: double.infinity,
@@ -121,6 +157,17 @@ class _AddBoxViewState extends State<AddBoxView> {
                         ),
                       ),
                     ),
+                    if (_imageError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                          _imageError!,
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                        ),
+                      ),
+
+
+
                     if (_imageError != null) // Show error message if no image
                       Padding(
                         padding: const EdgeInsets.only(top: 5),

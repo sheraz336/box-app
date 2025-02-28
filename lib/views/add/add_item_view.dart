@@ -28,7 +28,10 @@ class _AddItemsViewState extends State<AddItemsView> {
   final _formKey = GlobalKey<FormState>();
   final AdManager adManager = AdManager();
   int itemLimit = 10; // Default item limit
+  final ImagePicker _picker = ImagePicker();
   String? _imageError;
+
+
   @override
   void initState() {
     super.initState();
@@ -115,6 +118,53 @@ class _AddItemsViewState extends State<AddItemsView> {
     }
   }
 
+  /// Show Bottom Sheet for Image Selection
+  void _showImagePicker(AddItemsController controller) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          height: 150,
+          child: Column(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt, color: Colors.blue),
+                title: const Text("Take a Photo"),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? image = await _picker.pickImage(
+                      source: ImageSource.camera);
+                  if (image != null) {
+                    setState(() {
+                      controller.imageUrl = image.path;
+                      _imageError = null;
+                    });
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.image, color: Colors.green),
+                title: const Text("Choose from Gallery"),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? image = await _picker.pickImage(
+                      source: ImageSource.gallery);
+                  if (image != null) {
+                    setState(() {
+                      controller.imageUrl = image.path;
+                      _imageError = null;
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final locations = context.watch<LocationRepository>().list;
@@ -137,19 +187,7 @@ class _AddItemsViewState extends State<AddItemsView> {
                     style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
                   ),
                   GestureDetector(
-                    onTap: () async {
-                      try {
-                        final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                        if (image == null) return;
-                        setState(() {
-                          controller.imageUrl = image.path;
-                          _imageError = null; // Clear error when image is selected
-                        });
-                      } catch (e) {
-                        print(e);
-                        showSnackbar(context, e.toString());
-                      }
-                    },
+                    onTap: () => _showImagePicker(controller),
                     child: Container(
                       height: 150,
                       width: double.infinity,
