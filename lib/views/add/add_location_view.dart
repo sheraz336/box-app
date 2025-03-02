@@ -6,11 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../controllers/add_location_controller.dart';
 import '../../widgets/custom_text_field.dart';
-import '../../widgets/qr_popup_container.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-
 import '../admob/ad_manager.dart';
- // Import AdManager class
 
 class AddLocationView extends StatefulWidget {
   @override
@@ -21,8 +18,8 @@ class _AddLocationViewState extends State<AddLocationView> {
   String selectedTab = "Location";
   final _formKey = GlobalKey<FormState>();
   bool _isAdding = false;
-  final AdManager _adManager = AdManager(); //
-  String? _imageError; // Track image validation error
+  final AdManager _adManager = AdManager();
+
 
   @override
   void initState() {
@@ -33,14 +30,10 @@ class _AddLocationViewState extends State<AddLocationView> {
   void onSave(AddLocationController controller) async {
     try {
       if (_isAdding || !_formKey.currentState!.validate()) return;
-      setState(() {
-        _imageError = controller.imageUrl == null ? "Photo is required" : null;
-      });
-      if(_imageError != null)return;
-
-      _isAdding=true;
+      _isAdding = true;
       await controller.saveLocation();
-      _isAdding=false;
+      _isAdding = false;
+
       _adManager.incrementLocationCount(() {
         if (mounted) {
           Navigator.pop(context);
@@ -48,7 +41,7 @@ class _AddLocationViewState extends State<AddLocationView> {
       });
     } catch (e) {
       print(e);
-      _isAdding=false;
+      _isAdding = false;
       showSnackbar(context, e.toString());
     }
   }
@@ -68,7 +61,7 @@ class _AddLocationViewState extends State<AddLocationView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Upload Photo (Required)",
+                    "Upload Photo (Optional)",
                     style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
                   ),
                   GestureDetector(
@@ -78,7 +71,6 @@ class _AddLocationViewState extends State<AddLocationView> {
                         if (image == null) return;
                         setState(() {
                           controller.imageUrl = image.path;
-                          _imageError = null; // Clear error when image is selected
                         });
                       } catch (e) {
                         print(e);
@@ -89,47 +81,35 @@ class _AddLocationViewState extends State<AddLocationView> {
                       height: 150,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        border: Border.all(color: _imageError != null ? Colors.red : Colors.grey),
+                        border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
                         child: controller.imageUrl == null
-                            ? SvgPicture.asset("assets/camera.svg", height: 40)
+                            ? Image.asset("assets/default.png", height: 100, fit: BoxFit.cover)
                             : Image.file(File(controller.imageUrl!), fit: BoxFit.cover),
                       ),
                     ),
                   ),
-                  if (_imageError != null) // Show error message if no image
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        _imageError!,
-                        style: const TextStyle(color: Colors.red, fontSize: 12),
-                      ),
-                    ),
                   const SizedBox(height: 16),
                   CustomTextField(
                     validator: Validators.locationValidator,
                     controller: controller.nameController,
                     labelText: "Location Name",
                     hintText: "Enter Current Location",
-                    iconPath: "assets/add_camera.svg",
+                    //iconPath: "assets/add_camera.svg",
                     maxLength: 20,
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
                     validator: Validators.addressValidator,
                     controller: controller.addressController,
-                    labelText: "Address",
-                    hintText: "Enter Address",
-                    maxLength: 40,
+                    labelText: "Postcode",
+                    hintText: "Enter Postcode",
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
-                    validator: (text) {
-                      if (text == null) return "Location Type cannot be empty";
-                      return null;
-                    },
+                    validator: (text) => text == null ? "Location Type cannot be empty" : null,
                     value: controller.selectedType,
                     decoration: InputDecoration(
                       labelText: "Type",

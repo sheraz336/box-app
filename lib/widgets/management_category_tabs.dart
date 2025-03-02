@@ -21,7 +21,7 @@ class ManagementCategoryTabs extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             CategoryTab(
-              iconPath: "assets/location.svg",
+              iconPath: "assets/locationIcon.svg",
               text: "Location Management",
               color: Colors.blue[300]!,
               isSelected: selectedTab == "Location Management",
@@ -29,7 +29,7 @@ class ManagementCategoryTabs extends StatelessWidget {
             ),
             SizedBox(width: 8,),
             CategoryTab(
-              iconPath: "assets/boxes.svg",
+              iconPath: "assets/box.svg",
               text: "Boxes Management",
               color: Colors.purple.shade300,
               isSelected: selectedTab == "Boxes Management",
@@ -37,7 +37,7 @@ class ManagementCategoryTabs extends StatelessWidget {
             ),
             SizedBox(width: 8,),
             CategoryTab(
-              iconPath: "assets/items.svg",
+              iconPath: "assets/category.svg",
               text: "Item Management",
               color: Colors.green,
               isSelected: selectedTab == "Items Management",

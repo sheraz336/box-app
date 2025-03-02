@@ -26,21 +26,21 @@ class StatsBar extends StatelessWidget {
           children: [
             _buildStatItem(locations.length.toString(), "Locations", const Color(
                 0xFFE1EFFE),
-                const Color(0xFF06a3e0), "assets/location.svg",onTap: (){
+                const Color(0xFF06a3e0), "assets/locationIcon.svg",onTap: (){
                   Navigator.pushNamed(context,"/manage_location");
                 }),
             SizedBox(
               width: 3,
             ),
             _buildStatItem(boxes.length.toString(), "Boxes", const Color(0xFFF5E0FF),
-                const Color(0xFFBB2BFF), "assets/boxes.svg", onTap: () {
+                const Color(0xFFBB2BFF), "assets/box.svg", onTap: () {
               Navigator.pushNamed(context,"/manage_boxes");
             }),
             SizedBox(
               width: 3,
             ),
             _buildStatItem(items.length.toString(), "Items", const Color(0xFFE4FBE4),
-                const Color(0xFF00B100), "assets/items.svg",onTap: (){
+                const Color(0xFF00B100), "assets/category.svg",onTap: (){
                   Navigator.pushNamed(context,"/manage_items");
                 }),
           ],
@@ -66,8 +66,8 @@ class StatsBar extends StatelessWidget {
           children: [
             const SizedBox(height: 11),
             Container(
-              width: 31,
-              height: 27,
+              width: 30,
+              height: 30,
               decoration: BoxDecoration(
                 color: imageContainerColor,
                 borderRadius: BorderRadius.circular(5),

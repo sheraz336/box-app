@@ -49,18 +49,14 @@ class _AddBoxViewState extends State<AddBoxView> {
   void onSave(AddBoxController controller) async {
     try {
       if (!_formKey.currentState!.validate()) return;
-      setState(() {
-        _imageError = controller.imageUrl == null ? "Photo is required" : null;
-      });
-      if(_imageError != null)return;
 
-      final box  = await controller.addBox(); // Ensure action completes first
+      final box = await controller.addBox(); // Ensure action completes first
 
       // Show AdMob Interstitial Ad after every 3 times a box is added
       _adManager.incrementBoxCount(() {
         if (mounted) {
-          if(controller.generateQrCode){
-            showQrPopup(context, QrModel(type: ObjectType.Box,box:box ));
+          if (controller.generateQrCode) {
+            showQrPopup(context, QrModel(type: ObjectType.Box, box: box));
             showSnackbar(context, "Box added successfully");
             return;
           }
@@ -91,7 +87,7 @@ class _AddBoxViewState extends State<AddBoxView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Upload Photo (Required)",
+                      "Upload Photo (Optional)",
                       style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
                     ),
                     GestureDetector(
@@ -101,7 +97,6 @@ class _AddBoxViewState extends State<AddBoxView> {
                           if (image == null) return;
                           setState(() {
                             controller.imageUrl = image.path;
-                            _imageError = null; // Clear error when image is selected
                           });
                         } catch (e) {
                           print(e);
@@ -112,7 +107,7 @@ class _AddBoxViewState extends State<AddBoxView> {
                         height: 150,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          border: Border.all(color: _imageError != null ? Colors.red : Colors.grey),
+                          border: Border.all(color: Colors.grey), // Always grey border
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(
@@ -122,6 +117,7 @@ class _AddBoxViewState extends State<AddBoxView> {
                         ),
                       ),
                     ),
+
                     if (_imageError != null) // Show error message if no image
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
@@ -139,20 +135,27 @@ class _AddBoxViewState extends State<AddBoxView> {
                       maxLength: 30,
                     ),
                     SizedBox(height: 10),
-                    DropdownButtonFormField<LocationModel>(
+                    DropdownButtonFormField<LocationModel?>(
+                      value: null, // Default selection is "None"
                       items: [
+                        DropdownMenuItem<LocationModel?>(
+                          value: null,
+                          child: Text("None"), // Default option
+                        ),
                         ...locations.map((item) {
                           return DropdownMenuItem(
-                            child: Text(item.name),
                             value: item,
+                            child: Text(item.name),
                           );
-                        })
+                        }).toList(),
                       ],
                       onChanged: (item) {
                         controller.locationId = item?.locationId;
                       },
-                      hint: Text("Location"),
-                      decoration: TextFieldInputDecoration,
+                      decoration: InputDecoration(
+                        labelText: "Location", // Adds label on focus
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
                     ),
                     // CustomTextField(
                     //   controller: controller.locationController,

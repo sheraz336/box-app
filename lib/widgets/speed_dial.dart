@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import 'package:flutter_svg/svg.dart';
+
+
 class SpeedDialFAB extends StatefulWidget {
   const SpeedDialFAB({Key? key}) : super(key: key);
 
@@ -38,9 +41,9 @@ class _SpeedDialFABState extends State<SpeedDialFAB> {
 
   List<Widget> _buildMiniButtons() {
     List<Map<String, dynamic>> buttons = [
-      {'icon': Icons.location_on, 'route': "/add_location"},
-      {'icon': Icons.inbox, 'route': "/add_box"},
-      {'icon': Icons.widgets, 'route': "/items"},
+      {'icon': 'assets/locationIcon.svg', 'route': "/add_location", 'isSvg': true},
+      {'icon': 'assets/box.svg', 'route': "/add_box", 'isSvg': true},
+      {'icon': 'assets/category.svg', 'route': "/items", 'isSvg': true},
     ];
 
     double radius = 75; // Adjust to control the half-circle radius
@@ -62,10 +65,17 @@ class _SpeedDialFABState extends State<SpeedDialFAB> {
             setState(() => isOpen = false);
             Navigator.pushNamed(context, buttons[i]['route']);
           },
-          child: Icon(
+          child: buttons[i]['isSvg']
+              ? SvgPicture.asset(
+            buttons[i]['icon'],
+            width: 20,
+            height: 20,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          )
+              : Icon(
             buttons[i]['icon'],
             color: Colors.white,
-            size: 20,
+            size: 24,
           ),
         ),
       ));

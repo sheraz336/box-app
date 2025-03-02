@@ -39,9 +39,9 @@ class CustomTextField extends StatelessWidget {
         hintText: hintText,
         suffixIcon: iconPath != null
             ? Padding(
-                padding: EdgeInsets.all(10),
-                child: SvgPicture.asset(iconPath!, height: 20),
-              )
+          padding: EdgeInsets.all(10),
+          child: SvgPicture.asset(iconPath!, height: 20),
+        )
             : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -50,7 +50,7 @@ class CustomTextField extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide:
-              BorderSide(color: Colors.grey), // Grey border when not focused
+          BorderSide(color: Colors.grey), // Grey border when not focused
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -61,7 +61,7 @@ class CustomTextField extends StatelessWidget {
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide:
-              BorderSide(color: Colors.grey), // Grey border when not focused
+          BorderSide(color: Colors.grey), // Grey border when not focused
         ),
       ),
     );

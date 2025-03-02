@@ -92,28 +92,33 @@ class _AddItemsViewState extends State<AddItemsView> {
     }
   }
 
-  void onSave(AddItemsController controller)async{
-    try{
-      if(!_formKey.currentState!.validate())return;
-      setState(() {
-        _imageError = controller.imageUrl == null ? "Photo is required" : null;
-      });
-      if(_imageError != null)return;
+  void onSave(AddItemsController controller) async {
+    try {
+      if (!_formKey.currentState!.validate()) return;
+
+      // Remove the image error check
+      // setState(() {
+      //   _imageError = controller.imageUrl == null ? "Photo is required" : null;
+      // });
+
+      // Remove the return statement blocking save
+      // if (_imageError != null) return;
 
       final item = await controller.addItem();
-      if(mounted) {
-        if(controller.generateQrCode){
+      if (mounted) {
+        if (controller.generateQrCode) {
           showSnackbar(context, "Item added successfully");
-          showQrPopup(context, QrModel(type: ObjectType.Item,item:item ));
+          showQrPopup(context, QrModel(type: ObjectType.Item, item: item));
           return;
         }
         Navigator.pop(context);
       }
-    }catch(e){
+    } catch (e) {
       print(e);
       showSnackbar(context, e.toString());
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +138,7 @@ class _AddItemsViewState extends State<AddItemsView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Upload Photo (Required)",
+                    "Upload Photo (Optional)",
                     style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
                   ),
                   GestureDetector(
@@ -143,7 +148,6 @@ class _AddItemsViewState extends State<AddItemsView> {
                         if (image == null) return;
                         setState(() {
                           controller.imageUrl = image.path;
-                          _imageError = null; // Clear error when image is selected
                         });
                       } catch (e) {
                         print(e);
@@ -154,7 +158,7 @@ class _AddItemsViewState extends State<AddItemsView> {
                       height: 150,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        border: Border.all(color: _imageError != null ? Colors.red : Colors.grey),
+                        border: Border.all(color: Colors.grey), // Always grey border
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
@@ -164,6 +168,7 @@ class _AddItemsViewState extends State<AddItemsView> {
                       ),
                     ),
                   ),
+
                   if (_imageError != null) // Show error message if no image
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
@@ -180,37 +185,64 @@ class _AddItemsViewState extends State<AddItemsView> {
                     hintText: "Enter item name",
                   ),
                   const SizedBox(height: 10),
-                  DropdownButtonFormField<LocationModel>(
-                    items: [
-                      ...locations.map((item) {
-                        return DropdownMenuItem(
-                          child: Text(item.name),
-                          value: item,
-                        );
-                      })
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 4,
+                        child: DropdownButtonFormField<LocationModel?>(
+                          value: null, // Default selection is "None"
+                          items: [
+                            DropdownMenuItem<LocationModel?>(
+                              value: null,
+                              child: Text("None"), // Default option
+                            ),
+                            ...locations.map((item) {
+                              return DropdownMenuItem(
+                                value: item,
+                                child: Text(item.name),
+                              );
+                            }).toList(),
+                          ],
+                          onChanged: (item) {
+                            controller.locationId = item?.locationId;
+                          },
+                          decoration: InputDecoration(
+                            labelText: "Location", // Adds label on focus
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text('OR'),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        flex: 4,
+                        child: DropdownButtonFormField<BoxModel?>(
+                          value: null, // Default selection is "None"
+                          items: [
+                            DropdownMenuItem<BoxModel?>(
+                              value: null,
+                              child: Text("None"), // Default option
+                            ),
+                            ...boxes.map((item) {
+                              return DropdownMenuItem(
+                                value: item,
+                                child: Text(item.name),
+                              );
+                            }).toList(),
+                          ],
+                          onChanged: (item) {
+                            controller.boxId = item?.id;
+                          },
+                          decoration: InputDecoration(
+                            labelText: "Box", // Adds label on focus
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ),
                     ],
-                    onChanged: (item) {
-                      controller.locationId = item?.locationId;
-                    },
-                    hint: Text("Location"),
-                    decoration: TextFieldInputDecoration,
                   ),
-                  const SizedBox(height: 10),
-                  DropdownButtonFormField<BoxModel>(
-                    items: [
-                      ...boxes.map((item) {
-                        return DropdownMenuItem(
-                          child: Text(item.name),
-                          value: item,
-                        );
-                      })
-                    ],
-                    onChanged: (item) {
-                      controller.boxId = item?.id;
-                    },
-                    hint: Text("Box"),
-                    decoration: TextFieldInputDecoration,
-                  ),
+
                   const SizedBox(height: 10),
                   CustomTextField(
                     controller: controller.descriptionController,
