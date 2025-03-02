@@ -31,10 +31,10 @@ class _AddLocationViewState extends State<AddLocationView> {
   void onSave(AddLocationController controller) async {
     try {
       if (_isAdding || !_formKey.currentState!.validate()) return;
-      setState(() {
-        _imageError = controller.imageUrl == null ? "Photo is required" : null;
-      });
-      if(_imageError != null)return;
+      // setState(() {
+      //   _imageError = controller.imageUrl == null ? "Photo is required" : null;
+      // });
+      // if(_imageError != null)return;
 
       _isAdding=true;
       await controller.saveLocation();
@@ -113,7 +113,7 @@ class _AddLocationViewState extends State<AddLocationView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Upload Photo (Required)",
+                    "Upload Photo (Optional)",
                     style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
                   ),
                   GestureDetector(
@@ -146,7 +146,7 @@ class _AddLocationViewState extends State<AddLocationView> {
                     controller: controller.nameController,
                     labelText: "Location Name",
                     hintText: "Enter Current Location",
-                    iconPath: "assets/add_camera.svg",
+                    // iconPath: "assets/add_camera.svg",
                     maxLength: 20,
                   ),
                   const SizedBox(height: 16),
@@ -157,25 +157,25 @@ class _AddLocationViewState extends State<AddLocationView> {
                     hintText: "Enter Postcode",
                   ),
                   const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    validator: (text) => text == null ? "Location Type cannot be empty" : null,
-                    value: controller.selectedType,
-                    decoration: InputDecoration(
-                      labelText: "Type",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
-                    items: ["Home", "Office", "Warehouse"].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
-                        controller.selectType(newValue);
-                      }
-                    },
-                  ),
+                  // DropdownButtonFormField<String>(
+                  //   validator: (text) => text == null ? "Location Type cannot be empty" : null,
+                  //   value: controller.selectedType,
+                  //   decoration: InputDecoration(
+                  //     labelText: "Type",
+                  //     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  //   ),
+                  //   items: ["Home", "Office", "Warehouse"].map((String value) {
+                  //     return DropdownMenuItem<String>(
+                  //       value: value,
+                  //       child: Text(value),
+                  //     );
+                  //   }).toList(),
+                  //   onChanged: (String? newValue) {
+                  //     if (newValue != null) {
+                  //       controller.selectType(newValue);
+                  //     }
+                  //   },
+                  // ),
                   const SizedBox(height: 16),
                   CustomTextField(
                     controller: controller.descriptionController,

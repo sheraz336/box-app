@@ -13,12 +13,24 @@ import '../edit/edit_boxes_view.dart';
 import '../../widgets/native_ad_widget.dart'; // Import Native Ad Widget
 
 class BoxManagementScreen extends StatefulWidget {
+  final LocationModel? location;
+
+  const BoxManagementScreen({super.key, required this.location});
   @override
   _BoxManagementScreenState createState() => _BoxManagementScreenState();
 }
 
 class _BoxManagementScreenState extends State<BoxManagementScreen> {
   LocationModel? selectedLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedLocation=widget.location;
+    setState(() {
+
+    });
+  }
 
   void onEdit(BoxModel item) {
     Navigator.of(context)

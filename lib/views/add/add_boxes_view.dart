@@ -50,20 +50,20 @@ class _AddBoxViewState extends State<AddBoxView> {
   void onSave(AddBoxController controller) async {
     try {
       if (!_formKey.currentState!.validate()) return;
-      setState(() {
-        _imageError = controller.imageUrl == null ? "Photo is required" : null;
-      });
-      if(_imageError != null)return;
+      // setState(() {
+      //   _imageError = controller.imageUrl == null ? "Photo is required" : null;
+      // });
+      // if(_imageError != null)return;
 
       final box = await controller.addBox(); // Ensure action completes first
 
       // Show AdMob Interstitial Ad after every 3 times a box is added
-      _adManager.incrementBoxCount(() {
+      _adManager.incrementBoxCount(() async{
         if (mounted) {
           if (controller.generateQrCode) {
-            showQrPopup(context, QrModel(type: ObjectType.Box, box: box));
-            showSnackbar(context, "Box added successfully");
-            return;
+            await showQrPopup(context, QrModel(type: ObjectType.Box, box: box));
+            // showSnackbar(context, "Box added successfully");
+            // return;
           }
           Navigator.pop(context); // Only pop after ad is closed
         }
@@ -139,7 +139,7 @@ class _AddBoxViewState extends State<AddBoxView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Upload Photo (Required)",
+                      "Upload Photo (Optional)",
                       style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
                     ),
                     GestureDetector(

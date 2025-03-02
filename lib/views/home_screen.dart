@@ -27,6 +27,7 @@ import '../widgets/james_cooper_box.dart';
 import '../widgets/nav_bar_widget.dart';
 import 'edit/edit_boxes_view.dart';
 import 'edit/edit_items_view.dart';
+import 'management/management_view.dart';
 
 part 'home_screen.g.dart';
 
@@ -56,9 +57,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _loadBannerAd() {
-    if(!SubscriptionRepository.instance.isFree())return;
+    if (!SubscriptionRepository.instance.isFree()) return;
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-3512120495633654/7333096507', // Replace with your AdMob banner unit ID
+      adUnitId: 'ca-app-pub-3512120495633654/7333096507',
+      // Replace with your AdMob banner unit ID
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(
@@ -78,18 +80,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void onShare(LocationModel item) {
-    if(FirebaseAuth.instance.currentUser == null){
-      showAlertDialog(context, "Error", "Only pro users can share location", true, (){});
+    if (FirebaseAuth.instance.currentUser == null) {
+      showAlertDialog(
+          context, "Error", "Only pro users can share location", true, () {});
       return;
     }
     final uid = FirebaseAuth.instance.currentUser!.uid;
-    if(uid != item.ownerId){
-      showAlertDialog(context, "Error", "Only owner can share location", true, (){});
+    if (uid != item.ownerId) {
+      showAlertDialog(
+          context, "Error", "Only owner can share location", true, () {});
       return;
     }
     showDialog(
       context: context,
-      builder: (context) => ShareLocationDialog(onUserSelected: (String id,String name){
+      builder: (context) =>
+          ShareLocationDialog(onUserSelected: (String id, String name) {
         InviteRepository.instance.createInvite(item, name, id);
       }),
     );
@@ -115,7 +120,8 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
           backgroundColor: const Color(0xff06a3e0),
-          iconTheme: const IconThemeData(color: Colors.white), // Ensures back arrow is white
+          iconTheme: const IconThemeData(color: Colors.white),
+          // Ensures back arrow is white
           // leading: IconButton(
           //   icon: const Icon(Icons.arrow_back, color: Colors.white), // White back arrow
           //   onPressed: () {
@@ -135,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
               icon: Image.asset(
-                'assets/crown.png',  // Ensure this asset is in the correct path
+                'assets/crown.png', // Ensure this asset is in the correct path
                 width: 24,
                 height: 24,
               ),
@@ -151,8 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-
-          body: Column(
+        body: Column(
           children: [
             if (_isBannerAdLoaded)
               Padding(
@@ -188,33 +193,37 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 StyledBoxCard(
-                                    box: item,
-                                    onView: (){},
-                                    onEdit: () => Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                            builder: (c) => EditLocationScreen(
-                                                  location: item,
-                                                ))),
-                                    onDelete: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) =>
-                                            CustomDeleteDialog(
-                                          onConfirm: () {
-                                           try{
-                                             homeController.deleteLocation(item);
-                                           }catch(e){
-                                             print(e);
-                                             showSnackbar(context, e.toString());
-                                           }
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      );
-                                    },
-                                onShare: (){
-                                  onShare(item);
-                                },
+                                  box: item,
+                                  onView: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (c) =>
+                                                ManagementView(pageIndex: 1,location: item,)));
+                                  },
+                                  onEdit: () => Navigator.of(context)
+                                      .push(MaterialPageRoute(
+                                          builder: (c) => EditLocationScreen(
+                                                location: item,
+                                              ))),
+                                  onDelete: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => CustomDeleteDialog(
+                                        onConfirm: () {
+                                          try {
+                                            homeController.deleteLocation(item);
+                                          } catch (e) {
+                                            print(e);
+                                            showSnackbar(context, e.toString());
+                                          }
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  onShare: () {
+                                    onShare(item);
+                                  },
                                 ),
                                 const SizedBox(width: 12),
                               ],
@@ -307,11 +316,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         builder: (context) =>
                                             CustomDeleteDialog(
                                           onConfirm: () {
-                                            try{
+                                            try {
                                               homeController.deleteBox(item);
-                                            }catch(e){
+                                            } catch (e) {
                                               print(e);
-                                              showSnackbar(context, e.toString());
+                                              showSnackbar(
+                                                  context, e.toString());
                                             }
                                             Navigator.pop(context);
                                           },
@@ -414,11 +424,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                           builder: (context) =>
                                               CustomDeleteDialog(
                                             onConfirm: () {
-                                              try{
+                                              try {
                                                 homeController.deleteItem(item);
-                                              }catch(e){
+                                              } catch (e) {
                                                 print(e);
-                                                showSnackbar(context, e.toString());
+                                                showSnackbar(
+                                                    context, e.toString());
                                               }
                                               Navigator.pop(context);
                                             },

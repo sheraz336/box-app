@@ -148,17 +148,14 @@ class _OnboardingPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    return FittedBox(
-                      fit: BoxFit.scaleDown, // Ensures text scales dynamically
-                      child: Text(
-                        data['description']!,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.048, // Adjusted for better scaling
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xff76889A),
-                          height: 1.4, // Improves text layout consistency
-                        ),
+                    return Text(
+                      data['description']!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize:14, // Adjusted for better scaling
+                        fontWeight: FontWeight.w400,
+                        color: const Color(0xff76889A),
+                        height: 1.4, // Improves text layout consistency
                       ),
                     );
                   },

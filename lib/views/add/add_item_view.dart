@@ -98,17 +98,17 @@ class _AddItemsViewState extends State<AddItemsView> {
   void onSave(AddItemsController controller)async{
     try{
       if(!_formKey.currentState!.validate())return;
-      setState(() {
-        _imageError = controller.imageUrl == null ? "Photo is required" : null;
-      });
-      if(_imageError != null)return;
+      // setState(() {
+      //   _imageError = controller.imageUrl == null ? "Photo is required" : null;
+      // });
+      // if(_imageError != null)return;
 
       final item = await controller.addItem();
       if(mounted) {
         if(controller.generateQrCode){
-          showSnackbar(context, "Item added successfully");
-          showQrPopup(context, QrModel(type: ObjectType.Item,item:item ));
-          return;
+          // showSnackbar(context, "Item added successfully");
+          await showQrPopup(context, QrModel(type: ObjectType.Item,item:item ));
+          // return;
         }
         Navigator.pop(context);
       }
@@ -183,7 +183,7 @@ class _AddItemsViewState extends State<AddItemsView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Upload Photo (Required)",
+                    "Upload Photo (Optional)",
                     style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
                   ),
                   GestureDetector(

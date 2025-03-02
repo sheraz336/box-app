@@ -1,3 +1,4 @@
+import 'package:box_delivery_app/models/item_model.dart';
 import 'package:box_delivery_app/views/add/add_boxes_view.dart';
 import 'package:box_delivery_app/widgets/category_tabs.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,8 +15,8 @@ import 'location_management_view.dart';
 
 class ManagementView extends StatefulWidget {
   final int pageIndex;
-
-  const ManagementView({super.key, required this.pageIndex});
+  final LocationModel? location;
+  const ManagementView({super.key, required this.pageIndex,this.location});
 
   @override
   State<ManagementView> createState() => _AddViewState();
@@ -69,7 +70,7 @@ class _AddViewState extends State<ManagementView> {
             },
             children: [
               LocationManagementScreen(),
-              BoxManagementScreen(),
+              BoxManagementScreen(location:widget.location),
               ItemManagementScreen(),
             ],
           )),

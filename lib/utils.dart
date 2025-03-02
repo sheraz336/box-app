@@ -20,8 +20,8 @@ String? getOwnerId(){
 }
 
 //qr
-void showQrPopup(BuildContext context,QrModel model,) {
-  showModalBottomSheet(
+Future<void> showQrPopup(BuildContext context,QrModel model,)async {
+  await showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,

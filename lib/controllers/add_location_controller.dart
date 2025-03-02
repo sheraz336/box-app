@@ -35,7 +35,7 @@ class AddLocationController with ChangeNotifier {
         locationId: generateRandomId("location"),
         name: nameController.text,
         address: addressController.text,
-        type: selectedType!,
+        type: selectedType??"Other",
         description: descriptionController.text.isEmpty
             ? ""
             : descriptionController.text,

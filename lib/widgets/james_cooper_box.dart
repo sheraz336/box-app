@@ -81,7 +81,7 @@ class StyledBoxCard extends StatelessWidget {
                       ),
                       child: box.imagePath != null
                           ? Image.file(File(box.imagePath!), fit: BoxFit.cover)
-                          : Image.asset("assets/box.png", fit: BoxFit.cover),
+                          : Image.asset("assets/default.png", fit: BoxFit.cover),
                     ),
                   ),
                   SizedBox(),
