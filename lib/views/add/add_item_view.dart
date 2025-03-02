@@ -218,36 +218,62 @@ class _AddItemsViewState extends State<AddItemsView> {
                     hintText: "Enter item name",
                   ),
                   const SizedBox(height: 10),
-                  DropdownButtonFormField<LocationModel>(
-                    items: [
-                      ...locations.map((item) {
-                        return DropdownMenuItem(
-                          child: Text(item.name),
-                          value: item,
-                        );
-                      })
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 4,
+                        child: DropdownButtonFormField<LocationModel?>(
+                          value: null, // Default selection is "None"
+                          items: [
+                            DropdownMenuItem<LocationModel?>(
+                              value: null,
+                              child: Text("None"), // Default option
+                            ),
+                            ...locations.map((item) {
+                              return DropdownMenuItem(
+                                value: item,
+                                child: Text(item.name),
+                              );
+                            }).toList(),
+                          ],
+                          onChanged: (item) {
+                            controller.locationId = item?.locationId;
+                          },
+                          decoration: InputDecoration(
+                            labelText: "Location", // Adds label on focus
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text('OR'),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        flex: 4,
+                        child: DropdownButtonFormField<BoxModel?>(
+                          value: null, // Default selection is "None"
+                          items: [
+                            DropdownMenuItem<BoxModel?>(
+                              value: null,
+                              child: Text("None"), // Default option
+                            ),
+                            ...boxes.map((item) {
+                              return DropdownMenuItem(
+                                value: item,
+                                child: Text(item.name),
+                              );
+                            }).toList(),
+                          ],
+                          onChanged: (item) {
+                            controller.boxId = item?.id;
+                          },
+                          decoration: InputDecoration(
+                            labelText: "Box", // Adds label on focus
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ),
                     ],
-                    onChanged: (item) {
-                      controller.locationId = item?.locationId;
-                    },
-                    hint: Text("Location"),
-                    decoration: TextFieldInputDecoration,
-                  ),
-                  const SizedBox(height: 10),
-                  DropdownButtonFormField<BoxModel>(
-                    items: [
-                      ...boxes.map((item) {
-                        return DropdownMenuItem(
-                          child: Text(item.name),
-                          value: item,
-                        );
-                      })
-                    ],
-                    onChanged: (item) {
-                      controller.boxId = item?.id;
-                    },
-                    hint: Text("Box"),
-                    decoration: TextFieldInputDecoration,
                   ),
                   const SizedBox(height: 10),
                   CustomTextField(

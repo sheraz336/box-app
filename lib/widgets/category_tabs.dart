@@ -17,21 +17,21 @@ class CategoryTabs extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         CategoryTab(
-          iconPath: "assets/location.svg",
+          iconPath: "assets/locationIcon.svg",
           text: "Location",
           color: Colors.blue[300]!,
           isSelected: selectedTab == "Location",
           onTap: () => onTabSelected("Location"),
         ),
         CategoryTab(
-          iconPath: "assets/boxes.svg",
+          iconPath: "assets/box.svg",
           text: "Boxes",
           color: Colors.purple.shade300,
           isSelected: selectedTab == "Boxes",
           onTap: () => onTabSelected("Boxes"),
         ),
         CategoryTab(
-          iconPath: "assets/items.svg",
+          iconPath: "assets/category.svg",
           text: "Items",
           color: Colors.green,
           isSelected: selectedTab == "Items",

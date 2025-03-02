@@ -57,20 +57,20 @@ class _AddViewState extends State<AddView> {
                     curve: Curves.easeOut);
                 ;
               }),
-       const SizedBox(height: 16,),
-       Expanded(child:    PageView(
-         controller: pageController,
-         onPageChanged: (idx) {
-           setState(() {
-             currentPageIdx = idx;
-           });
-         },
-         children: [
-           AddLocationView(),
-           AddBoxView(),
-           AddItemsView(),
-         ],
-       )),
+          const SizedBox(height: 16,),
+          Expanded(child:    PageView(
+            controller: pageController,
+            onPageChanged: (idx) {
+              setState(() {
+                currentPageIdx = idx;
+              });
+            },
+            children: [
+              AddLocationView(),
+              AddBoxView(),
+              AddItemsView(),
+            ],
+          )),
         ],
       ),
     );

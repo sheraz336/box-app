@@ -169,7 +169,7 @@ class Validators {
 
   static String? addressValidator(String? text) {
     if (text == null) return "Address cannot be empty";
-    if (text.trim().length < 10) return "Min Length is 10";
+    if (text.trim().length < 2) return "Min Length is 2";
     return null;
   }
 

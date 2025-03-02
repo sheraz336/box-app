@@ -6,11 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../controllers/add_location_controller.dart';
 import '../../widgets/custom_text_field.dart';
-import '../../widgets/qr_popup_container.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-
 import '../admob/ad_manager.dart';
- // Import AdManager class
 
 class AddLocationView extends StatefulWidget {
   @override
@@ -156,16 +153,12 @@ class _AddLocationViewState extends State<AddLocationView> {
                   CustomTextField(
                     validator: Validators.addressValidator,
                     controller: controller.addressController,
-                    labelText: "Address",
-                    hintText: "Enter Address",
-                    maxLength: 40,
+                    labelText: "Postcode",
+                    hintText: "Enter Postcode",
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
-                    validator: (text) {
-                      if (text == null) return "Location Type cannot be empty";
-                      return null;
-                    },
+                    validator: (text) => text == null ? "Location Type cannot be empty" : null,
                     value: controller.selectedType,
                     decoration: InputDecoration(
                       labelText: "Type",

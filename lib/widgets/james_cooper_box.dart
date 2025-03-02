@@ -61,7 +61,7 @@ class StyledBoxCard extends StatelessWidget {
                           style: TextStyle(
                             color: Color(0xff000000),
                             fontSize: screenWidth * 0.036,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),

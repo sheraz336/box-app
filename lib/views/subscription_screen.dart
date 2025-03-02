@@ -252,10 +252,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                             onTap: () => setState(() => selectedPlan = 2),
                             child: SubscriptionCard(
                               title: "Pro+ Cloud",
-                              // price: "£49.99",
+                              price: "£49.99",
                               // subText: "Billed Annually",
                               isSelected: selectedPlan == 2,
-                              price: _products.firstWhereOrNull((p) => p.id == _proPlusCloudProductId)?.price ?? "£49.99",
+                             // price: _products.firstWhereOrNull((p) => p.id == _proPlusCloudProductId)?.price ?? "£49.99",
                               subText: "Billed Annually", // Manually setting since `ProductDetails` does not provide a period
                               // isSelected: selectedPlan == 1,
                             ),

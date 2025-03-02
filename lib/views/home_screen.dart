@@ -123,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
           //   },
           // ),
           title: const Text(
-            'Finditorium',
+            'FindItorium',
             style: TextStyle(color: Colors.white),
           ),
           actions: [

@@ -13,24 +13,27 @@ class OnboardingScreen extends StatelessWidget {
       'image': 'assets/onboarding.png',
       'title': 'Organise Your\nStorage',
       'description':
-          'Effortlessly manage your boxes, items, and\n storage locations all in one place. Stay \norganised like never before!',
+      'Effortlessly manage your boxes, items, and storage locations all in one place. Stay organised like never before!',
     },
     {
       'image': 'assets/onboarding2.png',
       'title': 'Track Every Item',
       'description':
-          'Add, categorize, and secure your items with\nease. No more losing track of what\'s stored\nwhere!',
+      'Add, categorize, and secure your items with ease. No more losing track of what\'s stored where!',
     },
     {
       'image': 'assets/onboarding3.png',
-      'title': 'Secure and\nAccessible',
+      'title': 'Secure and Accessible',
       'description':
-          'Enjoy secure access to your stored items\nanytime, anywhere. Simple tracking ensures\nyour items are always just where you need\nthem.',
+      'Enjoy secure access to your stored items anytime, anywhere. Simple tracking ensures your items are always just where you need them.',
     },
   ];
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return ChangeNotifierProvider(
       create: (_) => OnboardingProvider(),
       child: Scaffold(
@@ -48,19 +51,19 @@ class OnboardingScreen extends StatelessWidget {
                   },
                 ),
                 Positioned(
-                  top: 65,
-                  right: 20,
+                  top: screenHeight * 0.08,
+                  right: screenWidth * 0.05,
                   child: TextButton(
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SignInScreen()));
+                        context,
+                        MaterialPageRoute(builder: (context) => SignInScreen()),
+                      );
                     },
                     child: Text(
                       'Skip',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: screenWidth * 0.045,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF76889A),
                       ),
@@ -68,24 +71,23 @@ class OnboardingScreen extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  bottom: 6,
+                  bottom: screenHeight * 0.02,
                   left: 0,
                   right: 0,
                   child: PageIndicator(currentPage: provider.currentPage),
                 ),
                 Positioned(
-                  bottom: 75,
-                  left: 0,
-                  right: 0,
+                  bottom: screenHeight * 0.05,
+                  left: screenWidth * 0.15,
+                  right: screenWidth * 0.15,
                   child: CustomButton(
-                    text:
-                        provider.currentPage == 2 ? 'Get Started' : 'Continue',
+                    text: provider.currentPage == 2 ? 'Get Started' : 'Continue',
                     onPressed: () {
                       if (provider.currentPage == 2) {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SignInScreen()));
+                          context,
+                          MaterialPageRoute(builder: (context) => SignInScreen()),
+                        );
                       } else {
                         provider.nextPage();
                       }
@@ -111,39 +113,63 @@ class _OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(height: 150),
-          Image.asset(
-            data['image']!,
-            width: 323,
-            height: 255,
-          ),
-          const SizedBox(height: 30),
-          Center(
-            child: Text(
-              data['title']!,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                color: Color(0xff21252C),
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: screenHeight * 0.23),
+              SizedBox(
+                width: screenWidth * 0.8,
+                height: screenHeight * 0.3,
+                child: Image.asset(
+                  data['image']!,
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
+              SizedBox(height: screenHeight * 0.05),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
+                child: Text(
+                  data['title']!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.07,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xff21252C),
+                  ),
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.02),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return FittedBox(
+                      fit: BoxFit.scaleDown, // Ensures text scales dynamically
+                      child: Text(
+                        data['description']!,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.048, // Adjusted for better scaling
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xff76889A),
+                          height: 1.4, // Improves text layout consistency
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+
+            ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            data['description']!,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: const Color(0xff76889A),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
