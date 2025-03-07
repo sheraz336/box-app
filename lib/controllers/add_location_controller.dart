@@ -11,6 +11,7 @@ import '../utils.dart';
 class AddLocationController with ChangeNotifier {
   TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
+  TextEditingController tagsController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   String? selectedType;
   String? imageUrl;
@@ -36,6 +37,7 @@ class AddLocationController with ChangeNotifier {
         name: nameController.text,
         address: addressController.text,
         type: selectedType??"Other",
+        tags: tagsController.text,
         description: descriptionController.text.isEmpty
             ? ""
             : descriptionController.text,

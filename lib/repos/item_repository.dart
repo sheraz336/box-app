@@ -148,6 +148,15 @@ class ItemRepository extends ChangeNotifier {
   }
 
   //CRUD Operations
+  List<ItemModel> search(String text) {
+    final search = text.trim();
+    if(search.isEmpty)return [];
+    return list
+        .where((item) =>
+    item.name.toLowerCase().contains(search) ||
+        item.tags.toLowerCase().replaceAll(",", "").contains(search))
+        .toList();
+  }
 
   List<ItemModel> getBoxesItems(List<String> boxIds) {
     final list = _items.values

@@ -20,6 +20,8 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _boxIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _tagsController=TextEditingController();
+  final TextEditingController _nameController=TextEditingController();
   LocationModel? selectedLocation;
 
   @override
@@ -27,6 +29,8 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
     super.initState();
     _boxIdController.text = widget.box.id;
     _descriptionController.text = widget.box.description;
+    _tagsController.text = widget.box.tags;
+    _nameController.text = widget.box.name;
     selectedLocation = widget.box.location;
   }
 
@@ -35,6 +39,9 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
       if (!_formKey.currentState!.validate()) return;
       BoxRepository.instance.updateBox(widget.box
         ..location = selectedLocation
+        ..locationId=selectedLocation?.locationId
+        ..name=_nameController.text
+        ..tags=_tagsController.text
         ..description = _descriptionController.text);
       if (mounted) showSnackbar(context, "Box Updated Successfully");
     } catch (e) {
@@ -47,6 +54,7 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
   Widget build(BuildContext context) {
     final locationRepo = context.read<LocationRepository>();
     final locations = locationRepo.list;
+    print("aaaa ${BoxRepository.instance.getBox(widget.box.id)?.toMap()}");
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Boxes", style: TextStyle(color: Colors.white)),
@@ -62,6 +70,7 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
             child: Form(
               key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -96,10 +105,10 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
                         isExpanded: true,
                         value: selectedLocation,
                         hint: Text("Select your Location"),
-                        items: locations
+                        items: [null,...locations]
                             .map((location) => DropdownMenuItem(
                           value: location,
-                          child: Text(location.name),
+                          child: Text(location?.name ?? "None"),
                         ))
                             .toList(),
                         onChanged: (value) {
@@ -108,6 +117,36 @@ class _EditBoxesScreenState extends State<EditBoxesScreen> {
                           });
                         },
                       ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+
+                  //Name
+                  Text("Name",
+                      style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: _nameController,
+                    validator: Validators.itemNameValidator,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+
+                  //Tags
+                  Text("Tags",
+                      style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: _tagsController,
+                    validator: Validators.tagsValidator,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
                     ),
                   ),
                   SizedBox(height: 20),

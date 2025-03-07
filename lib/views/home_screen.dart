@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:box_delivery_app/models/item_model.dart';
+import 'package:box_delivery_app/models/qr_model.dart';
+import 'package:box_delivery_app/models/search_item.dart';
 import 'package:box_delivery_app/repos/box_repository.dart';
 import 'package:box_delivery_app/repos/item_repository.dart';
 import 'package:box_delivery_app/repos/location_repository.dart';
@@ -13,6 +15,7 @@ import 'package:box_delivery_app/widgets/speed_dial.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
@@ -159,6 +162,64 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Column(
           children: [
+            const SizedBox(
+              height: 10,
+            ),
+            TypeAheadField<SearchItem>(
+              suggestionsCallback: (search) {
+                print("search..... $search");
+                final locations = LocationRepository.instance
+                    .search(search)
+                    .map((item) =>
+                        SearchItem(type: ObjectType.Location, location: item));
+                final boxes = BoxRepository.instance
+                    .search(search)
+                    .map((item) => SearchItem(type: ObjectType.Box, box: item));
+                final items = ItemRepository.instance.search(search).map(
+                    (item) => SearchItem(type: ObjectType.Item, item: item));
+                return [...locations, ...boxes, ...items];
+              },
+              builder: (context, controller, focusNode) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: TextField(
+                      controller: controller,
+                      focusNode: focusNode,
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Search',
+                      )),
+                );
+              },
+              itemBuilder: (context, item) {
+                return ListTile(
+                  title: Text(item.type.name),
+                  subtitle: Text(item.name()),
+                );
+              },
+              onSelected: (item) {
+                print("selected   $item");
+                var screen;
+                switch (item.type) {
+                  case ObjectType.Location:
+                    screen = EditLocationScreen(location: item.location!);
+                    break;
+                  case ObjectType.Box:
+                    screen = EditBoxesScreen(box: item.box!);
+                    break;
+                  case ObjectType.Item:
+                    screen = EditItemScreen(item: item.item!);
+                    break;
+                }
+                print("tapppp");
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => screen,
+                  ),
+                );
+              },
+            ),
             if (_isBannerAdLoaded)
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -195,10 +256,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 StyledBoxCard(
                                   box: item,
                                   onView: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (c) =>
-                                                ManagementView(pageIndex: 1,location: item,)));
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (c) => ManagementView(
+                                                  pageIndex: 1,
+                                                  location: item,
+                                                )));
                                   },
                                   onEdit: () => Navigator.of(context)
                                       .push(MaterialPageRoute(

@@ -20,6 +20,8 @@ class LocationModel extends HiveObject {
   String? imagePath;
   @HiveField(6)
   String? ownerId;
+  @HiveField(7)
+  String tags;
 
   int items = 0;
   List<BoxModel> boxes = [];
@@ -32,6 +34,7 @@ class LocationModel extends HiveObject {
       required this.address,
       required this.type,
       required this.description,
+      this.tags = "",
       required this.imagePath});
 
   void update(LocationModel model) {
@@ -41,6 +44,7 @@ class LocationModel extends HiveObject {
     this.type = model.type;
     this.description = model.description;
     this.imagePath = model.imagePath;
+    this.tags=model.tags;
   }
 
   LocationModel copy() {
@@ -51,6 +55,7 @@ class LocationModel extends HiveObject {
         address: address,
         type: type,
         description: description,
+        tags: tags,
         imagePath: imagePath)
       ..boxes = boxes
       ..items = items
@@ -61,7 +66,6 @@ class LocationModel extends HiveObject {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     return uid != null && uid != ownerId;
   }
-
 
   static LocationModel fromMap(Map map) {
     return LocationModel(
@@ -209,7 +213,6 @@ class ItemModel {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     return uid != null && uid != ownerId;
   }
-
 
   static ItemModel fromMap(Map map) {
     return ItemModel(

@@ -157,6 +157,12 @@ class _AddLocationViewState extends State<AddLocationView> {
                     hintText: "Enter Postcode",
                   ),
                   const SizedBox(height: 16),
+                  CustomTextField(
+                    validator: Validators.tagsValidator,
+                    controller: controller.tagsController,
+                    labelText: "Tags (Optional)",
+                    hintText: "Enter tags separated by comma",
+                  ),
                   // DropdownButtonFormField<String>(
                   //   validator: (text) => text == null ? "Location Type cannot be empty" : null,
                   //   value: controller.selectedType,

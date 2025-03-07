@@ -67,7 +67,7 @@ class _LocationManagementScreenState extends State<LocationManagementScreen> {
   }
 
   onView(LocationModel loc) {
-    showQrPopup(context, QrModel(type: ObjectType.Item, location: loc));
+    showQrPopup(context, QrModel(type: ObjectType.Location, location: loc));
   }
 
   @override

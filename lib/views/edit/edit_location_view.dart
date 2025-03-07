@@ -40,7 +40,7 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
-
+print("loooc ${locationToEdit.toMap()}");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff06a3e0),
@@ -73,8 +73,8 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                 validator: Validators.locationValidator,
                 maxLength: 20,
               ),
-              _buildLabel('Address'),
-              _buildTextField('Enter Address', (value) {
+              _buildLabel('Postcode'),
+              _buildTextField('Enter Postcode', (value) {
                 setState(() {
                   locationToEdit..address = value;
                 });
@@ -82,17 +82,29 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                   initialValue: locationToEdit.address,
                   validator: Validators.addressValidator,
                   maxLength: 40),
-              _buildLabel('Type'),
 
-              _buildDropdown(
-                ['Home', 'Office', 'Other'],
-                locationToEdit.type,
-                (String? value) {
-                  setState(() {
-                    locationToEdit..type = value!;
-                  });
-                },
-              ),
+
+
+              _buildLabel('Tags'),
+              _buildTextField('Enter Tags separated by comma', (value) {
+                setState(() {
+                  locationToEdit..tags = value;
+                });
+              },
+                  initialValue: locationToEdit.tags,
+                  validator: Validators.tagsValidator,
+                  maxLength: 40),
+              // _buildLabel('Type'),
+
+              // _buildDropdown(
+              //   ['Home', 'Office', 'Other'],
+              //   "locationToEdit.type",
+              //   (String? value) {
+              //     setState(() {
+              //       locationToEdit..type = value!;
+              //     });
+              //   },
+              // ),
               // _buildLabel('Enter Latitude'),
               // _buildTextField('Latitude', (value) {
               //   setState(() {
@@ -205,6 +217,7 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
   }
 
   Widget _buildDropdown<T>(List<T> options, T? value, Function(T?) onChanged) {
+    print("oooptio;nsss ${options}");
     return DropdownButtonFormField<T>(
       decoration: InputDecoration(
         border: OutlineInputBorder(

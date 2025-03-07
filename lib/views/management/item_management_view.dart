@@ -71,10 +71,10 @@ class _ItemManagementScreenState extends State<ItemManagementScreen> {
                 isExpanded: true,
                 value: selectedBox,
                 hint: Text("Boxes"),
-                items: [
-                  ...boxes.map((item) =>
-                      DropdownMenuItem(value: item, child: Text(item.name)))
-                ],
+                items:
+                [null,...boxes].map((item) =>
+                      DropdownMenuItem(value: item, child: Text(item?.name ?? "All"))).toList()
+                ,
                 onChanged: (value) {
                   setState(() {
                     selectedBox = value;

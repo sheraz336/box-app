@@ -18,18 +18,20 @@ class LocationModelAdapter extends TypeAdapter<LocationModel> {
     };
     return LocationModel(
       locationId: fields[0] as String,
+      ownerId: fields[6] as String?,
       name: fields[1] as String,
       address: fields[2] as String,
       type: fields[3] as String,
       description: fields[4] as String,
+      tags: fields[7] != null ? fields[7] as String : "",
       imagePath: fields[5] as String?,
-    )..ownerId = fields[6] as String?;
+    );
   }
 
   @override
   void write(BinaryWriter writer, LocationModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.locationId)
       ..writeByte(1)
@@ -43,7 +45,9 @@ class LocationModelAdapter extends TypeAdapter<LocationModel> {
       ..writeByte(5)
       ..write(obj.imagePath)
       ..writeByte(6)
-      ..write(obj.ownerId);
+      ..write(obj.ownerId)
+      ..writeByte(7)
+      ..write(obj.tags);
   }
 
   @override
@@ -130,8 +134,9 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
       imagePath: fields[6] as String?,
       value: fields[7] as double,
       quantity: fields[8] as int,
+      boxLocationId: fields[11] as String?,
       tags: fields[9] as String,
-    )..boxLocationId = fields[11] as String?;
+    );
   }
 
   @override

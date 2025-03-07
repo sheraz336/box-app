@@ -53,8 +53,7 @@ class LocationRepository extends ChangeNotifier {
     });
 
     SubscriptionRepository.instance.addListener(() {
-      if (!SubscriptionRepository.instance.isPremiumActive())
-        return;
+      if (!SubscriptionRepository.instance.isPremiumActive()) return;
       startSync();
     });
 
@@ -71,10 +70,12 @@ class LocationRepository extends ChangeNotifier {
 
       //delete boxes that no longer have permission to
       final locations = list.where((item) =>
-      (newSharedLocationIds.indexWhere((locId) => locId != item.locationId) !=
-          -1 || newSharedLocationIds.isEmpty) && item.ownerId != uid);
-      for (var location in locations)
-        _locations.remove(location.locationId);
+          (newSharedLocationIds
+                      .indexWhere((locId) => locId != item.locationId) !=
+                  -1 ||
+              newSharedLocationIds.isEmpty) &&
+          item.ownerId != uid);
+      for (var location in locations) _locations.remove(location.locationId);
       await _box.deleteAll(locations.map((item) => item.locationId));
       print("location: removed boxes: ${locations.length}");
 
@@ -82,19 +83,16 @@ class LocationRepository extends ChangeNotifier {
       await _sharedSubscription?.cancel();
 
       //update subscription for latest shared locations
-      if (newSharedLocationIds.isEmpty)
-        return;
+      if (newSharedLocationIds.isEmpty) return;
       _sharedSubscription = FirebaseFirestore.instance
           .collection("locations")
           .where("locationId", whereIn: newSharedLocationIds)
           .snapshots(includeMetadataChanges: true)
           .listen((snapshots) {
-        print("shared locations snapshots received ${snapshots.docChanges
-            .length}");
         print(
-            "pendingWrites: ${snapshots.metadata
-                .hasPendingWrites}, fromCache: ${snapshots.metadata
-                .isFromCache}");
+            "shared locations snapshots received ${snapshots.docChanges.length}");
+        print(
+            "pendingWrites: ${snapshots.metadata.hasPendingWrites}, fromCache: ${snapshots.metadata.isFromCache}");
         _onFirebaseItemChange(snapshots, denyCache: false);
       });
     });
@@ -113,8 +111,8 @@ class LocationRepository extends ChangeNotifier {
         .snapshots(includeMetadataChanges: true)
         .listen((snapshots) {
       print("location snapshots received ${snapshots.docChanges.length}");
-      print("pendingWrites: ${snapshots.metadata
-          .hasPendingWrites}, fromCache: ${snapshots.metadata.isFromCache}");
+      print(
+          "pendingWrites: ${snapshots.metadata.hasPendingWrites}, fromCache: ${snapshots.metadata.isFromCache}");
       _onFirebaseItemChange(snapshots);
     });
 
@@ -125,8 +123,9 @@ class LocationRepository extends ChangeNotifier {
     try {
       WriteBatch batch = FirebaseFirestore.instance.batch();
       for (var location in list) {
-        final id = FirebaseFirestore.instance.collection("locations").doc(
-            location.locationId);
+        final id = FirebaseFirestore.instance
+            .collection("locations")
+            .doc(location.locationId);
         batch.set(id, location.toMap());
       }
       await batch.commit();
@@ -139,8 +138,9 @@ class LocationRepository extends ChangeNotifier {
   void _onFirebaseItemChange(QuerySnapshot<Map<String, dynamic>> snapshots,
       {bool denyCache = true}) {
     //update local database only, when its not from cache & no pending writes
-    if (!denyCache || (!snapshots.metadata.isFromCache &&
-        !snapshots.metadata.hasPendingWrites))
+    if (!denyCache ||
+        (!snapshots.metadata.isFromCache &&
+            !snapshots.metadata.hasPendingWrites))
       snapshots.docChanges.forEach((doc) {
         final item = LocationModel.fromMap(doc.doc.data()!);
         switch (doc.type) {
@@ -155,7 +155,7 @@ class LocationRepository extends ChangeNotifier {
             break;
         }
       });
-    else{
+    else {
       _updateBoxes();
       _updateItemsCount();
       fireNotify();
@@ -195,9 +195,7 @@ class LocationRepository extends ChangeNotifier {
             .getBoxesItems(item.boxes.map((item) => item.id).toList())
             .length;
         final locationItemsCount =
-            ItemRepository.instance
-                .getLocationItems(item.locationId)
-                .length;
+            ItemRepository.instance.getLocationItems(item.locationId).length;
         _locations[item.locationId]!
           ..items = boxesItemCount + locationItemsCount;
       });
@@ -210,6 +208,16 @@ class LocationRepository extends ChangeNotifier {
     return _locations[id];
   }
 
+  List<LocationModel> search(String text) {
+    final search = text.trim();
+    if(search.isEmpty)return [];
+    return list
+        .where((item) =>
+            item.name.toLowerCase().contains(search.toLowerCase()) ||
+            item.tags.toLowerCase().replaceAll(",", "").contains(search))
+        .toList();
+  }
+
   Future<bool> putLocation(LocationModel location,
       {bool remoteWrite = true}) async {
     if (!SubscriptionRepository.instance.canAddLocation()) return false;
@@ -217,8 +225,10 @@ class LocationRepository extends ChangeNotifier {
     //update in firestore
     if (remoteWrite &&
         SubscriptionRepository.instance.currentSubscription.isPremium) {
-      FirebaseFirestore.instance.collection("locations").doc(
-          location.locationId).set(location.toMap());
+      FirebaseFirestore.instance
+          .collection("locations")
+          .doc(location.locationId)
+          .set(location.toMap());
     }
 
     return true;
@@ -243,7 +253,8 @@ class LocationRepository extends ChangeNotifier {
     //update in firestore
     if (remoteWrite &&
         SubscriptionRepository.instance.currentSubscription.isPremium) {
-      FirebaseFirestore.instance.collection("locations")
+      FirebaseFirestore.instance
+          .collection("locations")
           .doc(model.locationId)
           .set(model.toMap());
     }
@@ -259,7 +270,7 @@ class LocationRepository extends ChangeNotifier {
   }
 
   Future<void> deleteAll() async {
-    for(var item in _box.values){
+    for (var item in _box.values) {
       await deleteLocation(item.locationId);
     }
   }

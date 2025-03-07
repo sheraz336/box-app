@@ -59,6 +59,7 @@ dependencies:
   barcode: ^2.2.9
   pdf: ^3.11.3
   file_picker: ^9.0.0
+  flutter_typeahead: ^5.2.0
 
 
 

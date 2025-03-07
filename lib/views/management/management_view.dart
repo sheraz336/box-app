@@ -9,6 +9,7 @@ import '../../repos/box_repository.dart';
 import '../../repos/item_repository.dart';
 import '../../repos/location_repository.dart';
 import '../../widgets/management_category_tabs.dart';
+import '../../widgets/speed_dial.dart';
 import 'box_management_view.dart';
 import 'item_management_view.dart';
 import 'location_management_view.dart';
@@ -76,6 +77,8 @@ class _AddViewState extends State<ManagementView> {
           )),
         ],
       ),
+      floatingActionButton: const SpeedDialFAB(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

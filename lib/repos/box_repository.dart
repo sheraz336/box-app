@@ -179,6 +179,16 @@ class BoxRepository extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<BoxModel> search(String text) {
+    final search = text.trim();
+    if(search.isEmpty)return [];
+    return list
+        .where((item) =>
+    item.name.toLowerCase().contains(search.toLowerCase()) ||
+        item.tags.toLowerCase().replaceAll(",", "").contains(search))
+        .toList();
+  }
+
   List<BoxModel> getBoxes(String locationId) {
     final list = _boxes.values
         .where(

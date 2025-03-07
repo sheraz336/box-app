@@ -39,8 +39,9 @@ class CustomBottomNav extends StatelessWidget {
                 imagePath: 'assets/navbar_1.svg',
                 isSelected: currentIndex == 0,
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (c) => HomeScreen()));
+                  if (currentIndex != 0)
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (c) => HomeScreen()));
                 },
               ),
               _buildNavItem(

@@ -17,8 +17,11 @@ class EditItemScreen extends StatefulWidget {
 }
 
 class _EditItemScreenState extends State<EditItemScreen> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _itemIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _tagsController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   BoxModel? selectedBox;
 
   @override
@@ -27,13 +30,18 @@ class _EditItemScreenState extends State<EditItemScreen> {
     final itemToEdit = widget.item;
     _itemIdController.text = itemToEdit.id;
     _descriptionController.text = itemToEdit.description;
+    _tagsController.text = itemToEdit.tags;
+    _nameController.text = itemToEdit.name;
   }
 
   void onUpdate() async {
     try {
+      if (!_formKey.currentState!.validate()) return;
       final description = _descriptionController.text.toString();
       await ItemRepository.instance.updateItem(widget.item
+        ..name = _nameController.text
         ..description = description
+        ..tags = _tagsController.text
         ..boxId = selectedBox?.id
         ..boxLocationId = selectedBox?.locationId);
       if (mounted) showSnackbar(context, "Successfully Updated");
@@ -52,124 +60,161 @@ class _EditItemScreenState extends State<EditItemScreen> {
       selectedBox = BoxRepository.instance.getBox(itemToEdit.boxId);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Edit Item", style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xff06a3e0),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Item ID Field
-              Text("Item ID",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              SizedBox(height: 8),
-              TextField(
-                controller: _itemIdController,
-                enabled: false,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
-              ),
-              SizedBox(height: 20),
-
-              // Box Dropdown
-              Text("Box",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              SizedBox(height: 8),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade400),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<BoxModel>(
-                    isExpanded: true,
-                    value: selectedBox,
-                    hint: Text("Select your Box"),
-                    items: boxes
-                        .map((box) => DropdownMenuItem(
-                              value: box,
-                              child: Text(box.name),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedBox = value;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-
-              // Description Field
-              Text("Description",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              SizedBox(height: 8),
-              TextField(
-                controller: _descriptionController,
-                maxLines: 4,
-                maxLength: 100,
-                decoration: InputDecoration(
-                  hintText: "Enter Description",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
-              ),
-              SizedBox(height: 30),
-
-              // Update Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xff06a3e0),
-                    padding: EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                  ),
-                  onPressed: onUpdate,
-                  child: Text("Update Item",
-                      style: TextStyle(fontSize: 16, color: Colors.white)),
-                ),
-              ),
-              SizedBox(height: 20),
-              //generate qr
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(color: Color(0xff06a3e0))),
-                  ),
-                  onPressed: () => showQrPopup(context,
-                      QrModel(type: ObjectType.Item, item: itemToEdit)),
-                  child: Text(
-                    'Generate QR',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff06a3e0)),
-                  ),
-                ),
-              ),
-            ],
+        appBar: AppBar(
+          title: Text("Edit Item", style: TextStyle(color: Colors.white)),
+          backgroundColor: Color(0xff06a3e0),
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
           ),
         ),
-      ),
-    );
+        body: Form(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Item ID Field
+                  Text("Item ID",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  TextField(
+                    controller: _itemIdController,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+
+                  // Box Dropdown
+                  Text("Box",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade400),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<BoxModel>(
+                        isExpanded: true,
+                        value: selectedBox,
+                        hint: Text("Select your Box"),
+                        items: [null, ...boxes]
+                            .map((box) => DropdownMenuItem(
+                                  value: box,
+                                  child: Text(box?.name ?? "None"),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedBox = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+
+                  //Name
+                  Text("Name",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: _nameController,
+                    validator: Validators.itemNameValidator,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+
+                  //Tags
+                  Text("Tags",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: _tagsController,
+                    validator: Validators.tagsValidator,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+
+                  // Description Field
+                  Text("Description",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  TextField(
+                    controller: _descriptionController,
+                    maxLines: 4,
+                    maxLength: 100,
+                    decoration: InputDecoration(
+                      hintText: "Enter Description",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+
+                  // Update Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xff06a3e0),
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                      onPressed: onUpdate,
+                      child: Text("Update Item",
+                          style: TextStyle(fontSize: 16, color: Colors.white)),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  //generate qr
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(color: Color(0xff06a3e0))),
+                      ),
+                      onPressed: () => showQrPopup(context,
+                          QrModel(type: ObjectType.Item, item: itemToEdit)),
+                      child: Text(
+                        'Generate QR',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff06a3e0)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 }

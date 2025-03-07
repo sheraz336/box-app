@@ -168,7 +168,7 @@ class Validators {
   }
 
   static String? addressValidator(String? text) {
-    if (text == null) return "Address cannot be empty";
+    if (text == null || text.isEmpty) return null;
     if (text.trim().length < 2) return "Min Length is 2";
     return null;
   }
@@ -208,8 +208,10 @@ class Validators {
   }
 
   static String? tagsValidator(String? text) {
-    if (text == null || text.trim().isEmpty) return null;
-    if (!RegExp(r"^[a-zA-Z,]+$").hasMatch(text.trim()))
+    if (text == null || text.isEmpty) return null;
+    if(text.contains(" ")) return "Cannot contain space";
+    if(text.endsWith(",")) return "Cannot end with comma";
+    if (!RegExp(r"^[a-zA-Z1-9,]+$").hasMatch(text.trim()))
       return "Enter tags separated by comma";
     return null;
   }
